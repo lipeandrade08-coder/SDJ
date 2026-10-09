@@ -38,11 +38,22 @@
       <span>D</span><span>e</span><span>p</span><span>a</span><span>r</span><span>t</span><span>a</span><span>m</span><span>e</span><span>n</span><span>t</span><span>o</span> <span>J</span><span>u</span><span>r</span><span>í</span><span>d</span><span>i</span><span>c</span><span>o</span>
     </h1>
     <p class="intro-sub">Brava RP</p>
-    <p class="intro-hint">Clique para iniciar</p>
+    <p class="intro-hint" id="intro-hint">Clique para iniciar</p>
+    
+    <!-- Validação -->
+    <div id="intro-validation" class="intro-validation">
+      <div class="val-spinner" id="val-spinner"></div>
+      <span class="val-text" id="val-text">Solicitando acesso...</span>
+    </div>
   </div>
   <script>
     (function () {
       var intro = document.getElementById("intro");
+      var hint = document.getElementById("intro-hint");
+      var valBox = document.getElementById("intro-validation");
+      var valText = document.getElementById("val-text");
+      var valSpinner = document.getElementById("val-spinner");
+      var validating = false;
       var done = false;
 
       function finish() {
@@ -55,10 +66,34 @@
         }, 900);
       }
 
-      // Sai ao clicar na tela inteira
-      intro.addEventListener("click", finish);
-      // Fim automático após a animação
-      setTimeout(finish, 4000);
+      function startValidation() {
+        if (validating || done) return;
+        validating = true;
+        
+        // Esconde a dica, mostra a validação
+        hint.style.opacity = "0";
+        valBox.classList.add("show");
+
+        // Simula checagem de banco de dados/acesso
+        setTimeout(function() {
+          valText.textContent = "Verificando credenciais...";
+        }, 800);
+
+        setTimeout(function() {
+          valText.textContent = "Acesso Permitido";
+          valText.classList.add("success");
+          valSpinner.style.display = "none";
+        }, 2200);
+
+        // Finaliza e entra no sistema
+        setTimeout(finish, 3200);
+      }
+
+      // Ao clicar, inicia a validação
+      intro.addEventListener("click", startValidation);
+      
+      // Se não clicar em 5 segundos, inicia sozinho
+      setTimeout(startValidation, 5000);
     })();
   </script>
   <div class="bg-glow"></div>

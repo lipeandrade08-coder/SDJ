@@ -779,3 +779,28 @@ body.intro-active .topbar, body.intro-active main { opacity: 0; transform: trans
 @media (prefers-reduced-motion: reduce) {
   .intro *, .intro { animation-duration: .01s !important; animation-delay: 0s !important; }
 }
+
+/* Validação de Acesso */
+.intro-validation {
+  position: absolute; bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; transition: opacity .4s ease;
+}
+.intro-validation.show { opacity: 1; }
+.val-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(212,175,55,.3);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: valSpin .8s linear infinite;
+}
+.val-text {
+  font: 500 12px/1 Inter, sans-serif;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: #e9d8a6;
+}
+.val-text.success {
+  color: #a8e6cf; /* verde suave para sucesso */
+  text-shadow: 0 0 8px rgba(168,230,207,.4);
+}
+@keyframes valSpin { to { transform: rotate(360deg); } }
