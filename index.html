@@ -19,7 +19,62 @@
     })();
   </script>
 </head>
-<body data-view="home">
+<body data-view="home" class="intro-active">
+  <!-- Intro em vídeo: roda antes do sistema aparecer -->
+  <div id="intro" class="intro" aria-hidden="false">
+    <video id="intro-video" class="intro-video" src="intro.mp4" playsinline preload="auto"></video>
+    <div class="intro-actions">
+      <button id="intro-sound" class="intro-btn hidden" type="button">🔊 Ativar som</button>
+      <button id="intro-skip" class="intro-btn" type="button">Pular intro ›</button>
+    </div>
+    <div class="intro-progress"><span id="intro-bar"></span></div>
+  </div>
+  <script>
+    (function () {
+      var intro = document.getElementById("intro");
+      var video = document.getElementById("intro-video");
+      var bar = document.getElementById("intro-bar");
+      var btnSkip = document.getElementById("intro-skip");
+      var btnSound = document.getElementById("intro-sound");
+      var done = false;
+
+      function finish() {
+        if (done) return;
+        done = true;
+        intro.classList.add("intro-out");
+        document.body.classList.remove("intro-active");
+        setTimeout(function () {
+          video.pause();
+          intro.remove();
+        }, 800);
+      }
+
+      video.addEventListener("ended", finish);
+      video.addEventListener("error", finish);
+      video.addEventListener("timeupdate", function () {
+        if (video.duration) bar.style.width = (video.currentTime / video.duration) * 100 + "%";
+      });
+      btnSkip.addEventListener("click", finish);
+      btnSound.addEventListener("click", function () {
+        video.muted = false;
+        btnSound.classList.add("hidden");
+      });
+
+      // Tenta tocar com som; se o navegador bloquear, toca mudo e oferece botão de som
+      video.muted = false;
+      var p = video.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          video.muted = true;
+          btnSound.classList.remove("hidden");
+          video.play().catch(finish);
+        });
+      }
+
+      // Segurança: nunca prender o usuário na intro
+      setTimeout(finish, 30000);
+    })();
+  </script>
   <div class="bg-glow"></div>
   <div class="bg-grid"></div>
 
