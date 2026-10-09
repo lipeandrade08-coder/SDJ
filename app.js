@@ -48,7 +48,8 @@
     btn.innerHTML = "<span>Enviando...</span>";
     btn.disabled = true;
     try {
-      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }) });
+      const payload = typeof content === "string" ? { content } : content;
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error("Erro ao enviar");
       btn.classList.add("success");
       btn.innerHTML = "<span>✓ Enviado com sucesso!</span>";
@@ -305,10 +306,49 @@
     return txt;
   }
 
+  function relatorioPenalEmbed() {
+    const r = calcular();
+    const nome = $("#input-nome").value || "—";
+    const id = $("#input-id").value || "—";
+    const advogado = $("#input-advogado").value || "—";
+    const idAdv = $("#input-id-adv").value || "—";
+    const oficial = $("#input-oficial").value || "—";
+    const idPolicial = $("#input-id-policial").value || "—";
+
+    const linhas = [...selected].map(([cod, qtd]) => {
+      const a = artigos[cod];
+      return `🔸 **Art. ${cod}** - ${a.nome}${qtd > 1 ? ` (x${qtd})` : ""}${a.inaf ? " *[INAFIANÇÁVEL]*" : ""}`;
+    });
+
+    return {
+      embeds: [{
+        title: `📄 RELATÓRIO PENAL`,
+        color: 13938487, // dourado #d4af37
+        fields: [
+          { name: "Nome do Acusado", value: `\`${nome}\``, inline: true },
+          { name: "ID do Acusado", value: `\`${id}\``, inline: true },
+          { name: "Antecedentes", value: state.primario ? "Réu primário" : "Reincidente", inline: true },
+          
+          { name: "Advogado", value: `${advogado} (${idAdv})`, inline: true },
+          { name: "Status Advogado", value: state.advogado ? "Presente (-50%)" : "Ausente", inline: true },
+          { name: "\u200b", value: "\u200b", inline: true }, // Spacer
+          
+          { name: "Pena Total", value: `**${r.pena} meses**${r.limitada ? " *(máx)*" : ""}`, inline: true },
+          { name: "Multa Total", value: `**${fmtMoney(r.multa)}**`, inline: true },
+          { name: "Fiança", value: `**${r.fianca === null ? "INAFIANÇÁVEL" : fmtMoney(r.fianca)}**`, inline: true },
+          
+          { name: "Artigos Enquadrados", value: linhas.length ? linhas.join("\n") : "Nenhum", inline: false }
+        ],
+        footer: { text: `Tribunal de Justiça — ${CONFIG.cidade.toUpperCase()} • Oficial: ${oficial} (${idPolicial})` },
+        timestamp: new Date().toISOString()
+      }]
+    };
+  }
+
   $("#btn-discord").innerHTML = DISCORD_LABEL;
   $("#btn-discord").addEventListener("click", (e) => {
     if (!selected.size) return toast("Selecione ao menos um artigo antes de enviar.", true);
-    sendWebhook(e.currentTarget, webhookUrl, relatorioPenal());
+    sendWebhook(e.currentTarget, webhookUrl, relatorioPenalEmbed());
   });
   $("#btn-copy").addEventListener("click", () => copyText(relatorioPenal()));
 
@@ -556,35 +596,24 @@
       const agenteId = $(`#${sid}_agente_id`).value || "—";
       const data = new Date().toLocaleString("pt-BR");
 
-      let lines = [
-        "```",
-        `===================================================`,
-        `      TRIBUNAL DE JUSTIÇA — ${CONFIG.cidade.toUpperCase()}`,
-        `===================================================`,
-        ``,
-        `📄 TIPO DE REGISTRO: ${svc.title.toUpperCase()}`,
-        `📅 DATA DE EMISSÃO: ${data}`,
-        ``,
-        `----------------- DADOS FORNECIDOS ----------------`,
-        ``
-      ];
+      const embed = {
+        title: `📄 Registro: ${svc.title.toUpperCase()}`,
+        color: 13938487, // dourado #d4af37
+        fields: [],
+        footer: { text: `Tribunal de Justiça — ${CONFIG.cidade.toUpperCase()} • Agente: ${agente} (${agenteId})` },
+        timestamp: new Date().toISOString()
+      };
 
       svc.fields.forEach(f => {
         const val = $(`#${f.id}`).value || "Não informado";
-        lines.push(`${f.label}:`);
-        lines.push(` ↳ ${val}`);
-        lines.push(``);
+        embed.fields.push({ 
+          name: f.label.replace(/^.*?\s/, ""), // remove emoji inicial para ficar limpo no titulo
+          value: `**${val}**`, 
+          inline: !f.isFull 
+        });
       });
 
-      lines.push(`---------------- ASSINATURA OFICIAL ---------------`);
-      lines.push(``);
-      lines.push(`👮 Agente Responsável: ${agente}`);
-      lines.push(`🪪 Passaporte do Agente: ${agenteId}`);
-      lines.push(``);
-      lines.push(`===================================================`);
-      lines.push("```");
-
-      sendWebhook(btn, svc.webhook, lines.join("\n"), () => resetService(svc));
+      sendWebhook(btn, svc.webhook, { embeds: [embed] }, () => resetService(svc));
     });
   });
 
