@@ -233,6 +233,7 @@ body:not([data-view="tab-calculadora"]) .top-search { display: none; }
   content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
   background: linear-gradient(135deg, var(--line-strong), transparent 40%, transparent 60%, var(--line-strong));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
 }
 .eyebrow {
