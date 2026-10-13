@@ -211,7 +211,11 @@
       const corTinta = estilo.cor || "#102f5e";
       ctx.fillStyle = corTinta;
       ctx.strokeStyle = corTinta;
-      ctx.font = estilo.font || "italic 44px 'Dancing Script', 'Brush Script MT', 'Segoe Script', 'Great Vibes', cursive";
+      // Ajusta tamanho da fonte dinamicamente para caber perfeitamente
+      let fontSize = 44;
+      if (nome.length > 24) fontSize = 32;
+      else if (nome.length > 17) fontSize = 38;
+      ctx.font = estilo.font || `italic ${fontSize}px 'Dancing Script', 'Brush Script MT', 'Segoe Script', 'Great Vibes', cursive`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
@@ -232,6 +236,11 @@
         ctx.bezierCurveTo(startX + 35, 26, endX - 25, 4, endX, 18);
         ctx.bezierCurveTo(endX + 16, 25, endX + 6, 32, endX - 28, 28);
         ctx.bezierCurveTo(endX - 70, 22, endX - 110, 30, endX - 150, 26);
+      } else if (estilo.tipo === "agente") {
+        // Floreio dinâmico para o Oficial Responsável
+        ctx.moveTo(startX, 16);
+        ctx.bezierCurveTo(startX + 40, 27, endX - 20, 8, endX, 18);
+        ctx.bezierCurveTo(endX + 12, 24, endX + 4, 30, endX - 25, 28);
       } else {
         // Zaith Frost
         ctx.moveTo(startX, 16);
@@ -327,9 +336,19 @@
     doc.text("Vice-Presidente do Departamento Jurídico", col2X + (col2W / 2), 247.5, { align: "center" });
 
     // 3. OFICIAL RESPONSÁVEL & SELO DIGITAL NOTARIAL
-    // Coluna Esquerda: Agente que emitiu a certidão
+    // Coluna Esquerda: Agente que emitiu a certidão com ASSINATURA A MÃO DEDICADA
     const ofX = 18;
     const ofW = 90;
+    const nomeOficial = agenteNome && agenteNome !== "—" && agenteNome.trim() ? agenteNome.trim() : "Oficial do Cartório";
+
+    // Gera a assinatura à mão do nome do oficial digitado
+    const sigAgenteImg = gerarAssinaturaCanvas(nomeOficial, { rot: -2.8, tipo: "agente" });
+    if (sigAgenteImg) {
+      try {
+        doc.addImage(sigAgenteImg, "PNG", ofX + 18, 250, 54, 16);
+      } catch (_) {}
+    }
+
     doc.setDrawColor(...AZUL_NOITE);
     doc.setLineWidth(0.3);
     doc.line(ofX, 266, ofX + ofW, 266);
@@ -337,8 +356,7 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...AZUL_NOITE);
-    const nomeOficial = agenteNome && agenteNome !== "—" ? agenteNome.toUpperCase() : "OFICIAL REGISTRADOR RESPONSÁVEL";
-    doc.text(nomeOficial, ofX + (ofW / 2), 270, { align: "center" });
+    doc.text(nomeOficial.toUpperCase(), ofX + (ofW / 2), 270, { align: "center" });
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6.8);
@@ -364,7 +382,7 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...ORO);
-    doc.text("★  PODER JUDICIÁRIO • SDJ  ★", stampX + (stampW / 2), stampY + 5.2, { align: "center" });
+    doc.text("•  PODER JUDICIÁRIO • SDJ  •", stampX + (stampW / 2), stampY + 5.2, { align: "center" });
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7);
