@@ -19,6 +19,7 @@
     copiar: svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
     dado: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h.01M16 8h.01M12 12h.01M8 16h.01M16 16h.01"/>'),
     limpar: svg('<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>'),
+    download: svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -43,17 +44,35 @@
       toast("Não foi possível copiar o relatório", true);
     }
   }
-  async function sendWebhook(btn, url, content, onSuccess) {
+  async function sendWebhook(btn, url, content, onSuccess, fileAttachment) {
     const original = btn.innerHTML;
-    btn.innerHTML = "<span>Enviando...</span>";
+    btn.innerHTML = "<span>Enviando documento...</span>";
     btn.disabled = true;
     try {
-      const payload = typeof content === "string" ? { content } : content;
-      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      if (!res.ok) throw new Error("Erro ao enviar");
+      let body;
+      let headers = {};
+      if (fileAttachment && fileAttachment.blob) {
+        const formData = new FormData();
+        const payload = typeof content === "string" ? { content } : content;
+        formData.append("payload_json", JSON.stringify(payload));
+        formData.append("files[0]", fileAttachment.blob, fileAttachment.filename || "documento.pdf");
+        body = formData;
+      } else {
+        headers["Content-Type"] = "application/json";
+        body = JSON.stringify(typeof content === "string" ? { content } : content);
+      }
+      const res = await fetch(url, { method: "POST", headers, body });
+      if (!res.ok) {
+        let errDetail = "";
+        try {
+          const errJson = await res.json();
+          errDetail = errJson.message ? `: ${errJson.message}` : "";
+        } catch (_) {}
+        throw new Error(`Código ${res.status}${errDetail}`);
+      }
       btn.classList.add("success");
-      btn.innerHTML = "<span>✓ Enviado com sucesso!</span>";
-      toast("✓ Relatório enviado para o Discord");
+      btn.innerHTML = "<span>✓ Enviado com PDF!</span>";
+      toast("✓ Documento e PDF oficial enviados para o Discord!");
       onSuccess && onSuccess();
     } catch (err) {
       toast("Erro ao enviar para o Discord: " + err.message, true);
@@ -62,7 +81,7 @@
         btn.classList.remove("success");
         btn.innerHTML = original;
         btn.disabled = false;
-      }, 1800);
+      }, 2200);
     }
   }
 
@@ -345,11 +364,64 @@
     };
   }
 
+  async function getPenalPDFData() {
+    const r = calcular();
+    const nome = $("#input-nome").value || "—";
+    const id = $("#input-id").value || "—";
+    const advogado = $("#input-advogado").value || "—";
+    const idAdv = $("#input-id-adv").value || "—";
+    const oficial = $("#input-oficial").value || "—";
+    const idPolicial = $("#input-id-policial").value || "—";
+
+    const artigosList = [...selected].map(([cod, qtd]) => {
+      const a = artigos[cod];
+      return { cod, nome: a.nome, qtd, pena: a.pena, multa: a.multa, inaf: a.inaf };
+    });
+
+    return await window.SDJ_PDF.generatePenalPDF({
+      nome,
+      id,
+      advogado,
+      idAdv,
+      advogadoPresente: state.advogado,
+      primario: state.primario,
+      oficial,
+      idPolicial,
+      artigos: artigosList,
+      calculo: r,
+      cidade: CONFIG.cidade
+    });
+  }
+
   $("#btn-discord").innerHTML = DISCORD_LABEL;
-  $("#btn-discord").addEventListener("click", (e) => {
+  $("#btn-discord").addEventListener("click", async (e) => {
     if (!selected.size) return toast("Selecione ao menos um artigo antes de enviar.", true);
-    sendWebhook(e.currentTarget, webhookUrl, relatorioPenalEmbed());
+    let pdfData = null;
+    try {
+      if (window.SDJ_PDF) {
+        pdfData = await getPenalPDFData();
+      }
+    } catch (err) {
+      console.warn("Falha ao gerar PDF para o Discord:", err);
+    }
+    sendWebhook(e.currentTarget, webhookUrl, relatorioPenalEmbed(), null, pdfData);
   });
+
+  const btnPdfCalc = $("#btn-pdf-calc");
+  if (btnPdfCalc) {
+    btnPdfCalc.addEventListener("click", async () => {
+      if (!selected.size) return toast("Selecione ao menos um artigo para gerar o PDF.", true);
+      try {
+        toast("Gerando Certidão em PDF...");
+        const pdfData = await getPenalPDFData();
+        pdfData.doc.save(pdfData.filename);
+        toast("✓ PDF baixado com sucesso!");
+      } catch (err) {
+        toast("Erro ao gerar PDF: " + err.message, true);
+      }
+    });
+  }
+
   $("#btn-copy").addEventListener("click", () => copyText(relatorioPenal()));
 
   $("#search-input").addEventListener("input", (e) => renderList(e.target.value));
@@ -492,6 +564,7 @@
 
             <div class="form-actions">
               <button class="btn-outline btn-reset" data-sid="${svc.id}" type="button">${ICONS.limpar} Limpar</button>
+              <button class="btn-outline btn-pdf-service" data-sid="${svc.id}" type="button" title="Baixar Certidão oficial em PDF">${ICONS.download} Baixar PDF</button>
               <button class="btn-primary btn-service" data-sid="${svc.id}" type="button">${DISCORD_LABEL}</button>
             </div>
           </div>
@@ -586,6 +659,29 @@
   $("#btn-back").addEventListener("click", () => goTo("home"));
   $("#crumb-home").addEventListener("click", (e) => { e.preventDefault(); goTo("home"); });
 
+  async function getServicePDFData(svc) {
+    const sid = svc.id;
+    const agente = $(`#${sid}_agente`).value || "—";
+    const agenteId = $(`#${sid}_agente_id`).value || "—";
+
+    const fields = svc.fields.map((f) => {
+      const el = $(`#${f.id}`);
+      const val = el ? el.value || "Não informado" : "Não informado";
+      return {
+        label: cleanLabel(f.label),
+        value: val
+      };
+    });
+
+    return await window.SDJ_PDF.generateServicePDF({
+      service: svc,
+      fields,
+      agente,
+      agenteId,
+      cidade: CONFIG.cidade
+    });
+  }
+
   // Dynamic Service Submission
   $$(".btn-service").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -594,7 +690,6 @@
       
       const agente = $(`#${sid}_agente`).value || "—";
       const agenteId = $(`#${sid}_agente_id`).value || "—";
-      const data = new Date().toLocaleString("pt-BR");
 
       const embed = {
         title: `📄 Registro: ${svc.title.toUpperCase()}`,
@@ -613,7 +708,32 @@
         });
       });
 
-      sendWebhook(btn, svc.webhook, { embeds: [embed] }, () => resetService(svc));
+      let pdfData = null;
+      try {
+        if (window.SDJ_PDF) {
+          pdfData = await getServicePDFData(svc);
+        }
+      } catch (err) {
+        console.warn("Falha ao gerar PDF para o Discord:", err);
+      }
+
+      sendWebhook(btn, svc.webhook, { embeds: [embed] }, () => resetService(svc), pdfData);
+    });
+  });
+
+  // Baixar PDF do serviço avulso
+  $$(".btn-pdf-service").forEach(btnPdf => {
+    btnPdf.addEventListener("click", async () => {
+      const sid = btnPdf.dataset.sid;
+      const svc = servicesConfig.find(s => s.id === sid);
+      try {
+        toast("Gerando Certidão em PDF...");
+        const pdfData = await getServicePDFData(svc);
+        pdfData.doc.save(pdfData.filename);
+        toast("✓ PDF baixado com sucesso!");
+      } catch (err) {
+        toast("Erro ao gerar PDF: " + err.message, true);
+      }
     });
   });
 

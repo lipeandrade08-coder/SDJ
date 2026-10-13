@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    TEMAS — identidade preto & dourado (baseada no brasão SDJ).
    Todas as cores passam por variáveis.
    ========================================================= */
@@ -518,7 +518,8 @@ body:not([data-view="tab-calculadora"]) .top-search { display: none; }
 @keyframes slideIn { from { opacity: 0; transform: translateX(8px); } }
 
 /* ---------- Botões ---------- */
-.actions-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 18px; margin-bottom: 20px; }
+.actions-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; margin-bottom: 20px; }
+.actions-row .btn-primary { flex: 1 1 200px; }
 .btn-primary {
   position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center; gap: 9px;
@@ -581,7 +582,8 @@ body:not([data-view="tab-calculadora"]) .top-search { display: none; }
 .opt-card.active .radio { background: var(--accent); border-color: var(--accent); }
 .opt-card.active .radio::after { transform: scale(1); }
 
-.form-actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 24px; }
+.form-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.form-actions .btn-primary { flex: 1 1 200px; }
 
 .toast {
   position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); opacity: 0; z-index: 60;
