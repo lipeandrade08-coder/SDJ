@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="arte.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script>
     // Aplica o tema salvo antes de renderizar (evita "piscar")
@@ -120,6 +120,10 @@
         <input id="search-input" type="text" placeholder="Buscar artigo ou crime..." autocomplete="off" />
         <kbd>/</kbd>
       </div>
+      <button id="btn-precos" class="btn-outline" type="button" title="Consultar Tabela Oficial de Preços">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>Tabela de Preços</span>
+      </button>
       <button id="btn-codigo" class="btn-outline" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         <span>Código Penal</span>
@@ -246,6 +250,65 @@
               <button id="btn-discord" class="btn-primary btn-discord" type="button"></button>
             </div>
           </aside>
+        </div>
+      </div>
+
+      <!-- TABELA DE PREÇOS OFICIAL -->
+      <div id="tab-precos" class="tab-content">
+        <div class="service-wrap precos-wrap">
+          <header class="service-hero">
+            <span class="card-icon">⚖️</span>
+            <div>
+              <h2>Tabela Oficial de Preços — Jurídico de Brava</h2>
+              <p>Valores regulamentados pela Presidência (Zaith Frost &amp; Mike Santaroni). Distinção oficial entre custo interno de retirada e valor de venda cobrado do cidadão.</p>
+            </div>
+          </header>
+
+          <div class="precos-legend-grid">
+            <div class="legend-card retirada-card">
+              <span class="legend-badge badge-retirada">Retirada (Valor Interno)</span>
+              <p>Custo pago pelo membro do Jurídico para retirar o insumo ou item no cofre/estoque oficial.</p>
+            </div>
+            <div class="legend-card venda-card">
+              <span class="legend-badge badge-venda">Venda ao Cidadão</span>
+              <p>Valor fixado por portaria a ser obrigatoriamente cobrado do cidadão para a emissão ou celebração do serviço.</p>
+            </div>
+          </div>
+
+          <div class="search precos-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="precos-search-input" type="text" placeholder="Filtrar por serviço, anel, certidão ou valor..." autocomplete="off" />
+          </div>
+
+          <section class="panel precos-panel">
+            <div class="table-responsive">
+              <table class="tabela-precos-oficial">
+                <thead>
+                  <tr>
+                    <th>Serviço / Item</th>
+                    <th>Categoria</th>
+                    <th class="c">Retirada (Interno)</th>
+                    <th class="r">Venda ao Cidadão</th>
+                    <th class="c">Margem</th>
+                    <th class="c">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="precos-tbody">
+                  <!-- Gerado dinamicamente via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="precos-presidencia-banner">
+            <div class="presidencia-stamp">
+              <span class="seal">⚖️</span>
+              <div>
+                <b>Homologado pela Presidência do Departamento Jurídico</b>
+                <p>Zaith Frost (Presidente) &bull; Mike Santaroni (Vice-Presidente) &bull; Cidade de Brava RP</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

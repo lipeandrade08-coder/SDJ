@@ -179,49 +179,182 @@
     return 69; // Próximo Y livre para o conteúdo
   }
 
-  // Desenha o rodapé padrão com termo de fé pública, assinaturas e selo digital
+  // Cores da paleta oficial
+  const ORO = [212, 175, 55];       // Dourado #d4af37
+  const ORO_ESCURO = [160, 125, 30];
+  const AZUL_NOITE = [18, 24, 38];   // Deep Navy / Slate
+  const CINZA_BORDA = [200, 205, 215];
+  const CINZA_FUNDO = [248, 249, 251];
+  const TEXTO_ESCURO = [25, 30, 42];
+  const TEXTO_MUTED = [105, 112, 125];
+
+  // Cache das assinaturas à mão para alta performance
+  let cachedSignatureZaith = null;
+  let cachedSignatureMike = null;
+
+  function gerarAssinaturaCanvas(nome, estilo = {}) {
+    if (typeof document === "undefined") return null;
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 460;
+      canvas.height = 140;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2 + 6);
+      ctx.rotate((estilo.rot || -3) * Math.PI / 180);
+
+      // Cor de tinta de caneta tinteiro azul escuro autêntico
+      const corTinta = estilo.cor || "#102f5e";
+      ctx.fillStyle = corTinta;
+      ctx.strokeStyle = corTinta;
+      ctx.font = estilo.font || "italic 44px 'Dancing Script', 'Brush Script MT', 'Segoe Script', 'Great Vibes', cursive";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // Escreve o nome assinado
+      ctx.fillText(nome, 0, 0);
+
+      // Floreio / Rubrica elegante por baixo
+      ctx.beginPath();
+      ctx.lineWidth = 2.4;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const w = ctx.measureText(nome).width;
+      const startX = -w / 2 - 10;
+      const endX = w / 2 + 18;
+
+      if (estilo.tipo === "mike") {
+        ctx.moveTo(startX, 15);
+        ctx.bezierCurveTo(startX + 35, 26, endX - 25, 4, endX, 18);
+        ctx.bezierCurveTo(endX + 16, 25, endX + 6, 32, endX - 28, 28);
+        ctx.bezierCurveTo(endX - 70, 22, endX - 110, 30, endX - 150, 26);
+      } else {
+        // Zaith Frost
+        ctx.moveTo(startX, 16);
+        ctx.bezierCurveTo(startX + 50, 28, endX - 35, 6, endX, 20);
+        ctx.bezierCurveTo(endX + 15, 27, endX + 8, 33, endX - 35, 29);
+      }
+      ctx.stroke();
+
+      ctx.restore();
+      return canvas.toDataURL("image/png");
+    } catch (e) {
+      console.warn("Falha ao gerar assinatura manuscrita:", e);
+      return null;
+    }
+  }
+
+  function getAssinaturaZaith() {
+    if (!cachedSignatureZaith) {
+      cachedSignatureZaith = gerarAssinaturaCanvas("Zaith Frost", { rot: -3.5, tipo: "zaith" });
+    }
+    return cachedSignatureZaith;
+  }
+
+  function getAssinaturaMike() {
+    if (!cachedSignatureMike) {
+      cachedSignatureMike = gerarAssinaturaCanvas("Mike Santaroni", { rot: -2.2, tipo: "mike" });
+    }
+    return cachedSignatureMike;
+  }
+
+  // Desenha o rodapé oficial com as assinaturas da Presidência, Oficial Responsável e Selo Notarial
   function desenharRodape(doc, agenteNome, agenteId, cargoAgente) {
     const pageWidth = 210;
-    const baseY = 240;
 
-    const ORO = [212, 175, 55];
-    const AZUL_NOITE = [18, 24, 38];
-    const TEXTO_MUTED = [105, 112, 125];
-
-    // Texto de Fé Pública
+    // 1. Termo de Fé Pública
     doc.setFont("helvetica", "italic");
     doc.setFontSize(6.8);
     doc.setTextColor(...TEXTO_MUTED);
-    const termo = "Certifico e dou fé que o presente documento é autêntico, foi lavrado eletronicamente perante o Sistema do Departamento Jurídico de Brava RP e possui validade jurídica em todo o território nacional.";
-    doc.text(termo, pageWidth / 2, baseY - 4, { align: "center", maxWidth: 175 });
+    const termo = "Certifico e dou fé que o presente documento é autêntico, homologado perante o Sistema do Departamento Jurídico da Comarca de Brava RP e possui validade jurídica em todo o território nacional.";
+    doc.text(termo, pageWidth / 2, 219, { align: "center", maxWidth: 180 });
 
-    // Coluna Esquerda: Assinatura do Agente / Oficial
-    const sigX = 22;
-    const sigW = 90;
+    // Linha divisória sutil
+    doc.setDrawColor(225, 230, 240);
+    doc.setLineWidth(0.2);
+    doc.line(14, 222.5, pageWidth - 14, 222.5);
+
+    // 2. ASSINATURAS DA PRESIDÊNCIA: Zaith Frost & Mike Santaroni
+    const sigZaithImg = getAssinaturaZaith();
+    const sigMikeImg = getAssinaturaMike();
+
+    // Coluna 1: Zaith Frost (Presidente)
+    const col1X = 18;
+    const col1W = 80;
+    if (sigZaithImg) {
+      try {
+        doc.addImage(sigZaithImg, "PNG", col1X + 14, 224, 52, 16);
+      } catch (_) {}
+    }
     doc.setDrawColor(...AZUL_NOITE);
-    doc.setLineWidth(0.3);
-    doc.line(sigX, baseY + 18, sigX + sigW, baseY + 18);
+    doc.setLineWidth(0.35);
+    doc.line(col1X, 240, col1X + col1W, 240);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(agenteNome && agenteNome !== "—" ? agenteNome.toUpperCase() : "AGENTE NÃO IDENTIFICADO", sigX + (sigW / 2), baseY + 22.5, { align: "center" });
+    doc.text("ZAITH FROST", col1X + (col1W / 2), 244, { align: "center" });
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(6.8);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("Presidente do Departamento Jurídico", col1X + (col1W / 2), 247.5, { align: "center" });
+
+    // Coluna 2: Mike Santaroni (Vice-Presidente)
+    const col2X = 112;
+    const col2W = 80;
+    if (sigMikeImg) {
+      try {
+        doc.addImage(sigMikeImg, "PNG", col2X + 14, 224, 52, 16);
+      } catch (_) {}
+    }
+    doc.setDrawColor(...AZUL_NOITE);
+    doc.setLineWidth(0.35);
+    doc.line(col2X, 240, col2X + col2W, 240);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("MIKE SANTARONI", col2X + (col2W / 2), 244, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.8);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("Vice-Presidente do Departamento Jurídico", col2X + (col2W / 2), 247.5, { align: "center" });
+
+    // 3. OFICIAL RESPONSÁVEL & SELO DIGITAL NOTARIAL
+    // Coluna Esquerda: Agente que emitiu a certidão
+    const ofX = 18;
+    const ofW = 90;
+    doc.setDrawColor(...AZUL_NOITE);
+    doc.setLineWidth(0.3);
+    doc.line(ofX, 266, ofX + ofW, 266);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...AZUL_NOITE);
+    const nomeOficial = agenteNome && agenteNome !== "—" ? agenteNome.toUpperCase() : "OFICIAL REGISTRADOR RESPONSÁVEL";
+    doc.text(nomeOficial, ofX + (ofW / 2), 270, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.8);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text(`Passaporte / ID: ${agenteId || "—"}  •  ${cargoAgente || "Oficial Responsável"}`, sigX + (sigW / 2), baseY + 26.5, { align: "center" });
+    doc.text(`Passaporte / ID: ${agenteId || "—"}  •  ${cargoAgente || "Oficial Responsável"}`, ofX + (ofW / 2), 273.5, { align: "center" });
 
     // Coluna Direita: Selo de Autenticidade Digital
-    const stampX = 126;
-    const stampY = baseY + 4;
-    const stampW = 68;
-    const stampH = 26;
+    const stampX = 118;
+    const stampY = 252;
+    const stampW = 74;
+    const stampH = 25;
 
-    doc.setFillColor(252, 251, 246);
+    doc.setFillColor(253, 252, 248);
     doc.setDrawColor(...ORO);
     doc.setLineWidth(0.5);
-    doc.roundedRect(stampX, stampY, stampW, stampH, 2, 2, "FD");
+    doc.roundedRect(stampX, stampY, stampW, stampH, 1.8, 1.8, "FD");
 
     // Borda interna pontilhada
     doc.setDrawColor(220, 200, 140);
@@ -231,29 +364,29 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...ORO);
-    doc.text("★  SELO DE AUTENTICIDADE DIGITAL  ★", stampX + (stampW / 2), stampY + 5.5, { align: "center" });
+    doc.text("★  PODER JUDICIÁRIO • SDJ  ★", stampX + (stampW / 2), stampY + 5.2, { align: "center" });
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("DOCUMENTO OFICIAL REGISTRADO", stampX + (stampW / 2), stampY + 10.5, { align: "center" });
+    doc.text("CHANCELA E REGISTRO NOTARIAL", stampX + (stampW / 2), stampY + 9.8, { align: "center" });
 
     doc.setFont("courier", "bold");
-    doc.setFontSize(6.8);
-    doc.setTextColor(70, 75, 90);
-    doc.text(`HASH: ${gerarHashAutenticidade()}`, stampX + (stampW / 2), stampY + 16, { align: "center" });
+    doc.setFontSize(6.5);
+    doc.setTextColor(60, 65, 80);
+    doc.text(`HASH: ${gerarHashAutenticidade()}`, stampX + (stampW / 2), stampY + 14.8, { align: "center" });
 
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Homologação: Zaith Frost & Mike Santaroni", stampX + (stampW / 2), stampY + 19, { align: "center" });
+    doc.text("Certidão emitida via Sistema do Depto. Jurídico", stampX + (stampW / 2), stampY + 22.5, { align: "center" });
+
+    // 4. Rodapé Absoluto da Página
     doc.setFont("helvetica", "normal");
     doc.setFontSize(5.8);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("Validação em tempo real via Sistema SDJ", stampX + (stampW / 2), stampY + 20.5, { align: "center" });
-    doc.text("Impresso em papel de segurança digital", stampX + (stampW / 2), stampY + 23.5, { align: "center" });
-
-    // Linha inferior absoluta de rodapé
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(6);
-    doc.setTextColor(...TEXTO_MUTED);
-    doc.text("Tribunal de Justiça de Brava RP  •  Departamento Jurídico  •  Página 1 de 1", pageWidth / 2, 288, { align: "center" });
+    doc.text("Tribunal de Justiça de Brava RP  •  Departamento Jurídico  •  Presidência: Zaith Frost & Mike Santaroni  •  Página 1 de 1", pageWidth / 2, 287, { align: "center" });
   }
 
   // Desenha uma seção com barra decorativa dourada

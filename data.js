@@ -19,6 +19,79 @@ const CONFIG = {
   ],
 };
 
+const PRESIDENCIA_JURIDICO = {
+  presidente: "Zaith Frost",
+  cargoPresidente: "Presidente do Departamento Jurídico",
+  vice: "Mike Santaroni",
+  cargoVice: "Vice-Presidente do Departamento Jurídico",
+};
+
+const TABELA_PRECOS = [
+  {
+    item: "Aliança",
+    icone: "💍",
+    retirada: 4000,
+    venda: 15000,
+    categoria: "União Civil",
+    desc: "Aliança tradicional para celebração de compromisso/namoro.",
+    targetId: "alianca",
+  },
+  {
+    item: "Anel de Diamante",
+    icone: "💎",
+    retirada: 8000,
+    venda: 30000,
+    categoria: "União Civil",
+    desc: "Anel de diamante lapidado para celebração de noivado.",
+    targetId: "alianca",
+  },
+  {
+    item: "Anel de Ouro",
+    icone: "🥇",
+    retirada: 12000,
+    venda: 45000,
+    categoria: "União Civil",
+    desc: "Anel em ouro nobre para celebração oficial de casamento.",
+    targetId: "alianca",
+  },
+  {
+    item: "Troca de Nome",
+    icone: "📝",
+    retirada: 30000,
+    venda: 100000,
+    categoria: "Registro Civil",
+    desc: "Processo de alteração de certidão e registro civil do cidadão.",
+    targetId: "trocanome",
+  },
+  {
+    item: "Registro de Família",
+    icone: "👨‍👩‍👧",
+    retirada: null,
+    venda: 100000,
+    categoria: "Organização",
+    desc: "Cadastro oficial de entidade familiar e seu fundador.",
+    targetId: "familia",
+  },
+  {
+    item: "CNPJ",
+    icone: "🏢",
+    retirada: null,
+    venda: 50000,
+    categoria: "Empresarial",
+    desc: "Abertura oficial de empresa com emissão de CNPJ.",
+    targetId: "cnpj",
+  },
+  {
+    item: "Taxa Semanal do CNPJ",
+    icone: "💰",
+    retirada: null,
+    venda: 30000,
+    categoria: "Empresarial",
+    desc: "Alvará de funcionamento e manutenção semanal do registro CNPJ.",
+    targetId: "cnpj",
+  },
+];
+
 const CODIGO_PENAL = [
   {
     titulo: "1. Crimes Nível 1",

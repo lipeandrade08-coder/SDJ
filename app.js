@@ -20,6 +20,7 @@
     dado: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h.01M16 8h.01M12 12h.01M8 16h.01M16 16h.01"/>'),
     limpar: svg('<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>'),
     download: svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
+    tabela: svg('<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -574,14 +575,31 @@
 
   // Opções (cards de seleção)
   function selectOption(btn) {
+    if (!btn) return;
     const inputId = btn.dataset.input;
     $$(`.opt-card[data-input="${inputId}"]`).forEach((b) => {
       b.classList.toggle("active", b === btn);
       b.setAttribute("aria-checked", b === btn);
     });
     $("#" + inputId).value = btn.dataset.val;
+
+    // Se for Aliança, atualiza o valor cobrado oficial correspondente
+    if (inputId === "al_tipo") {
+      const precoMap = { "Namoro": "R$ 15.000", "Noivado": "R$ 30.000", "Casamento": "R$ 45.000" };
+      const valInput = $("#al_valor");
+      if (valInput) {
+        valInput.value = precoMap[btn.dataset.val] || "";
+      }
+    }
   }
   $$(".opt-card").forEach((btn) => btn.addEventListener("click", () => selectOption(btn)));
+
+  function aplicarPrecosPadrao() {
+    if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
+    if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 100.000";
+    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 100.000";
+    if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 50.000";
+  }
 
   // Gerador de CNPJ
   $$(".btn-gerar-cnpj").forEach((btnCnpj) => {
@@ -600,13 +618,20 @@
     });
     $(`#${svc.id}_agente`).value = "";
     $(`#${svc.id}_agente_id`).value = "";
+    aplicarPrecosPadrao();
   }
   $$(".btn-reset").forEach((btn) =>
     btn.addEventListener("click", () => resetService(servicesConfig.find((s) => s.id === btn.dataset.sid)))
   );
 
+  /* ---------- Card: Tabela de Preços ---------- */
+  const precosCard = {
+    id: "precos", title: "Tabela de Preços", svg: "tabela", tag: "Regulamento",
+    desc: "Valores regulamentados: custos internos de retirada e preços de venda ao cidadão."
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, ...servicesConfig];
+  const allCards = [calculadoraCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
     <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" style="animation-delay:${0.05 * i}s">
@@ -810,6 +835,97 @@
     localStorage.setItem("brava-tema", novo);
   });
 
+  /* ---------- Tabela de Preços Oficial ---------- */
+  function renderTabelaPrecos(filtro = "") {
+    const q = (filtro || "").trim().toLowerCase();
+    const tbody = $("#precos-tbody");
+    if (!tbody || typeof TABELA_PRECOS === "undefined") return;
+
+    const itensFiltrados = TABELA_PRECOS.filter(p =>
+      !q || p.item.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || String(p.venda).includes(q) || String(p.retirada).includes(q)
+    );
+
+    if (!itensFiltrados.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty" style="text-align:center;padding:26px;">Nenhum item ou serviço encontrado para "${filtro}".</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = itensFiltrados.map(p => {
+      const retiradaTxt = p.retirada !== null ? `<span class="preco-retirada">R$ ${p.retirada.toLocaleString("pt-BR")}</span>` : `<span class="preco-sem-retirada">— Taxa Notarial</span>`;
+      const vendaTxt = `<span class="preco-venda">R$ ${p.venda.toLocaleString("pt-BR")}</span>`;
+      
+      let margemTxt = "";
+      if (p.retirada !== null) {
+        const lucro = p.venda - p.retirada;
+        margemTxt = `<span class="badge-lucro" title="Lucro líquido retido pelo Jurídico">+R$ ${lucro.toLocaleString("pt-BR")}</span>`;
+      } else {
+        margemTxt = `<span class="badge-lucro total" title="Serviço 100% notarial">100% Notarial</span>`;
+      }
+
+      return `
+        <tr>
+          <td>
+            <div class="item-cell">
+              <span class="item-ico">${p.icone}</span>
+              <div class="item-info">
+                <b>${p.item}</b>
+                <span>${p.desc}</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge-tag-cat">${p.categoria}</span></td>
+          <td class="c">${retiradaTxt}</td>
+          <td class="r">${vendaTxt}</td>
+          <td class="c">${margemTxt}</td>
+          <td class="c">
+            <button type="button" class="btn-outline btn-ir-servico" data-target="tab-${p.targetId}" data-title="${p.item}">
+              Emitir ${ICONS.seta}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // Conecta botões "Emitir" para navegar direto para o formulário correspondente
+    tbody.querySelectorAll(".btn-ir-servico").forEach(b => {
+      b.addEventListener("click", () => {
+        const target = b.dataset.target;
+        const title = b.dataset.title;
+        goTo(target, title);
+        
+        // Auto-seleciona e preenche de acordo com o item clicado
+        if (title === "Aliança") {
+          selectOption($(`.opt-card[data-input="al_tipo"][data-val="Namoro"]`));
+          if ($("#al_valor")) $("#al_valor").value = "R$ 15.000";
+        } else if (title === "Anel de Diamante") {
+          selectOption($(`.opt-card[data-input="al_tipo"][data-val="Noivado"]`));
+          if ($("#al_valor")) $("#al_valor").value = "R$ 30.000";
+        } else if (title === "Anel de Ouro") {
+          selectOption($(`.opt-card[data-input="al_tipo"][data-val="Casamento"]`));
+          if ($("#al_valor")) $("#al_valor").value = "R$ 45.000";
+        } else if (target === "tab-trocanome") {
+          if ($("#tn_valor")) $("#tn_valor").value = "R$ 100.000";
+        } else if (target === "tab-familia") {
+          if ($("#rf_valor")) $("#rf_valor").value = "R$ 100.000";
+        } else if (target === "tab-cnpj") {
+          if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 30.000" : "R$ 50.000";
+        }
+      });
+    });
+  }
+
+  const btnPrecos = $("#btn-precos");
+  if (btnPrecos) {
+    btnPrecos.addEventListener("click", () => goTo("tab-precos", "Tabela de Preços"));
+  }
+
+  const precosSearchInput = $("#precos-search-input");
+  if (precosSearchInput) {
+    precosSearchInput.addEventListener("input", (e) => renderTabelaPrecos(e.target.value));
+  }
+
   renderList();
+  renderTabelaPrecos();
+  aplicarPrecosPadrao();
   update();
 })();
