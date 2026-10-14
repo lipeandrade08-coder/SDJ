@@ -397,27 +397,27 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("PROTOCOLO:", 18, metaY + 5.2);
+    doc.text("PROTOCOLO:", 17, metaY + 5.2);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7.2);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(protocolo, 36, metaY + 5.2);
+    doc.text(protocolo, 34, metaY + 5.2);
 
     // Data de Expedição
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("EXPEDIÇÃO:", 88, metaY + 5.2);
+    doc.text("EXPEDIÇÃO:", 80, metaY + 5.2);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7.2);
     doc.setTextColor(...TEXTO_ESCURO);
-    doc.text(dataHora, 104, metaY + 5.2);
+    doc.text(dataHora, 95, metaY + 5.2);
 
-    // Validade Notarial / Status (Completamente dentro do limite da barra)
+    // Validade Notarial / Status (Espaçamento limpo e perfeitamente distribuído)
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("STATUS:", 148, metaY + 5.2);
+    doc.text("STATUS:", 142, metaY + 5.2);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7.2);
     doc.setTextColor(25, 125, 55);
