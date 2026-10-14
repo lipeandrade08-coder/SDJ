@@ -449,7 +449,7 @@
     },
     {
       id: "alianca", title: "Venda de Aliança", icon: "💍", svg: "alianca", tag: "União civil",
-      desc: "Registro de namoro, noivado ou casamento entre dois cidadãos.", webhook: "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2",
+      desc: "Venda e registro de alianças e anéis (Namoro, Noivado e Anel de Ouro/Casamento).", webhook: "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2",
       fields: [
         { id: "al_tipo", label: "💎 Tipo de Aliança", type: "options", options: ["Namoro", "Noivado", "Casamento"], isFull: true },
         { id: "al_n1", label: "👤 Nome do(a) Parceiro(a) 1" },
