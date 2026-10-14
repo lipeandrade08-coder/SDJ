@@ -337,7 +337,7 @@
     // 3. Cabeçalho Oficial Notarial com Brasão
     if (logoData) {
       try {
-        doc.addImage(logoData, "PNG", 14, 13, 24, 24);
+        doc.addImage(logoData, "PNG", 14, 13, 22, 22);
       } catch (err) {
         console.warn("Erro ao renderizar logo no cabeçalho:", err);
       }
@@ -345,49 +345,49 @@
 
     // Textos do Cabeçalho
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8);
+    doc.setFontSize(7.8);
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("ESTADO DE BRAVA  •  PODER JUDICIÁRIO", 42, 17.5);
+    doc.text("ESTADO DE BRAVA  ·  PODER JUDICIÁRIO", 40, 17.5);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(12.8);
+    doc.setFontSize(11.8);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("TRIBUNAL DE JUSTIÇA DA COMARCA DE BRAVA", 42, 23.5);
+    doc.text("TRIBUNAL DE JUSTIÇA DA COMARCA DE BRAVA", 40, 23);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setTextColor(55, 65, 82);
-    doc.text("SISTEMA DO DEPARTAMENTO JURÍDICO", 42, 28.5);
+    doc.text("SISTEMA DO DEPARTAMENTO JURÍDICO", 40, 27.8);
 
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text(`Cartório Notarial, Registro Civil e Varas Penais  •  ${cidade || "Brava RP"}`, 42, 33.5);
+    doc.text(`Cartório Notarial, Registro Civil e Varas Penais  ·  ${cidade || "Brava RP"}`, 40, 32.2);
 
     // Linha divisória do cabeçalho
     doc.setDrawColor(...ORO);
-    doc.setLineWidth(0.65);
-    doc.line(14, 38.5, pageWidth - 14, 38.5);
+    doc.setLineWidth(0.6);
+    doc.line(14, 36.5, pageWidth - 14, 36.5);
     doc.setDrawColor(...CINZA_BORDA);
     doc.setLineWidth(0.2);
-    doc.line(14, 39.5, pageWidth - 14, 39.5);
+    doc.line(14, 37.3, pageWidth - 14, 37.3);
 
     // 4. Faixa de Título do Documento
-    const bannerY = 42.5;
-    const bannerH = 11;
+    const bannerY = 40;
+    const bannerH = 10;
     doc.setFillColor(...AZUL_NOITE);
     doc.setDrawColor(...ORO);
     doc.setLineWidth(0.4);
-    doc.roundedRect(14, bannerY, pageWidth - 28, bannerH, 1.5, 1.5, "FD");
+    doc.roundedRect(14, bannerY, pageWidth - 28, bannerH, 1.2, 1.2, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11.5);
+    doc.setFontSize(11);
     doc.setTextColor(255, 255, 255);
-    doc.text(tituloDocumento.toUpperCase(), pageWidth / 2, bannerY + 7.2, { align: "center" });
+    doc.text(tituloDocumento.toUpperCase(), pageWidth / 2, bannerY + 6.6, { align: "center" });
 
     // 5. Barra de Metadados / Protocolo & Livro Notarial
-    const metaY = 56.5;
-    const metaH = 8.5;
+    const metaY = 52.5;
+    const metaH = 8;
     doc.setFillColor(...CINZA_FUNDO);
     doc.setDrawColor(...CINZA_BORDA);
     doc.setLineWidth(0.25);
@@ -395,53 +395,53 @@
 
     // Protocolo
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("PROTOCOLO:", 18, metaY + 5.5);
+    doc.text("PROTOCOLO:", 18, metaY + 5.2);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(protocolo, 38, metaY + 5.5);
+    doc.text(protocolo, 36, metaY + 5.2);
 
     // Data de Expedição
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("EXPEDIÇÃO:", 95, metaY + 5.5);
+    doc.text("EXPEDIÇÃO:", 88, metaY + 5.2);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...TEXTO_ESCURO);
-    doc.text(dataHora, 113, metaY + 5.5);
+    doc.text(dataHora, 104, metaY + 5.2);
 
-    // Validade Notarial
+    // Validade Notarial / Status (Completamente dentro do limite da barra)
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("STATUS:", 162, metaY + 5.5);
+    doc.text("STATUS:", 148, metaY + 5.2);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(25, 125, 55);
-    doc.text("HOMOLOGADO • FÉ PÚBLICA", 175, metaY + 5.5);
+    doc.text("HOMOLOGADO · FÉ PÚBLICA", 192, metaY + 5.2, { align: "right" });
 
-    return 69; // Próximo Y livre para o conteúdo
+    return 63.5; // Próximo Y livre para o conteúdo
   }
 
   // Cabeçalho de seção com indicador dourado
   function desenharCabecalhoSecao(doc, y, titulo) {
     const pageWidth = 210;
     doc.setFillColor(242, 245, 250);
-    doc.rect(14, y, pageWidth - 28, 6.5, "F");
+    doc.rect(14, y, pageWidth - 28, 5.8, "F");
 
     // Indicador vertical dourado
     doc.setFillColor(...ORO);
-    doc.rect(14, y, 2.8, 6.5, "F");
+    doc.rect(14, y, 2.5, 5.8, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.5);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(titulo.toUpperCase(), 20, y + 4.6);
+    doc.text(titulo.toUpperCase(), 19, y + 4.1);
 
-    return y + 9.5;
+    return y + 8.2;
   }
 
   /* ==========================================================
@@ -455,19 +455,18 @@
     const sigZaithImg = getAssinaturaZaith();
     const sigMikeImg = getAssinaturaMike();
 
-    const colW = 82;
+    const colW = 80;
     const col1X = 18;
-    const col2X = 110;
+    const col2X = 112;
 
     // Y da primeira linha de assinaturas
-    const row1SigY = startY + 1;
-    const row1LineY = startY + 22;
+    const row1SigY = startY;
+    const row1LineY = startY + 16;
 
     // Coluna 1: Zaith Frost (Presidente)
     if (sigZaithImg) {
       try {
-        // Rubrica BEM MAIOR: 76mm de largura por 26mm de altura, cruzando elegantemente a linha
-        doc.addImage(sigZaithImg, "PNG", col1X + 3, row1SigY, 76, 26);
+        doc.addImage(sigZaithImg, "PNG", col1X + 5, row1SigY, 70, 22);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -475,20 +474,19 @@
     doc.line(col1X, row1LineY, col1X + colW, row1LineY);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("ZAITH FROST", col1X + (colW / 2), row1LineY + 4.5, { align: "center" });
+    doc.text("ZAITH FROST", col1X + (colW / 2), row1LineY + 4, { align: "center" });
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.2);
+    doc.setFontSize(6.8);
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("Presidente do Departamento Jurídico", col1X + (colW / 2), row1LineY + 8, { align: "center" });
+    doc.text("Presidente do Departamento Jurídico", col1X + (colW / 2), row1LineY + 7.2, { align: "center" });
 
     // Coluna 2: Mike Santaroni (Vice-Presidente)
     if (sigMikeImg) {
       try {
-        // Rubrica BEM MAIOR: 76mm de largura por 26mm de altura
-        doc.addImage(sigMikeImg, "PNG", col2X + 3, row1SigY, 76, 26);
+        doc.addImage(sigMikeImg, "PNG", col2X + 5, row1SigY, 70, 22);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -496,19 +494,19 @@
     doc.line(col2X, row1LineY, col2X + colW, row1LineY);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("MIKE SANTARONI", col2X + (colW / 2), row1LineY + 4.5, { align: "center" });
+    doc.text("MIKE SANTARONI", col2X + (colW / 2), row1LineY + 4, { align: "center" });
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.2);
+    doc.setFontSize(6.8);
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("Vice-Presidente do Departamento Jurídico", col2X + (colW / 2), row1LineY + 8, { align: "center" });
+    doc.text("Vice-Presidente do Departamento Jurídico", col2X + (colW / 2), row1LineY + 7.2, { align: "center" });
 
     // Linha 2 de Assinaturas: Oficial Registrador à esquerda + Chancela Notarial com QR Code à direita
-    const row2Y = row1LineY + 12;
-    const row2SigY = row2Y + 1;
-    const row2LineY = row2Y + 22;
+    const row2Y = row1LineY + 9.5;
+    const row2SigY = row2Y - 1;
+    const row2LineY = row2Y + 16;
 
     // Coluna Esquerda: Agente/Oficial Responsável com RUBRICA GRANDE DINÂMICA
     const nomeLimpo = toSignatureCase(agenteNome);
@@ -516,7 +514,7 @@
 
     if (sigAgenteImg) {
       try {
-        doc.addImage(sigAgenteImg, "PNG", col1X + 3, row2SigY, 76, 26);
+        doc.addImage(sigAgenteImg, "PNG", col1X + 5, row2SigY, 70, 22);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -524,76 +522,76 @@
     doc.line(col1X, row2LineY, col1X + colW, row2LineY);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(nomeLimpo.toUpperCase(), col1X + (colW / 2), row2LineY + 4.5, { align: "center" });
+    doc.text(nomeLimpo.toUpperCase(), col1X + (colW / 2), row2LineY + 4, { align: "center" });
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
+    doc.setFontSize(6.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text(`Passaporte / ID: ${agenteId || "—"}  •  ${cargoAgente || "Oficial Notarial"}`, col1X + (colW / 2), row2LineY + 8, { align: "center" });
+    doc.text(`Passaporte / ID: ${agenteId || "—"}  ·  ${cargoAgente || "Oficial Notarial"}`, col1X + (colW / 2), row2LineY + 7.2, { align: "center" });
 
     // Coluna Direita: Chancela e Registro Notarial Digital com QR Code Real
     const stampX = col2X;
-    const stampY = row2Y + 2;
+    const stampY = row2Y;
     const stampW = colW;
-    const stampH = 27;
+    const stampH = 23.5;
 
     doc.setFillColor(254, 253, 249);
     doc.setDrawColor(...ORO);
-    doc.setLineWidth(0.5);
-    doc.roundedRect(stampX, stampY, stampW, stampH, 2, 2, "FD");
+    doc.setLineWidth(0.45);
+    doc.roundedRect(stampX, stampY, stampW, stampH, 1.5, 1.5, "FD");
 
     // Borda interna dupla sutil
     doc.setDrawColor(225, 205, 145);
-    doc.setLineWidth(0.2);
-    doc.rect(stampX + 1.4, stampY + 1.4, stampW - 2.8, stampH - 2.8);
+    doc.setLineWidth(0.18);
+    doc.rect(stampX + 1.2, stampY + 1.2, stampW - 2.4, stampH - 2.4);
 
     // QR Code de validação à esquerda da chancela
     const urlValidacao = `https://sdj.brava.gov.br/verificar?protocolo=${protocolo}`;
     const qrDataUrl = gerarQrCodeDataUrl(urlValidacao, 120);
-    const qrSize = 21;
-    const qrX = stampX + 3.2;
-    const qrY = stampY + 3;
+    const qrSize = 18.5;
+    const qrX = stampX + 2.5;
+    const qrY = stampY + 2.5;
 
     if (qrDataUrl) {
       try {
         doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
         doc.setDrawColor(215, 218, 226);
-        doc.setLineWidth(0.2);
-        doc.rect(qrX - 0.4, qrY - 0.4, qrSize + 0.8, qrSize + 0.8);
+        doc.setLineWidth(0.18);
+        doc.rect(qrX - 0.3, qrY - 0.3, qrSize + 0.6, qrSize + 0.6);
       } catch (_) {}
     }
 
     // Textos informativos da Chancela à direita do QR Code
-    const textLeft = stampX + qrSize + 6.5;
+    const textLeft = stampX + qrSize + 5;
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6.2);
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("• PODER JUDICIÁRIO • SDJ •", textLeft, stampY + 5.5);
+    doc.text("· PODER JUDICIÁRIO · SDJ ·", textLeft, stampY + 4.8);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("CHANCELA NOTARIAL", textLeft, stampY + 9.8);
+    doc.text("CHANCELA NOTARIAL", textLeft, stampY + 8.8);
 
     doc.setFont("courier", "bold");
-    doc.setFontSize(6.2);
+    doc.setFontSize(5.8);
     doc.setTextColor(50, 58, 75);
-    doc.text(`HASH: ${gerarHashAutenticidade()}`, textLeft, stampY + 14.5);
+    doc.text(`HASH: ${gerarHashAutenticidade()}`, textLeft, stampY + 13);
 
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(5.8);
+    doc.setFontSize(5.5);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("Homologação: Zaith Frost & Mike Santaroni", textLeft, stampY + 19);
-    doc.text("Verificação: sdj.brava.gov/verificar", textLeft, stampY + 23);
+    doc.text("Homologação: Zaith Frost & Mike Santaroni", textLeft, stampY + 17);
+    doc.text("Verificação: sdj.brava.gov/verificar", textLeft, stampY + 20.6);
 
     // Rodapé Institucional Absoluto
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("Tribunal de Justiça de Brava RP  •  Departamento Jurídico  •  Presidência: Zaith Frost & Mike Santaroni  •  Página 1 de 1", pageWidth / 2, 287, { align: "center" });
+    doc.text("Tribunal de Justiça de Brava RP  ·  Departamento Jurídico  ·  Presidência: Zaith Frost & Mike Santaroni  ·  Página 1 de 1", pageWidth / 2, 284, { align: "center" });
   }
 
   function getJsPDF() {
@@ -625,8 +623,17 @@
     // Seção 1: Dados Oficiais Registrados
     curY = desenharCabecalhoSecao(doc, curY, "1. Dados e Declarações do Assento Cartorário");
 
-    // Altura proporcional para valorizar o conteúdo
-    const rowH = fields.length <= 4 ? 12 : 9.5;
+    // Altura proporcional para valorizar o conteúdo sem sobrecarregar a folha
+    const nFields = fields.length;
+    let rowH = 10;
+    let rowGap = 1.2;
+    if (nFields >= 7) {
+      rowH = 7.0;
+      rowGap = 0.8;
+    } else if (nFields >= 5) {
+      rowH = 8.2;
+      rowGap = 1.0;
+    }
 
     fields.forEach((f, idx) => {
       const isEven = idx % 2 === 0;
@@ -641,79 +648,85 @@
 
       // Rótulo
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(6.8);
+      doc.setFontSize(rowH >= 9 ? 6.5 : 5.8);
       doc.setTextColor(110, 118, 134);
-      doc.text(f.label.toUpperCase(), 18, curY + (rowH * 0.38));
+      doc.text(f.label.toUpperCase(), 18, curY + (rowH * 0.36));
 
       // Valor
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(rowH > 10 ? 9.5 : 8.5);
+      doc.setFontSize(rowH >= 9 ? 8.8 : 7.8);
       doc.setTextColor(18, 24, 38);
       const valText = f.value && f.value !== "—" ? String(f.value) : "NÃO INFORMADO";
       doc.text(valText, 18, curY + (rowH * 0.78));
 
-      curY += rowH + 1.2;
+      curY += rowH + rowGap;
     });
 
-    curY += 2;
+    curY += 1.5;
 
     // Seção 2: Termo de Homologação, Registro e Fé Pública (Preenche com solene autoridade notarial)
     curY = desenharCabecalhoSecao(doc, curY, "2. Termo de Homologação, Registro e Fé Pública");
 
-    const certBoxH = 26;
+    const certBoxH = 24.5;
     doc.setFillColor(251, 252, 255);
     doc.setDrawColor(...ORO);
     doc.setLineWidth(0.4);
-    doc.roundedRect(14, curY, boxW, certBoxH, 1.5, 1.5, "FD");
+    doc.roundedRect(14, curY, boxW, certBoxH, 1.2, 1.2, "FD");
 
     // Filete interno sutil
     doc.setDrawColor(230, 234, 245);
-    doc.setLineWidth(0.2);
-    doc.rect(15.2, curY + 1.2, boxW - 2.4, certBoxH - 2.4);
+    doc.setLineWidth(0.18);
+    doc.rect(15.2, curY + 1.0, boxW - 2.4, certBoxH - 2.0);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.2);
+    doc.setFontSize(7.0);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text("CERTIDÃO DE HOMOLOGAÇÃO NOTARIAL E EFICÁCIA JURÍDICA", 18, curY + 5.2);
+    doc.text("CERTIDÃO DE HOMOLOGAÇÃO NOTARIAL E EFICÁCIA JURÍDICA", 18, curY + 4.8);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.1);
     doc.setTextColor(45, 52, 68);
     const termoCompleto =
       "O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, no uso das prerrogativas conferidas pela Presidência do Poder Judiciário e pela Corregedoria Geral de Justiça, CERTIFICA que foram cumpridos todos os pressupostos legais e formais exigidos para a lavratura deste ato notarial. O presente assento encontra-se registrado, averbado e homologado, gozando de fé pública originária, presunção absoluta de veracidade e eficácia plena perante todos os órgãos públicos, corporações policiais e instituições civis.";
-    doc.text(termoCompleto, 18, curY + 9.5, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.35 });
+    doc.text(termoCompleto, 18, curY + 8.5, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.26 });
+
+    // Divisória sutil antes dos atributos
+    const divY = curY + 17.0;
+    doc.setDrawColor(235, 238, 245);
+    doc.setLineWidth(0.2);
+    doc.line(18, divY, 14 + boxW - 4, divY);
 
     // Barra de atributos dentro da certidão
-    const attrY = curY + 20.5;
+    const attrY = curY + 21.0;
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6);
+    doc.setFontSize(5.8);
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("• NATUREZA:", 18, attrY);
+    doc.text("· NATUREZA:", 18, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
     doc.text("Assento Notarial Oficial", 34, attrY);
 
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("• EFICÁCIA:", 78, attrY);
+    doc.text("· EFICÁCIA:", 78, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
     doc.text("Oponibilidade 'Erga Omnes'", 93, attrY);
 
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...ORO_ESCURO);
-    doc.text("• SEGURANÇA:", 140, attrY);
+    doc.text("· SEGURANÇA:", 140, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
     doc.text("Criptografia Digital SHA-256", 158, attrY);
 
-    curY += certBoxH + 3.5;
+    curY += certBoxH + 2.5;
 
     // Seção 3: Agente Notarial Designado & Livro Registral (Duas colunas elegantes)
     curY = desenharCabecalhoSecao(doc, curY, "3. Oficial Notarial Designado e Controle de Livro");
 
     const splitW = (boxW - 3) / 2;
-    const splitH = 15;
+    const splitH = 13.5;
 
     // Coluna Esquerda: Agente do Cartório
     doc.setFillColor(255, 255, 255);
@@ -722,19 +735,19 @@
     doc.roundedRect(14, curY, splitW, splitH, 1, 1, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6.2);
     doc.setTextColor(110, 118, 134);
-    doc.text("OFICIAL NOTARIAL DESIGNADO:", 18, curY + 4.5);
+    doc.text("OFICIAL NOTARIAL DESIGNADO:", 18, curY + 4.0);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.8);
+    doc.setFontSize(8.2);
     doc.setTextColor(18, 24, 38);
-    doc.text(toSignatureCase(opts.agente || "Oficial do Cartório"), 18, curY + 9);
+    doc.text(toSignatureCase(opts.agente || "Oficial do Cartório"), 18, curY + 8.2);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.2);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text(`Passaporte / ID: ${opts.agenteId || "—"}  •  1º Ofício Notarial de Brava RP`, 18, curY + 12.8);
+    doc.text(`Passaporte / ID: ${opts.agenteId || "—"}  ·  1º Ofício Notarial de Brava RP`, 18, curY + 11.6);
 
     // Coluna Direita: Controle do Livro
     const colRightX = 14 + splitW + 3;
@@ -747,25 +760,25 @@
     const folhaNum = String(Math.abs((protocolo.length * 13) % 250) + 1).padStart(3, "0");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6.2);
     doc.setTextColor(110, 118, 134);
-    doc.text("ASSENTO E LIVRO NOTARIAL:", colRightX + 4, curY + 4.5);
+    doc.text("ASSENTO E LIVRO NOTARIAL:", colRightX + 4, curY + 4.0);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8.0);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(`LIVRO A-${livroNum}  •  FOLHAS ${folhaNum}`, colRightX + 4, curY + 9);
+    doc.text(`LIVRO A-${livroNum}  ·  FOLHAS ${folhaNum}`, colRightX + 4, curY + 8.2);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(25, 125, 55);
-    doc.text("LAVRADO, AVERBADO E HOMOLOGADO", colRightX + 4, curY + 12.8);
+    doc.text("LAVRADO, AVERBADO E HOMOLOGADO", colRightX + 4, curY + 11.6);
 
-    curY += splitH + 4;
+    curY += splitH + 2.5;
 
     // Seção 4: Assinaturas Grandes da Presidência, Oficial e Chancela Digital
-    // Garante que o bloco de assinaturas comece em posição harmônica
-    const signatureStartY = Math.max(curY, 212);
+    // Garante que o bloco de assinaturas comece em posição harmônica e nunca estoure o rodapé
+    const signatureStartY = Math.min(Math.max(curY + 1, 226), 231);
     desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, "Oficial Notarial Titular", protocolo);
 
     const safeTitle = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
@@ -801,175 +814,175 @@
     doc.setFillColor(255, 255, 255);
     doc.setDrawColor(225, 230, 240);
     doc.setLineWidth(0.25);
-    doc.roundedRect(14, curY, boxW, 21, 1, 1, "FD");
+    doc.roundedRect(14, curY, boxW, 19, 1, 1, "FD");
 
     // Linha 1: Acusado e Antecedentes
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(115, 122, 138);
-    doc.text("NOME DO ACUSADO:", 18, curY + 4.5);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
-    doc.setTextColor(20, 26, 38);
-    doc.text(opts.nome || "—", 18, curY + 9);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
-    doc.setTextColor(115, 122, 138);
-    doc.text("ID / PASSAPORTE:", 85, curY + 4.5);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
-    doc.setTextColor(20, 26, 38);
-    doc.text(opts.id || "—", 85, curY + 9);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
-    doc.setTextColor(115, 122, 138);
-    doc.text("ANTECEDENTES:", 140, curY + 4.5);
+    doc.text("NOME DO ACUSADO:", 18, curY + 4.2);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8.2);
+    doc.setTextColor(20, 26, 38);
+    doc.text(opts.nome || "—", 18, curY + 8.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(115, 122, 138);
+    doc.text("ID / PASSAPORTE:", 85, curY + 4.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.2);
+    doc.setTextColor(20, 26, 38);
+    doc.text(opts.id || "—", 85, curY + 8.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(115, 122, 138);
+    doc.text("ANTECEDENTES:", 140, curY + 4.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.0);
     doc.setTextColor(opts.primario ? 25 : 180, opts.primario ? 120 : 35, opts.primario ? 50 : 35);
-    doc.text(opts.primario ? "RÉU PRIMÁRIO (-25% FIANÇA)" : "REINCIDENTE (SEM DESCONTO)", 140, curY + 9);
+    doc.text(opts.primario ? "RÉU PRIMÁRIO (-25% FIANÇA)" : "REINCIDENTE (SEM DESCONTO)", 140, curY + 8.2);
 
     // Divisória sutil
     doc.setDrawColor(235, 238, 245);
-    doc.line(16, curY + 11.2, pageWidth - 16, curY + 11.2);
+    doc.line(16, curY + 10.2, pageWidth - 16, curY + 10.2);
 
     // Linha 2: Defesa Técnica
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(115, 122, 138);
-    doc.text("ADVOGADO DEFENSOR:", 18, curY + 15);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
-    doc.setTextColor(20, 26, 38);
-    doc.text(`${opts.advogado || "—"} (ID: ${opts.idAdv || "—"})`, 18, curY + 19);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
-    doc.setTextColor(115, 122, 138);
-    doc.text("ATUAÇÃO DO DEFENSOR:", 140, curY + 15);
+    doc.text("ADVOGADO DEFENSOR:", 18, curY + 13.8);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8.2);
-    doc.setTextColor(opts.advogadoPresente ? 25 : 110, opts.advogadoPresente ? 120 : 115, opts.advogadoPresente ? 50 : 125);
-    doc.text(opts.advogadoPresente ? "PRESENTE (-50% PENA E MULTA)" : "AUSENTE / SEM REDUÇÃO", 140, curY + 19);
+    doc.setTextColor(20, 26, 38);
+    doc.text(`${opts.advogado || "—"} (ID: ${opts.idAdv || "—"})`, 18, curY + 17.5);
 
-    curY += 24.5;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(115, 122, 138);
+    doc.text("ATUAÇÃO DO DEFENSOR:", 140, curY + 13.8);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.0);
+    doc.setTextColor(opts.advogadoPresente ? 25 : 110, opts.advogadoPresente ? 120 : 115, opts.advogadoPresente ? 50 : 125);
+    doc.text(opts.advogadoPresente ? "PRESENTE (-50% PENA E MULTA)" : "AUSENTE / SEM REDUÇÃO", 140, curY + 17.5);
+
+    curY += 21.5;
 
     // 2. Tabela de Artigos Enquadrados
     curY = desenharCabecalhoSecao(doc, curY, "2. Capitulação Penal — Artigos Enquadrados");
 
     const thY = curY;
     doc.setFillColor(...AZUL_NOITE);
-    doc.rect(14, thY, boxW, 6.2, "F");
+    doc.rect(14, thY, boxW, 5.8, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.5);
     doc.setTextColor(255, 255, 255);
-    doc.text("ARTIGO", 18, thY + 4.3);
-    doc.text("DESCRIÇÃO DA INFRAÇÃO", 40, thY + 4.3);
-    doc.text("QTD", 115, thY + 4.3, { align: "center" });
-    doc.text("PENA UNIT.", 135, thY + 4.3, { align: "right" });
-    doc.text("MULTA UNIT.", 160, thY + 4.3, { align: "right" });
-    doc.text("FIANÇA?", 187, thY + 4.3, { align: "center" });
+    doc.text("ARTIGO", 18, thY + 4.0);
+    doc.text("DESCRIÇÃO DA INFRAÇÃO", 40, thY + 4.0);
+    doc.text("QTD", 115, thY + 4.0, { align: "center" });
+    doc.text("PENA UNIT.", 135, thY + 4.0, { align: "right" });
+    doc.text("MULTA UNIT.", 160, thY + 4.0, { align: "right" });
+    doc.text("FIANÇA?", 187, thY + 4.0, { align: "center" });
 
-    curY += 6.2;
+    curY += 5.8;
 
     const artigosList = opts.artigos || [];
     if (!artigosList.length) {
       doc.setFillColor(255, 255, 255);
-      doc.rect(14, curY, boxW, 8, "FD");
+      doc.rect(14, curY, boxW, 7, "FD");
       doc.setFont("helvetica", "italic");
-      doc.setFontSize(7.5);
+      doc.setFontSize(7.2);
       doc.setTextColor(120, 120, 130);
-      doc.text("Nenhum artigo enquadrado registrado.", pageWidth / 2, curY + 5.5, { align: "center" });
-      curY += 8;
+      doc.text("Nenhum artigo enquadrado registrado.", pageWidth / 2, curY + 4.8, { align: "center" });
+      curY += 7;
     } else {
       artigosList.forEach((a, i) => {
-        const rowH = 6;
+        const rowH = 5.5;
         doc.setFillColor(i % 2 === 0 ? 255 : 248, i % 2 === 0 ? 255 : 249, i % 2 === 0 ? 255 : 252);
         doc.setDrawColor(230, 234, 242);
         doc.setLineWidth(0.2);
         doc.rect(14, curY, boxW, rowH, "FD");
 
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(7);
+        doc.setFontSize(6.8);
         doc.setTextColor(20, 26, 38);
-        doc.text(a.cod, 18, curY + 4.2);
+        doc.text(a.cod, 18, curY + 3.8);
 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(7);
-        doc.text(a.nome.length > 40 ? a.nome.substring(0, 39) + "..." : a.nome, 40, curY + 4.2);
+        doc.setFontSize(6.8);
+        doc.text(a.nome.length > 40 ? a.nome.substring(0, 39) + "..." : a.nome, 40, curY + 3.8);
 
         doc.setFont("helvetica", "bold");
-        doc.text(String(a.qtd), 115, curY + 4.2, { align: "center" });
-        doc.text(`${a.pena}m`, 135, curY + 4.2, { align: "right" });
-        doc.text(`$${Math.round(a.multa).toLocaleString("pt-BR")}`, 160, curY + 4.2, { align: "right" });
+        doc.text(String(a.qtd), 115, curY + 3.8, { align: "center" });
+        doc.text(`${a.pena}m`, 135, curY + 3.8, { align: "right" });
+        doc.text(`$${Math.round(a.multa).toLocaleString("pt-BR")}`, 160, curY + 3.8, { align: "right" });
 
         if (a.inaf) {
           doc.setFont("helvetica", "bold");
           doc.setTextColor(190, 40, 40);
-          doc.text("INAFIANÇÁVEL", 187, curY + 4.2, { align: "center" });
+          doc.text("INAFIANÇÁVEL", 187, curY + 3.8, { align: "center" });
         } else {
           doc.setFont("helvetica", "normal");
           doc.setTextColor(25, 125, 55);
-          doc.text("Regra geral", 187, curY + 4.2, { align: "center" });
+          doc.text("Regra geral", 187, curY + 3.8, { align: "center" });
         }
 
         curY += rowH;
       });
     }
 
-    curY += 3.5;
+    curY += 2.5;
 
     // 3. Dispositivo da Sentença (Pena, Multa, Fiança)
     curY = desenharCabecalhoSecao(doc, curY, "3. Dispositivo da Sentença Condenatória");
 
     const cardW = (boxW - 6) / 3;
-    const cardH = 17;
+    const cardH = 15;
     const calc = opts.calculo || {};
 
     // Card 1: Pena Total
     doc.setFillColor(255, 255, 255);
     doc.setDrawColor(...AZUL_NOITE);
     doc.setLineWidth(0.3);
-    doc.roundedRect(14, curY, cardW, cardH, 1.5, 1.5, "FD");
+    doc.roundedRect(14, curY, cardW, cardH, 1.2, 1.2, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setTextColor(115, 122, 138);
-    doc.text("PENA TOTAL", 14 + (cardW / 2), curY + 5, { align: "center" });
+    doc.text("PENA TOTAL", 14 + (cardW / 2), curY + 4.2, { align: "center" });
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
+    doc.setFontSize(11.5);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(`${calc.pena || 0} meses`, 14 + (cardW / 2), curY + 11.5, { align: "center" });
+    doc.text(`${calc.pena || 0} meses`, 14 + (cardW / 2), curY + 9.8, { align: "center" });
 
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     doc.setTextColor(120, 120, 130);
-    doc.text(calc.limitada ? "(limitada ao teto legal)" : "(tempo de reclusão)", 14 + (cardW / 2), curY + 15, { align: "center" });
+    doc.text(calc.limitada ? "(limitada ao teto legal)" : "(tempo de reclusão)", 14 + (cardW / 2), curY + 13.2, { align: "center" });
 
     // Card 2: Multa Total
     const x2 = 14 + cardW + 3;
     doc.setFillColor(255, 255, 255);
     doc.setDrawColor(...AZUL_NOITE);
-    doc.roundedRect(x2, curY, cardW, cardH, 1.5, 1.5, "FD");
+    doc.roundedRect(x2, curY, cardW, cardH, 1.2, 1.2, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setTextColor(115, 122, 138);
-    doc.text("MULTA PECUNIÁRIA", x2 + (cardW / 2), curY + 5, { align: "center" });
+    doc.text("MULTA PECUNIÁRIA", x2 + (cardW / 2), curY + 4.2, { align: "center" });
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
+    doc.setFontSize(11.5);
     doc.setTextColor(180, 110, 20);
-    doc.text(`$${Math.round(calc.multa || 0).toLocaleString("pt-BR")}`, x2 + (cardW / 2), curY + 11.5, { align: "center" });
+    doc.text(`$${Math.round(calc.multa || 0).toLocaleString("pt-BR")}`, x2 + (cardW / 2), curY + 9.8, { align: "center" });
 
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     doc.setTextColor(120, 120, 130);
-    doc.text("recolhimento ao Tesouro Municipal", x2 + (cardW / 2), curY + 15, { align: "center" });
+    doc.text("recolhimento ao Tesouro Municipal", x2 + (cardW / 2), curY + 13.2, { align: "center" });
 
     // Card 3: Fiança
     const x3 = x2 + cardW + 3;
@@ -977,45 +990,45 @@
     doc.setFillColor(inafiancavel ? 255 : 255, inafiancavel ? 245 : 255, inafiancavel ? 245 : 255);
     doc.setDrawColor(inafiancavel ? 200 : 30, inafiancavel ? 40 : 130, inafiancavel ? 40 : 60);
     doc.setLineWidth(inafiancavel ? 0.4 : 0.3);
-    doc.roundedRect(x3, curY, cardW, cardH, 1.5, 1.5, "FD");
+    doc.roundedRect(x3, curY, cardW, cardH, 1.2, 1.2, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setTextColor(inafiancavel ? 190 : 30, inafiancavel ? 40 : 130, inafiancavel ? 40 : 60);
-    doc.text("VALOR DA FIANÇA", x3 + (cardW / 2), curY + 5, { align: "center" });
+    doc.text("VALOR DA FIANÇA", x3 + (cardW / 2), curY + 4.2, { align: "center" });
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setTextColor(inafiancavel ? 190 : 30, inafiancavel ? 40 : 130, inafiancavel ? 40 : 60);
-    doc.text(inafiancavel ? "INAFIANÇÁVEL" : `$${Math.round(calc.fianca).toLocaleString("pt-BR")}`, x3 + (cardW / 2), curY + 11.5, { align: "center" });
+    doc.text(inafiancavel ? "INAFIANÇÁVEL" : `$${Math.round(calc.fianca).toLocaleString("pt-BR")}`, x3 + (cardW / 2), curY + 9.8, { align: "center" });
 
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     doc.setTextColor(120, 120, 130);
-    doc.text(inafiancavel ? "vedada liberdade provisória" : (opts.primario ? "com 25% desc. primário" : "valor integral"), x3 + (cardW / 2), curY + 15, { align: "center" });
+    doc.text(inafiancavel ? "vedada liberdade provisória" : (opts.primario ? "com 25% desc. primário" : "valor integral"), x3 + (cardW / 2), curY + 13.2, { align: "center" });
 
-    curY += cardH + 3.5;
+    curY += cardH + 2.5;
 
     // 4. Termo de Fé Pública Judicial e Execução Penal
     curY = desenharCabecalhoSecao(doc, curY, "4. Disposições Executórias e Fé Pública Judicial");
 
-    const termoPenalH = 15;
+    const termoPenalH = 13.5;
     doc.setFillColor(252, 253, 255);
     doc.setDrawColor(220, 226, 238);
     doc.setLineWidth(0.25);
     doc.roundedRect(14, curY, boxW, termoPenalH, 1, 1, "FD");
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.8);
+    doc.setFontSize(6.2);
     doc.setTextColor(45, 52, 68);
     const termoPenalTexto =
       "Certifico que a presente sentença e dosimetria penal foram calculadas com estrita observância ao Código Penal Vigente de Brava RP e Provimentos do Departamento Jurídico. Fica a autoridade policial e o sistema penitenciário autorizados a dar fiel cumprimento às medidas aqui cominadas.";
-    doc.text(termoPenalTexto, 18, curY + 5.5, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.3 });
+    doc.text(termoPenalTexto, 18, curY + 4.8, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.25 });
 
-    curY += termoPenalH + 4;
+    curY += termoPenalH + 2.5;
 
     // 5. Assinaturas Grandes e Chancela Notarial
-    const sigPenalStartY = Math.max(curY, 212);
+    const sigPenalStartY = Math.min(Math.max(curY + 1, 226), 231);
     desenharBlocoAssinaturasEChancela(doc, sigPenalStartY, opts.oficial, opts.idPolicial, "Policial / Autoridade Responsável", protocolo);
 
     const safeNome = (opts.nome || "Acusado").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");

@@ -11,6 +11,7 @@
     balanca: svg('<path d="M12 3v18M7 21h10M5 7h14M12 7l0 0"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z"/>'),
     nome: svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>'),
     alianca: svg('<circle cx="9" cy="14" r="6"/><circle cx="15" cy="14" r="6"/><path d="M10 3h4l1.5 2.5L12 8 8.5 5.5z"/>'),
+    casamento: svg('<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>'),
     nascimento: svg('<path d="M9 12h.01M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/>'),
     adocao: svg('<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>'),
     familia: svg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>'),
@@ -443,7 +444,7 @@
         { id: "tn_novo", label: "📝 Novo Nome" },
         { id: "tn_id", label: "🪪 Passaporte" },
         { id: "tn_motivo", label: "❓ Motivo da Troca" },
-        { id: "tn_valor", label: "💰 Valor Cobrado", isFull: true }
+        { id: "tn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 100.000", isFull: true }
       ]
     },
     {
@@ -456,7 +457,20 @@
         { id: "al_n2", label: "👤 Nome do(a) Parceiro(a) 2" },
         { id: "al_id2", label: "🪪 Passaporte 2" },
         { id: "al_data", label: "📅 Data da Celebração" },
-        { id: "al_valor", label: "💰 Valor Cobrado" }
+        { id: "al_valor", label: "💰 Valor Cobrado", placeholder: "R$ 15.000 / R$ 30.000 / R$ 45.000" }
+      ]
+    },
+    {
+      id: "casamento", title: "Certidão de Casamento", icon: "💒", svg: "casamento", tag: "Certidão",
+      desc: "Celebração oficial e emissão de Certidão Notarial de Casamento.", webhook: "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2",
+      fields: [
+        { id: "cas_conjuge1", label: "👤 Nome do Cônjuge 1" },
+        { id: "cas_id1", label: "🪪 Passaporte 1" },
+        { id: "cas_conjuge2", label: "👤 Nome do Cônjuge 2" },
+        { id: "cas_id2", label: "🪪 Passaporte 2" },
+        { id: "cas_regime", label: "📜 Regime de Bens", placeholder: "Ex.: Comunhão Parcial de Bens" },
+        { id: "cas_data", label: "📅 Data do Casamento" },
+        { id: "cas_valor", label: "💰 Valor Cobrado", placeholder: "R$ 200.000", isFull: true }
       ]
     },
     {
@@ -470,7 +484,7 @@
         { id: "cn_pai", label: "👨 Nome do Pai" },
         { id: "cn_id_pai", label: "🪪 Passaporte do Pai" },
         { id: "cn_data", label: "📅 Data de Nascimento" },
-        { id: "cn_valor", label: "💰 Valor Cobrado" }
+        { id: "cn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000" }
       ]
     },
     {
@@ -483,7 +497,7 @@
         { id: "ca_id_adotante1", label: "🪪 Passaporte 1" },
         { id: "ca_adotante2", label: "👨‍👦 Nome do Adotante 2 (Opcional)" },
         { id: "ca_id_adotante2", label: "🪪 Passaporte 2 (Opcional)" },
-        { id: "ca_valor", label: "💰 Valor Cobrado", isFull: true }
+        { id: "ca_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
       ]
     },
     {
@@ -493,7 +507,7 @@
         { id: "rf_familia", label: "👥 Nome da Família" },
         { id: "rf_fundador", label: "👑 Nome do Fundador" },
         { id: "rf_id", label: "🪪 Passaporte do Fundador" },
-        { id: "rf_valor", label: "💰 Valor Cobrado" },
+        { id: "rf_valor", label: "💰 Valor Cobrado", placeholder: "R$ 200.000" },
         { id: "rf_membros", label: "📝 Quantidade de Membros Iniciais", placeholder: "Ex: 10", isFull: true }
       ]
     },
@@ -506,7 +520,7 @@
         { id: "cp_prop", label: "👤 Nome do Proprietário" },
         { id: "cp_id", label: "🪪 Passaporte do Proprietário" },
         { id: "cp_cnpj", label: "🔢 CNPJ da Empresa", type: "cnpj-generator", isFull: true },
-        { id: "cp_valor", label: "💰 Valor Cobrado", isFull: true }
+        { id: "cp_valor", label: "💰 Valor Cobrado", placeholder: "R$ 300.000 (ou R$ 50.000 semanal)", isFull: true }
       ]
     }
   ];
@@ -596,9 +610,12 @@
 
   function aplicarPrecosPadrao() {
     if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
+    if ($("#cas_valor") && !$("#cas_valor").value) $("#cas_valor").value = "R$ 200.000";
     if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 100.000";
-    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 100.000";
-    if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 50.000";
+    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 200.000";
+    if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 300.000";
+    if ($("#cn_valor") && !$("#cn_valor").value) $("#cn_valor").value = "R$ 150.000";
+    if ($("#ca_valor") && !$("#ca_valor").value) $("#ca_valor").value = "R$ 150.000";
   }
 
   // Gerador de CNPJ
@@ -903,12 +920,18 @@
         } else if (title === "Anel de Ouro") {
           selectOption($(`.opt-card[data-input="al_tipo"][data-val="Casamento"]`));
           if ($("#al_valor")) $("#al_valor").value = "R$ 45.000";
+        } else if (target === "tab-casamento" || title.includes("Casamento")) {
+          if ($("#cas_valor")) $("#cas_valor").value = "R$ 200.000";
         } else if (target === "tab-trocanome") {
           if ($("#tn_valor")) $("#tn_valor").value = "R$ 100.000";
+        } else if (target === "tab-nascimento") {
+          if ($("#cn_valor")) $("#cn_valor").value = "R$ 150.000";
+        } else if (target === "tab-adocao") {
+          if ($("#ca_valor")) $("#ca_valor").value = "R$ 150.000";
         } else if (target === "tab-familia") {
-          if ($("#rf_valor")) $("#rf_valor").value = "R$ 100.000";
+          if ($("#rf_valor")) $("#rf_valor").value = "R$ 200.000";
         } else if (target === "tab-cnpj") {
-          if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 30.000" : "R$ 50.000";
+          if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 50.000" : "R$ 300.000";
         }
       });
     });
