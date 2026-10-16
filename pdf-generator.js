@@ -415,13 +415,13 @@
 
     // Validade Notarial / Status (Espaçamento limpo e perfeitamente distribuído)
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(6.5);
+    doc.setFontSize(6.2);
     doc.setTextColor(...TEXTO_MUTED);
-    doc.text("STATUS:", 142, metaY + 5.2);
+    doc.text("STATUS:", 135, metaY + 5.2);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.2);
+    doc.setFontSize(6.8);
     doc.setTextColor(25, 125, 55);
-    doc.text("HOMOLOGADO · FÉ PÚBLICA", 192, metaY + 5.2, { align: "right" });
+    doc.text("HOMOLOGADO · FÉ PÚBLICA", 147, metaY + 5.2);
 
     return 63.5; // Próximo Y livre para o conteúdo
   }
@@ -623,51 +623,122 @@
     // Seção 1: Dados Oficiais Registrados
     curY = desenharCabecalhoSecao(doc, curY, "1. Dados e Declarações do Assento Cartorário");
 
-    // Altura proporcional para valorizar o conteúdo sem sobrecarregar a folha
+    // Layout responsivo: 2 colunas se tiver 8 ou mais campos (ex: Porte de Arma), 1 coluna para os demais
     const nFields = fields.length;
-    let rowH = 10;
-    let rowGap = 1.2;
-    if (nFields >= 7) {
-      rowH = 7.0;
-      rowGap = 0.8;
-    } else if (nFields >= 5) {
-      rowH = 8.2;
-      rowGap = 1.0;
+    if (nFields >= 8) {
+      const colW = (boxW - 3) / 2;
+      const rowH = 8.6;
+      const rowGap = 1.0;
+
+      for (let i = 0; i < nFields; i += 2) {
+        const f1 = fields[i];
+        const f2 = fields[i + 1];
+
+        // Coluna 1
+        const x1 = 14;
+        const isEven = (i / 2) % 2 === 0;
+        doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.25);
+        const w1 = f2 ? colW : boxW;
+        doc.roundedRect(x1, curY, w1, rowH, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(x1, curY, 1.8, rowH, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.5);
+        doc.setTextColor(110, 118, 134);
+        doc.text(f1.label.toUpperCase(), x1 + 4, curY + (rowH * 0.35), { maxWidth: w1 - 7 });
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(18, 24, 38);
+        const val1 = f1.value && f1.value !== "—" ? String(f1.value) : "NÃO INFORMADO";
+        doc.text(val1, x1 + 4, curY + (rowH * 0.78), { maxWidth: w1 - 7 });
+
+        // Coluna 2 (se houver)
+        if (f2) {
+          const x2 = 14 + colW + 3;
+          doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+          doc.setDrawColor(220, 226, 238);
+          doc.setLineWidth(0.25);
+          doc.roundedRect(x2, curY, colW, rowH, 0.8, 0.8, "FD");
+          doc.setFillColor(...ORO);
+          doc.rect(x2, curY, 1.8, rowH, "F");
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(5.5);
+          doc.setTextColor(110, 118, 134);
+          doc.text(f2.label.toUpperCase(), x2 + 4, curY + (rowH * 0.35), { maxWidth: colW - 7 });
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.setTextColor(18, 24, 38);
+          const val2 = f2.value && f2.value !== "—" ? String(f2.value) : "NÃO INFORMADO";
+          doc.text(val2, x2 + 4, curY + (rowH * 0.78), { maxWidth: colW - 7 });
+        }
+
+        curY += rowH + rowGap;
+      }
+    } else {
+      let rowH = 10;
+      let rowGap = 1.2;
+      if (nFields >= 5) {
+        rowH = 8.2;
+        rowGap = 1.0;
+      }
+
+      fields.forEach((f, idx) => {
+        const isEven = idx % 2 === 0;
+        doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.25);
+        doc.roundedRect(14, curY, boxW, rowH, 0.8, 0.8, "FD");
+
+        // Marcador lateral dourado sutil
+        doc.setFillColor(...ORO);
+        doc.rect(14, curY, 1.8, rowH, "F");
+
+        // Rótulo
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(rowH >= 9 ? 6.5 : 5.8);
+        doc.setTextColor(110, 118, 134);
+        doc.text(f.label.toUpperCase(), 18, curY + (rowH * 0.36), { maxWidth: boxW - 8 });
+
+        // Valor
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(rowH >= 9 ? 8.8 : 7.8);
+        doc.setTextColor(18, 24, 38);
+        const valText = f.value && f.value !== "—" ? String(f.value) : "NÃO INFORMADO";
+        doc.text(valText, 18, curY + (rowH * 0.78), { maxWidth: boxW - 8 });
+
+        curY += rowH + rowGap;
+      });
     }
-
-    fields.forEach((f, idx) => {
-      const isEven = idx % 2 === 0;
-      doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
-      doc.setDrawColor(220, 226, 238);
-      doc.setLineWidth(0.25);
-      doc.roundedRect(14, curY, boxW, rowH, 0.8, 0.8, "FD");
-
-      // Marcador lateral dourado sutil
-      doc.setFillColor(...ORO);
-      doc.rect(14, curY, 1.8, rowH, "F");
-
-      // Rótulo
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(rowH >= 9 ? 6.5 : 5.8);
-      doc.setTextColor(110, 118, 134);
-      doc.text(f.label.toUpperCase(), 18, curY + (rowH * 0.36));
-
-      // Valor
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(rowH >= 9 ? 8.8 : 7.8);
-      doc.setTextColor(18, 24, 38);
-      const valText = f.value && f.value !== "—" ? String(f.value) : "NÃO INFORMADO";
-      doc.text(valText, 18, curY + (rowH * 0.78));
-
-      curY += rowH + rowGap;
-    });
 
     curY += 1.5;
 
     // Seção 2: Termo de Homologação, Registro e Fé Pública (Preenche com solene autoridade notarial)
     curY = desenharCabecalhoSecao(doc, curY, "2. Termo de Homologação, Registro e Fé Pública");
 
-    const certBoxH = 24.5;
+    let termoCompleto =
+      "O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, no uso das prerrogativas conferidas pela Presidência do Poder Judiciário e pela Corregedoria Geral de Justiça, CERTIFICA que foram cumpridos todos os pressupostos legais e formais exigidos para a lavratura deste ato notarial. O presente assento encontra-se registrado, averbado e homologado, gozando de fé pública originária, presunção absoluta de veracidade e eficácia plena perante todos os órgãos públicos, corporações policiais e instituições civis.";
+
+    if (opts.service && opts.service.id === "porte") {
+      termoCompleto =
+        "O DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob homologação da Presidência do Judiciário e em conformidade com as diretrizes de Segurança Pública, CERTIFICA a concessão do Porte de Arma de Fogo exclusivo para 1 Pistola PT 9mm (R$ 80.000) e fornecimento de munições (R$ 400 por unidade), condicionado estritamente à apresentação do Laudo Psicotécnico emitido pelo Hospital Municipal com parecer 'Apto'. O presente registro possui fé pública e validade oficial perante todas as forças policiais do Estado de Brava.";
+    }
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.8);
+    const termoLines = doc.splitTextToSize(termoCompleto, boxW - 8);
+    const lineSpacing = 3.2;
+    const textStartY = curY + 8.2;
+    const textEndY = textStartY + (termoLines.length * lineSpacing);
+    const divY = textEndY + 1.8;
+    const attrY = divY + 3.8;
+    const certBoxH = (attrY - curY) + 3.6;
+
     doc.setFillColor(251, 252, 255);
     doc.setDrawColor(...ORO);
     doc.setLineWidth(0.4);
@@ -684,41 +755,42 @@
     doc.text("CERTIDÃO DE HOMOLOGAÇÃO NOTARIAL E EFICÁCIA JURÍDICA", 18, curY + 4.8);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.1);
+    doc.setFontSize(5.8);
     doc.setTextColor(45, 52, 68);
-    const termoCompleto =
-      "O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, no uso das prerrogativas conferidas pela Presidência do Poder Judiciário e pela Corregedoria Geral de Justiça, CERTIFICA que foram cumpridos todos os pressupostos legais e formais exigidos para a lavratura deste ato notarial. O presente assento encontra-se registrado, averbado e homologado, gozando de fé pública originária, presunção absoluta de veracidade e eficácia plena perante todos os órgãos públicos, corporações policiais e instituições civis.";
-    doc.text(termoCompleto, 18, curY + 8.5, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.26 });
+    doc.text(termoLines, 18, textStartY, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.22 });
 
     // Divisória sutil antes dos atributos
-    const divY = curY + 17.0;
     doc.setDrawColor(235, 238, 245);
     doc.setLineWidth(0.2);
     doc.line(18, divY, 14 + boxW - 4, divY);
 
+    const isPorte = opts.service && opts.service.id === "porte";
+    const natText = isPorte ? "Porte de Arma Legal" : "Assento Notarial Oficial";
+    const eficText = isPorte ? "Autorização Notarial" : "Oponibilidade 'Erga Omnes'";
+    const segText = isPorte ? "Laudo Médico Hospitalar" : "Criptografia Digital SHA-256";
+
     // Barra de atributos dentro da certidão
-    const attrY = curY + 21.0;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(5.8);
     doc.setTextColor(...ORO_ESCURO);
     doc.text("· NATUREZA:", 18, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
-    doc.text("Assento Notarial Oficial", 34, attrY);
+    doc.text(natText, 34, attrY);
 
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...ORO_ESCURO);
     doc.text("· EFICÁCIA:", 78, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
-    doc.text("Oponibilidade 'Erga Omnes'", 93, attrY);
+    doc.text(eficText, 93, attrY);
 
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...ORO_ESCURO);
     doc.text("· SEGURANÇA:", 140, attrY);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...TEXTO_ESCURO);
-    doc.text("Criptografia Digital SHA-256", 158, attrY);
+    doc.text(segText, 158, attrY);
 
     curY += certBoxH + 2.5;
 
@@ -1038,10 +1110,362 @@
     return { doc, blob, filename, protocolo };
   }
 
+  /* ==========================================================
+     3. GERAÇÃO DE PDF: ATA NOTARIAL DE PROVA ORAL
+     (Avaliação de Candidatos — Recrutamento Judiciário)
+     ========================================================== */
+  async function generateProvaOralPDF(opts) {
+    const jsPDF = getJsPDF();
+    if (!jsPDF) throw new Error("Biblioteca jsPDF não encontrada.");
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const { logo, watermark } = await getLogoAndWatermark();
+
+    const dataHora = (opts.data ? `${opts.data} às ${opts.hora || "—"}` : new Date().toLocaleString("pt-BR"));
+    const protocolo = gerarProtocolo();
+    const titulo = "Ata Notarial de Exame Oral de Admissão";
+    const cidade = opts.cidade || (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
+
+    // 1. Estrutura base notarial
+    let curY = desenharEstruturaBase(doc, logo, watermark, titulo, protocolo, dataHora, cidade);
+
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+
+    // Seção 1: Qualificação das Partes
+    curY = desenharCabecalhoSecao(doc, curY, "1. Qualificação das Partes e da Banca Examinadora");
+
+    const qualH = 14;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, qualH, 0.8, 0.8, "FD");
+
+    // Linha divisória vertical
+    doc.setDrawColor(230, 234, 245);
+    doc.line(14 + boxW / 2, curY + 1.5, 14 + boxW / 2, curY + qualH - 1.5);
+
+    // Coluna 1: Recrutador / Instrutor
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(110, 118, 134);
+    doc.text("EXAMINADOR / RECRUTADOR OFICIAL", 18, curY + 4.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`${opts.recrutador || "Zaith Frost"} (ID: ${opts.recrutadorId || "—"})`, 18, curY + 8.8);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Banca de Seleção do Departamento Jurídico", 18, curY + 12.2);
+
+    // Coluna 2: Candidato
+    const col2X = 14 + (boxW / 2) + 4;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(110, 118, 134);
+    doc.text("CANDIDATO(A) AVALIADO(A)", col2X, curY + 4.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`${opts.candidato || "Candidato"} (ID: ${opts.candidatoId || "—"})`, col2X, curY + 8.8);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    const cargoIndicado = opts.cargo || "Estagiário";
+    doc.text(`Cargo Indicado: ${cargoIndicado} · Prova Oral (12 Questões)`, col2X, curY + 12.2);
+
+    curY += qualH + 2.5;
+
+    // Seção 2: Desempenho e Veredicto
+    curY = desenharCabecalhoSecao(doc, curY, "2. Quadro de Desempenho, Postura e Veredicto");
+
+    const desempH = 15.5;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(...ORO);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(14, curY, boxW, desempH, 1.0, 1.0, "FD");
+
+    // 4 Blocos de Informação
+    const blockW = boxW / 4;
+    const scoreVal = typeof opts.score === "number" ? opts.score.toFixed(1) : (opts.score || "0.0");
+    const pctVal = opts.percent ? `${opts.percent}%` : `${Math.round((parseFloat(scoreVal) / 12) * 100)}%`;
+    const resultado = (opts.resultado || "APROVADO").toUpperCase();
+    const postura = opts.postura || "Adequada";
+
+    // Bloco 1: Pontuação
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(110, 118, 134);
+    doc.text("PONTUAÇÃO OBTIDA", 18, curY + 4.6);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12.5);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`${scoreVal}`, 18, curY + 10.2);
+    doc.setFontSize(7.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text(" / 12.0", 18 + doc.getTextWidth(scoreVal) + 1, curY + 10.2);
+
+    // Bloco 2: Aproveitamento
+    const b2X = 14 + blockW;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(110, 118, 134);
+    doc.text("APROVEITAMENTO", b2X, curY + 4.6);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text(pctVal, b2X, curY + 10.2);
+
+    // Bloco 3: Postura & Ética
+    const b3X = 14 + blockW * 2;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(110, 118, 134);
+    doc.text("POSTURA & ÉTICA", b3X, curY + 4.6);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.0);
+    if (postura.toLowerCase().includes("adequada")) {
+      doc.setTextColor(25, 125, 55);
+    } else if (postura.toLowerCase().includes("inadequada")) {
+      doc.setTextColor(180, 40, 40);
+    } else {
+      doc.setTextColor(180, 130, 20);
+    }
+    doc.text(postura, b3X, curY + 10.0);
+
+    // Bloco 4: Veredicto Oficial
+    const b4X = 14 + blockW * 3;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(110, 118, 134);
+    doc.text("VEREDICTO FINAL", b4X, curY + 4.6);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    if (resultado === "APROVADO") {
+      doc.setTextColor(25, 125, 55);
+    } else if (resultado === "REPROVADO") {
+      doc.setTextColor(180, 40, 40);
+    } else {
+      doc.setTextColor(180, 130, 20);
+    }
+    doc.text(resultado, b4X, curY + 10.2);
+
+    // Linha inferior do resumo
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(5.5);
+    doc.setTextColor(...TEXTO_MUTED);
+    const nChecklist = Array.isArray(opts.checklist) ? opts.checklist.length : 6;
+    doc.text(`* Avaliação baseada no Manual do Recrutador. Checklist: ${nChecklist}/6 requisitos confirmados. Nota de corte sugerida: 80% (9.5+).`, 18, curY + 14.0);
+
+    curY += desempH + 2.5;
+
+    // Seção 3: Espelho das 12 Questões
+    curY = desenharCabecalhoSecao(doc, curY, "3. Espelho Sintético das 12 Questões Aplicadas");
+
+    // Tabela Cabeçalho
+    const tblHeadH = 4.8;
+    doc.setFillColor(...AZUL_NOITE);
+    doc.rect(14, curY, boxW, tblHeadH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.6);
+    doc.setTextColor(255, 255, 255);
+    doc.text("Q#", 17, curY + 3.3);
+    doc.text("TEMA / CONCEITO AVALIADO", 26, curY + 3.3);
+    doc.text("TIPO", 98, curY + 3.3);
+    doc.text("RESUMO DA MATÉRIA", 116, curY + 3.3);
+    doc.text("NOTA", 168, curY + 3.3);
+    doc.text("STATUS", 182, curY + 3.3);
+
+    curY += tblHeadH;
+
+    const rowH = 4.0;
+    const questions = opts.questions || [];
+
+    const resumoMap = [
+      "Papel do Judiciário e Regra de Ouro",
+      "Conceito legal e finalidade da Fiança",
+      "Distinção crucial: Fiança x Inocência/Pena",
+      "Crimes inafiançáveis: Vida, Sequestro, Desacato",
+      "Réu Primário: -25% exclusivo na Fiança",
+      "Advogado Constituído: -50% Pena e Multa",
+      "Advogado não reduz fiança automaticamente",
+      "Fluxo operacional em 5 etapas para casos",
+      "Cálculo Prático: Fiança Réu Primário (-25%)",
+      "Caso Prático: Inafiançabilidade do Sequestro",
+      "Cálculo Prático: Pena com Advogado (-50%)",
+      "Ética, recusa de suborno e autonomia policial"
+    ];
+
+    for (let idx = 0; idx < 12; idx++) {
+      const q = questions[idx] || { id: idx + 1 };
+      const isEven = idx % 2 === 0;
+      doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+      doc.setDrawColor(230, 235, 244);
+      doc.setLineWidth(0.2);
+      doc.rect(14, curY, boxW, rowH, "FD");
+
+      // Q#
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(...AZUL_NOITE);
+      doc.text(String(q.id || (idx + 1)).padStart(2, "0"), 17, curY + 2.8);
+
+      // Tema
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(40, 48, 65);
+      const temaTxt = (q.tema || "").replace(/&/g, "e");
+      doc.text(temaTxt.substring(0, 38), 26, curY + 2.8);
+
+      // Tipo
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(5.2);
+      doc.setTextColor(...TEXTO_MUTED);
+      doc.text(q.tipo || (idx < 8 ? "Teórica" : "Prática"), 98, curY + 2.8);
+
+      // Resumo da Matéria
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(5.2);
+      doc.setTextColor(60, 68, 82);
+      doc.text(resumoMap[idx] || (q.pergunta || "").substring(0, 36), 116, curY + 2.8);
+
+      // Nota
+      const qScore = typeof q.score === "number" ? q.score.toFixed(1) : (q.score || "1.0");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.6);
+      if (parseFloat(qScore) >= 1.0) {
+        doc.setTextColor(25, 125, 55);
+      } else if (parseFloat(qScore) > 0) {
+        doc.setTextColor(...ORO_ESCURO);
+      } else {
+        doc.setTextColor(180, 40, 40);
+      }
+      doc.text(`${qScore} pt`, 168, curY + 2.8);
+
+      // Status
+      let statusTxt = "Correto";
+      if (parseFloat(qScore) === 0.5) statusTxt = "Parcial";
+      else if (parseFloat(qScore) === 0) statusTxt = "Incorreto";
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.2);
+      doc.text(statusTxt, 182, curY + 2.8);
+
+      curY += rowH;
+    }
+
+    curY += 1.5;
+
+    // Seção 4: Parecer Conclusivo do Examinador
+    curY = desenharCabecalhoSecao(doc, curY, "4. Parecer Conclusivo e Observações do Examinador");
+
+    const obsH = 11.5;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, obsH, 0.8, 0.8, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("DELIBERAÇÃO DA BANCA EXAMINADORA:", 18, curY + 3.8);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.4);
+    doc.setTextColor(45, 52, 68);
+    const obsTexto = opts.observacoes && opts.observacoes.trim()
+      ? opts.observacoes.trim()
+      : (resultado === "APROVADO"
+          ? "O candidato demonstrou pleno domínio dos conceitos do Código Penal, benefícios legais (réu primário e advogado), identificação precisa de crimes inafiançáveis e irrepreensível postura de imparcialidade e anticorrupção perante o Judiciário de Brava City."
+          : resultado === "REAVALIAR"
+          ? "O candidato apresentou compreensão parcial da matéria, necessitando aprofundar estudos sobre cálculo de benefícios, inafiançabilidade e distinção entre fiança e pena. Recomenda-se nova avaliação após período de estudo."
+          : "O candidato não atingiu os requisitos mínimos de conhecimento regulamentar e/ou postura profissional exigidos para o exercício das atribuições no Departamento Jurídico.");
+
+    doc.text(obsTexto, 18, curY + 7.0, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.25 });
+
+    curY += obsH + 1.8;
+
+    // Seção 5: Indicação de Cargo e Homologação da Presidência (Efetivação)
+    curY = desenharCabecalhoSecao(doc, curY, "5. Indicação de Cargo e Homologação da Presidência (Efetivação)");
+
+    const homH = 14.2;
+    const homologacao = opts.homologacao || "PENDENTE";
+    const cargoNome = opts.cargo || "Estagiário";
+
+    if (homologacao === "HOMOLOGADO_ZAITH" || homologacao === "HOMOLOGADO_MIKE") {
+      doc.setFillColor(242, 253, 245);
+      doc.setDrawColor(34, 150, 70);
+    } else if (homologacao === "INDEFERIDO") {
+      doc.setFillColor(254, 242, 242);
+      doc.setDrawColor(220, 38, 38);
+    } else {
+      // PENDENTE
+      doc.setFillColor(255, 252, 240);
+      doc.setDrawColor(...ORO);
+    }
+    doc.setLineWidth(0.35);
+    doc.roundedRect(14, curY, boxW, homH, 0.8, 0.8, "FD");
+
+    // Título do Status de Homologação (sem emojis para evitar caractere corrompido [#6])
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    if (homologacao === "HOMOLOGADO_ZAITH") {
+      doc.setTextColor(25, 125, 55);
+      doc.text("[HOMOLOGADO] AUTORIZADO PELO PRESIDENTE ZAITH FROST", 18, curY + 4.0);
+    } else if (homologacao === "HOMOLOGADO_MIKE") {
+      doc.setTextColor(25, 125, 55);
+      doc.text("[HOMOLOGADO] AUTORIZADO PELO VICE-PRESIDENTE MIKE SANTARONI", 18, curY + 4.0);
+    } else if (homologacao === "INDEFERIDO") {
+      doc.setTextColor(180, 40, 40);
+      doc.text("[INDEFERIDO] EFETIVAÇÃO RECUSADA PELA PRESIDÊNCIA", 18, curY + 4.0);
+    } else {
+      doc.setTextColor(...ORO_ESCURO);
+      doc.text("[PENDENTE DE HOMOLOGAÇÃO] AGUARDANDO DESPACHO FORMAL", 18, curY + 4.0);
+    }
+
+    // Cargo Indicado alinhado à direita para garantir que caiba perfeitamente
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`CARGO INDICADO: ${cargoNome.toUpperCase()}`, 14 + boxW - 4, curY + 4.0, { align: "right" });
+
+    // Texto explicativo e estatutário
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.3);
+    doc.setTextColor(45, 52, 68);
+
+    let descHomologacao = "";
+    if (homologacao === "HOMOLOGADO_ZAITH" || homologacao === "HOMOLOGADO_MIKE") {
+      const autoridade = homologacao === "HOMOLOGADO_ZAITH" ? "pelo Presidente Zaith Frost" : "pelo Vice-Presidente Mike Santaroni";
+      descHomologacao = `Ata ratificada e despachada favoravelmente com status "Aprovado" ${autoridade}. Candidato oficialmente habilitado para investidura e posse imediata nas funções de ${cargoNome}.`;
+    } else if (homologacao === "INDEFERIDO") {
+      descHomologacao = `A Presidência do Departamento Jurídico indeferiu a homologação para investidura no cargo de ${cargoNome}. O candidato deverá cumprir novas diretrizes regimentais para reavaliação.`;
+    } else {
+      descHomologacao = `O examinador indicou o candidato para o cargo de "${cargoNome}". CONDIÇÃO RESOLUTIVA: Antes do candidato ser efetivado, o Presidente (Zaith Frost) ou o Vice-Presidente (Mike Santaroni) deverão conceder o "Aprovado" formal nesta ata.`;
+    }
+
+    if (opts.despachoPresidencia && opts.despachoPresidencia.trim()) {
+      descHomologacao += ` Despacho do Gabinete: "${opts.despachoPresidencia.trim()}".`;
+    }
+
+    doc.text(descHomologacao, 18, curY + 7.4, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.25 });
+
+    // 6. Assinaturas Grandes e Chancela Notarial
+    const sigStartY = Math.max(curY + homH + 4.0, 198);
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, opts.recrutador || "Zaith Frost", opts.recrutadorId || "101", "Examinador / Recrutador Responsável", protocolo);
+
+    const safeNome = (opts.candidato || "Candidato").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `Ata_Prova_Oral_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
   // Exporta globalmente para o aplicativo
   window.SDJ_PDF = {
     generateServicePDF,
     generatePenalPDF,
+    generateProvaOralPDF,
     getLogoAndWatermark,
     toSignatureCase
   };

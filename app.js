@@ -22,6 +22,8 @@
     limpar: svg('<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>'),
     download: svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
     tabela: svg('<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
+    prova: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/>'),
+    porte: svg('<path d="M4 11h11l2-3h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2l-2 5H9l1.5-4H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -507,12 +509,12 @@
         { id: "rf_familia", label: "👥 Nome da Família" },
         { id: "rf_fundador", label: "👑 Nome do Fundador" },
         { id: "rf_id", label: "🪪 Passaporte do Fundador" },
-        { id: "rf_valor", label: "💰 Valor Cobrado", placeholder: "R$ 200.000" },
+        { id: "rf_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000" },
         { id: "rf_membros", label: "📝 Quantidade de Membros Iniciais", placeholder: "Ex: 10", isFull: true }
       ]
     },
     {
-      id: "cnpj", title: "Registro CNPJ", icon: "🏠", svg: "cnpj", tag: "Empresarial",
+      id: "cnpj", title: "Registro CNPJ", icon: "🏢", svg: "cnpj", tag: "Empresarial",
       desc: "Abertura de empresa com geração automática de CNPJ.", webhook: "https://discord.com/api/webhooks/1557910430666588192/-mdIUQAewOMjr4yvgvNos11Qa70c5fnVyJxEjK8uhRrCSTx267_1oMcR4JF54sCAQ1bO",
       fields: [
         { id: "cp_empresa", label: "🏢 Nome da Empresa" },
@@ -520,13 +522,53 @@
         { id: "cp_prop", label: "👤 Nome do Proprietário" },
         { id: "cp_id", label: "🪪 Passaporte do Proprietário" },
         { id: "cp_cnpj", label: "🔢 CNPJ da Empresa", type: "cnpj-generator", isFull: true },
-        { id: "cp_valor", label: "💰 Valor Cobrado", placeholder: "R$ 300.000 (ou R$ 50.000 semanal)", isFull: true }
+        { id: "cp_valor", label: "💰 Valor Cobrado", placeholder: "R$ 250.000 (ou R$ 50.000 semanal)", isFull: true }
+      ]
+    },
+    {
+      id: "porte", title: "Porte de Arma (PT) & Munições", icon: "🔫", svg: "porte", tag: "Armamento",
+      desc: "Porte e Registro exclusivo para 1 Pistola PT 9mm (R$ 80.000) e Munições (R$ 400 por unidade). Laudo psicotécnico hospitalar obrigatório.",
+      webhook: "https://discord.com/api/webhooks/1560687247869878294/WFpx_HfZFoNVsA-b8Fxx_hwVJidjHy2HNi2JD4-MsevtwQshLDcj8LJODGwyemWeu92A",
+      fields: [
+        { id: "pa_cidadao", label: "👤 Nome do Cidadão (Requerente)" },
+        { id: "pa_id", label: "🪪 Passaporte do Cidadão" },
+        { id: "pa_emprego", label: "💼 Emprego / Ocupação Atual", placeholder: "Ex.: Empresário, Mecânico, Comerciante..." },
+        { id: "pa_motivo", label: "🎯 Motivo para Realizar o Porte", placeholder: "Ex.: Legítima defesa, segurança pessoal, transporte de valores..." },
+        { 
+          id: "pa_psicotecnico", 
+          label: "🏥 Laudo Psicotécnico Hospitalar", 
+          type: "options", 
+          options: ["Apto (Aprovado no Hospital)", "Inapto (Reprovado no Hospital)", "Pendente de Avaliação"] 
+        },
+        { id: "pa_medico", label: "🩺 Médico / Psicólogo Avaliador (Hospital)", placeholder: "Ex.: Dr. Roberto Silva (ID: 504)" },
+        { id: "pa_arma", label: "🔫 Armamento Homologado (Exclusivo: 1 PT 9mm — R$ 80.000)", placeholder: "Pistola PT 9mm" },
+        { id: "pa_serie", label: "🔢 Registro / Nº de Série da Arma", type: "serie-generator" },
+        { 
+          id: "pa_municao", 
+          label: "📦 Quantidade de Munições (R$ 400 por unidade)", 
+          type: "options", 
+          options: [
+            "Sem Munições (Somente 1 Arma PT — R$ 80.000)",
+            "50 Munições (+ R$ 20.000 · Total R$ 100.000)", 
+            "100 Munições (+ R$ 40.000 · Total R$ 120.000)", 
+            "150 Munições (+ R$ 60.000 · Total R$ 140.000)", 
+            "200 Munições (+ R$ 80.000 · Total R$ 160.000)", 
+            "250 Munições (+ R$ 100.000 · Total R$ 180.000)"
+          ] 
+        },
+        { id: "pa_valor", label: "💰 Valor Total Cobrado (1 Arma PT: 80k + Munições: R$ 400/un)", placeholder: "R$ 80.000", isFull: true }
       ]
     }
   ];
 
   const renderField = (f) => {
     const label = cleanLabel(f.label);
+    if (f.id === "pa_arma") {
+      return `
+        <label class="${f.isFull ? "full" : ""}">${label}
+          <input id="${f.id}" type="text" value="Pistola PT 9mm" readonly style="background:var(--bg-card);font-weight:600;color:var(--text);cursor:not-allowed;" title="Armamento homologado exclusivo: 1 Pistola PT 9mm (R$ 80.000)" />
+        </label>`;
+    }
     if (f.type === "options") {
       return `
         <div class="full">
@@ -546,6 +588,15 @@
           <span class="input-with-btn">
             <input id="${f.id}" type="text" placeholder="Clique em “Gerar CNPJ”" readonly />
             <button type="button" class="btn-outline btn-gerar-cnpj" data-input="${f.id}">${ICONS.dado} Gerar CNPJ</button>
+          </span>
+        </label>`;
+    }
+    if (f.type === "serie-generator") {
+      return `
+        <label class="full">${label}
+          <span class="input-with-btn">
+            <input id="${f.id}" type="text" placeholder="Clique em “Gerar Registro”" />
+            <button type="button" class="btn-outline btn-gerar-serie" data-input="${f.id}">${ICONS.dado} Gerar Registro</button>
           </span>
         </label>`;
     }
@@ -605,6 +656,27 @@
         valInput.value = precoMap[btn.dataset.val] || "";
       }
     }
+
+    // Se for Porte de Arma, calcula: 1 PT 9mm (80k) + Munições (400 por unidade)
+    if (inputId === "pa_municao") {
+      const valInput = $("#pa_valor");
+      if (valInput) {
+        const valText = btn.dataset.val;
+        if (valText.includes("Sem Munições")) {
+          valInput.value = "R$ 80.000";
+        } else if (valText.includes("50")) {
+          valInput.value = "R$ 100.000";
+        } else if (valText.includes("100")) {
+          valInput.value = "R$ 120.000";
+        } else if (valText.includes("150")) {
+          valInput.value = "R$ 140.000";
+        } else if (valText.includes("200")) {
+          valInput.value = "R$ 160.000";
+        } else if (valText.includes("250")) {
+          valInput.value = "R$ 180.000";
+        }
+      }
+    }
   }
   $$(".opt-card").forEach((btn) => btn.addEventListener("click", () => selectOption(btn)));
 
@@ -612,10 +684,12 @@
     if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
     if ($("#cas_valor") && !$("#cas_valor").value) $("#cas_valor").value = "R$ 200.000";
     if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 100.000";
-    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 200.000";
-    if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 300.000";
+    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 150.000";
+    if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 250.000";
     if ($("#cn_valor") && !$("#cn_valor").value) $("#cn_valor").value = "R$ 150.000";
     if ($("#ca_valor") && !$("#ca_valor").value) $("#ca_valor").value = "R$ 150.000";
+    if ($("#pa_arma") && !$("#pa_arma").value) $("#pa_arma").value = "Pistola PT 9mm";
+    if ($("#pa_valor") && !$("#pa_valor").value) $("#pa_valor").value = "R$ 80.000";
   }
 
   // Gerador de CNPJ
@@ -624,6 +698,15 @@
       const R = () => Math.floor(Math.random() * 10);
       $("#" + btnCnpj.dataset.input).value = `${R()}${R()}.${R()}${R()}${R()}.${R()}${R()}${R()}/0001-${R()}${R()}`;
       toast("✓ CNPJ gerado");
+    });
+  });
+
+  // Gerador de Registro de Arma
+  $$(".btn-gerar-serie").forEach((btnSerie) => {
+    btnSerie.addEventListener("click", () => {
+      const R = () => Math.floor(Math.random() * 900000 + 100000);
+      $("#" + btnSerie.dataset.input).value = `PT-BR-${R()}`;
+      toast("✓ Registro do armamento gerado");
     });
   });
 
@@ -647,8 +730,18 @@
     desc: "Valores regulamentados: custos internos de retirada e preços de venda ao cidadão."
   };
 
+  /* ---------- Card: Prova Oral do Recrutador ---------- */
+  const provaOralCard = {
+    id: "provaoral",
+    title: "Prova Oral do Recrutador",
+    svg: "prova",
+    tag: "Recrutamento",
+    featured: true,
+    desc: "Aplicação do teste oral oficial de admissão (12 perguntas nível fácil), gabarito e ata notarial em PDF."
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, precosCard, ...servicesConfig];
+  const allCards = [calculadoraCard, provaOralCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
     <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" style="animation-delay:${0.05 * i}s">
@@ -764,9 +857,26 @@
         webhookUrl = "https://discord.com/api/webhooks/1560000830436806716/6MdSLFAUlYGzR5UxAMYNnSRfuonjv44niLAwQ-1GUgbyaCfljWI6LZl2GlV1vuGl2UEp";
       } else if (sid === "alianca") {
         webhookUrl = "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2";
+      } else if (sid === "porte") {
+        webhookUrl = "https://discord.com/api/webhooks/1560687247869878294/WFpx_HfZFoNVsA-b8Fxx_hwVJidjHy2HNi2JD4-MsevtwQshLDcj8LJODGwyemWeu92A";
       }
 
-      sendWebhook(btn, webhookUrl, { embeds: [embed] }, () => resetService(svc), pdfData);
+      let payload = { embeds: [embed] };
+      if (sid === "porte") {
+        const laudoVal = ($("#pa_psicotecnico")?.value || "").toLowerCase();
+        if (laudoVal.includes("inapto")) {
+          embed.color = 15158332; // Vermelho
+          payload.content = "🚨 **[ALERTA DE SEGURANÇA · LAUDO INAPTO NO HOSPITAL]**\nO cidadão foi reprovado no exame psicotécnico hospitalar. Concessão de porte de arma e entrega de munições **RECUSADAS/BLOQUEADAS**.";
+        } else if (laudoVal.includes("pendente")) {
+          embed.color = 15844367; // Amarelo
+          payload.content = "⏳ **[LAUDO HOSPITALAR PENDENTE]**\nA emissão do porte de arma e a entrega de munições aguardam a realização e laudo favorável do teste psicotécnico no Hospital.";
+        } else {
+          embed.color = 3066993; // Verde
+          payload.content = "🔫 **[PORTE DE ARMA (PT) & MUNIÇÃO EMITIDO COM SUCESSO]**\nCidadão aprovado no teste psicotécnico hospitalar. Porte de pistola PT e munições liberados com fé pública.";
+        }
+      }
+
+      sendWebhook(btn, webhookUrl, payload, () => resetService(svc), pdfData);
     });
   });
 
@@ -875,16 +985,31 @@
     }
 
     tbody.innerHTML = itensFiltrados.map(p => {
-      const retiradaTxt = p.retirada !== null ? `<span class="preco-retirada">R$ ${p.retirada.toLocaleString("pt-BR")}</span>` : `<span class="preco-sem-retirada">— Taxa Notarial</span>`;
-      const vendaTxt = `<span class="preco-venda">R$ ${p.venda.toLocaleString("pt-BR")}</span>`;
+      let retiradaTxt = "";
+      if (p.retiradaDisplay) {
+        retiradaTxt = `<span class="preco-retirada">${p.retiradaDisplay}</span>`;
+      } else if (p.retirada !== null) {
+        retiradaTxt = `<span class="preco-retirada">R$ ${p.retirada.toLocaleString("pt-BR")}</span>`;
+      } else {
+        retiradaTxt = `<span class="preco-sem-retirada">—</span>`;
+      }
+
+      const vendaTxt = p.vendaDisplay ? `<span class="preco-venda">${p.vendaDisplay}</span>` : `<span class="preco-venda">R$ ${p.venda.toLocaleString("pt-BR")}</span>`;
       
       let margemTxt = "";
-      if (p.retirada !== null) {
+      if (p.item.includes("Delegacia")) {
+        margemTxt = `<span class="badge-lucro total" title="Honorários advocatícios">Honorários</span>`;
+      } else if (p.retiradaDisplay && p.retiradaDisplay.includes("%")) {
+        const pct = parseInt(p.retiradaDisplay);
+        margemTxt = `<span class="badge-lucro" title="Margem líquida do Jurídico">${100 - pct}% Retenção</span>`;
+      } else if (p.retirada !== null) {
         const lucro = p.venda - p.retirada;
         margemTxt = `<span class="badge-lucro" title="Lucro líquido retido pelo Jurídico">+R$ ${lucro.toLocaleString("pt-BR")}</span>`;
       } else {
         margemTxt = `<span class="badge-lucro total" title="Serviço 100% notarial">100% Notarial</span>`;
       }
+
+      const btnAcaoLabel = p.targetId === "calculadora" ? "Consultar" : "Emitir";
 
       return `
         <tr>
@@ -903,7 +1028,7 @@
           <td class="c">${margemTxt}</td>
           <td class="c">
             <button type="button" class="btn-outline btn-ir-servico" data-target="tab-${p.targetId}" data-title="${p.item}">
-              Emitir ${ICONS.seta}
+              ${btnAcaoLabel} ${ICONS.seta}
             </button>
           </td>
         </tr>
@@ -936,9 +1061,17 @@
         } else if (target === "tab-adocao") {
           if ($("#ca_valor")) $("#ca_valor").value = "R$ 150.000";
         } else if (target === "tab-familia") {
-          if ($("#rf_valor")) $("#rf_valor").value = "R$ 200.000";
+          if ($("#rf_valor")) $("#rf_valor").value = "R$ 150.000";
         } else if (target === "tab-cnpj") {
-          if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 50.000" : "R$ 300.000";
+          if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 50.000" : "R$ 250.000";
+        } else if (target === "tab-porte") {
+          if (title.includes("Muniç")) {
+            selectOption($(`.opt-card[data-input="pa_municao"][data-val*="50"]`));
+            if ($("#pa_valor")) $("#pa_valor").value = "R$ 100.000";
+          } else {
+            selectOption($(`.opt-card[data-input="pa_municao"][data-val*="Sem Munições"]`));
+            if ($("#pa_valor")) $("#pa_valor").value = "R$ 80.000";
+          }
         }
       });
     });
@@ -954,8 +1087,645 @@
     precosSearchInput.addEventListener("input", (e) => renderTabelaPrecos(e.target.value));
   }
 
+  /* ==========================================================
+     PROVA ORAL DO RECRUTADOR — GERENCIAMENTO COMPLETO
+     ========================================================== */
+  const provaOralState = {
+    scores: {},        // qid -> 1.0 | 0.5 | 0.0
+    notes: {},         // qid -> texto
+    postura: "Adequada",
+    checklist: new Set(),
+    resultado: "APROVADO",
+    cargo: "Estagiário",
+    homologacao: "PENDENTE",
+    despachoPresidencia: "",
+  };
+
+  function initProvaOralCampos() {
+    const hoje = new Date();
+    if ($("#po-data") && !$("#po-data").value) {
+      $("#po-data").value = hoje.toLocaleDateString("pt-BR");
+    }
+    if ($("#po-hora") && !$("#po-hora").value) {
+      $("#po-hora").value = hoje.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    }
+    if ($("#po-recrutador") && !$("#po-recrutador").value && window.PRESIDENCIA_JURIDICO) {
+      $("#po-recrutador").value = window.PRESIDENCIA_JURIDICO.presidente || "Zaith Frost";
+      $("#po-recrutador-id").value = "101";
+    }
+    if ($("#po-cargo") && !$("#po-cargo").value) {
+      $("#po-cargo").value = provaOralState.cargo;
+    }
+    if ($("#po-despacho-presidencia") && !$("#po-despacho-presidencia").value) {
+      $("#po-despacho-presidencia").value = provaOralState.despachoPresidencia;
+    }
+  }
+
+  function renderProvaOral() {
+    const container = $("#po-questions-container");
+    if (!container || typeof PROVA_ORAL_CONFIG === "undefined") return;
+
+    container.innerHTML = PROVA_ORAL_CONFIG.questoes.map((q) => {
+      const currentScore = provaOralState.scores[q.id];
+      let indicatorClass = "";
+      let indicatorText = "Não avaliada";
+      if (currentScore === 1.0) {
+        indicatorClass = "active-correto";
+        indicatorText = "1.0 pt (Correto)";
+      } else if (currentScore === 0.5) {
+        indicatorClass = "active-parcial";
+        indicatorText = "0.5 pt (Parcial)";
+      } else if (currentScore === 0.0) {
+        indicatorClass = "active-incorreto";
+        indicatorText = "0.0 pt (Incorreto)";
+      }
+
+      let cardRatedClass = "";
+      if (currentScore === 1.0) cardRatedClass = "rated-correto";
+      else if (currentScore === 0.5) cardRatedClass = "rated-parcial";
+      else if (currentScore === 0.0) cardRatedClass = "rated-incorreto";
+
+      const keyPointsHtml = q.palavrasChave && q.palavrasChave.length
+        ? `<div class="po-keypoints-wrap">
+             <span class="po-kp-label">Pontos-chave:</span>
+             ${q.palavrasChave.map((kp) => `<span class="po-kp-tag">${kp}</span>`).join("")}
+           </div>`
+        : "";
+
+      const dicaHtml = q.dicaRecrutador
+        ? `<div class="po-dica-recrutador">🔍 <b>Critério do Examinador:</b> ${q.dicaRecrutador}</div>`
+        : "";
+
+      return `
+        <div class="po-question-card ${cardRatedClass}" id="po-qcard-${q.id}" data-qid="${q.id}">
+          <div class="po-q-head">
+            <div class="po-q-badges">
+              <span class="po-q-num">Questão ${String(q.id).padStart(2, "0")} / 12</span>
+              <span class="badge-tag-cat">${q.tema}</span>
+              <span class="po-q-tipo">${q.tipo}</span>
+            </div>
+            <span class="po-q-score-indicator ${indicatorClass}" id="po-qind-${q.id}">${indicatorText}</span>
+          </div>
+
+          <div class="po-q-text">${q.pergunta}</div>
+
+          <div class="po-gabarito-wrap">
+            <button type="button" class="po-gabarito-toggle" data-qid="${q.id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              Ver Gabarito Oficial &amp; Resposta Esperada
+            </button>
+            <div class="po-gabarito-box" id="po-gbox-${q.id}">
+              <div class="po-gab-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                Gabarito Oficial (Manual do Recrutador)
+              </div>
+              <div class="po-gab-text">${q.gabarito}</div>
+              ${keyPointsHtml}
+              ${dicaHtml}
+            </div>
+          </div>
+
+          <div class="po-rating-row">
+            <span class="po-rating-label">Atribuir pontuação do candidato:</span>
+            <div class="po-rating-btns">
+              <button type="button" class="po-btn-rate rate-correto ${currentScore === 1.0 ? "active-correto" : ""}" data-qid="${q.id}" data-score="1.0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
+                Correto (+1.0)
+              </button>
+              <button type="button" class="po-btn-rate rate-parcial ${currentScore === 0.5 ? "active-parcial" : ""}" data-qid="${q.id}" data-score="0.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                Parcial (+0.5)
+              </button>
+              <button type="button" class="po-btn-rate rate-incorreto ${currentScore === 0.0 ? "active-incorreto" : ""}" data-qid="${q.id}" data-score="0.0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Incorreto (0.0)
+              </button>
+            </div>
+          </div>
+
+          <input type="text" class="po-q-notes-input" id="po-qnote-${q.id}" placeholder="Anotações / resposta resumida do candidato nesta questão (opcional)..." value="${provaOralState.notes[q.id] || ""}" />
+        </div>
+      `;
+    }).join("");
+
+    // Toggle do Gabarito
+    container.querySelectorAll(".po-gabarito-toggle").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const qid = btn.dataset.qid;
+        const box = $(`#po-gbox-${qid}`);
+        if (!box) return;
+        const isShown = box.classList.toggle("show");
+        btn.classList.toggle("open", isShown);
+      });
+    });
+
+    // Cliques nos botões de pontuação
+    container.querySelectorAll(".po-btn-rate").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const qid = parseInt(btn.dataset.qid, 10);
+        const score = parseFloat(btn.dataset.score);
+        
+        if (provaOralState.scores[qid] === score) {
+          delete provaOralState.scores[qid];
+        } else {
+          provaOralState.scores[qid] = score;
+        }
+
+        updateQuestionUi(qid);
+        updateProvaOralScore();
+      });
+    });
+
+    // Anotações individuais
+    container.querySelectorAll(".po-q-notes-input").forEach((inp) => {
+      inp.addEventListener("input", (e) => {
+        const qid = parseInt(e.target.id.replace("po-qnote-", ""), 10);
+        provaOralState.notes[qid] = e.target.value;
+      });
+    });
+
+    renderChecklist();
+    renderCargoPills();
+    updateProvaOralScore();
+  }
+
+  function renderChecklist() {
+    const checkContainer = $("#po-checklist-container");
+    if (!checkContainer || typeof PROVA_ORAL_CONFIG === "undefined") return;
+
+    checkContainer.innerHTML = PROVA_ORAL_CONFIG.checklist.map((item, idx) => `
+      <label class="po-check-item">
+        <input type="checkbox" data-cidx="${idx}" ${provaOralState.checklist.has(idx) ? "checked" : ""} />
+        <span>${item}</span>
+      </label>
+    `).join("");
+
+    checkContainer.querySelectorAll("input[type='checkbox']").forEach((chk) => {
+      chk.addEventListener("change", (e) => {
+        const idx = parseInt(e.target.dataset.cidx, 10);
+        if (e.target.checked) provaOralState.checklist.add(idx);
+        else provaOralState.checklist.delete(idx);
+      });
+    });
+  }
+
+  function renderCargoCards() {
+    const container = $("#po-cargo-cards") || $("#po-cargo-pills");
+    if (!container || typeof PROVA_ORAL_CONFIG === "undefined") return;
+
+    const cargos = PROVA_ORAL_CONFIG.cargosDisponiveis || [];
+
+    container.innerHTML = cargos.map((item) => {
+      const nome = typeof item === "string" ? item : item.nome;
+      const icone = typeof item === "object" && item.icone ? item.icone : "🎖️";
+      const desc = typeof item === "object" && item.desc ? item.desc : "";
+      const isSelected = (provaOralState.cargo && provaOralState.cargo.trim().toLowerCase() === nome.trim().toLowerCase());
+      return `
+        <div class="po-cargo-card ${isSelected ? "selected active" : ""}" data-cargo="${nome}">
+          <div class="po-cargo-card-top">
+            <div class="po-cargo-card-ico-name">
+              <span class="po-cargo-card-ico">${icone}</span>
+              <span class="po-cargo-card-title">${nome}</span>
+            </div>
+            <span class="po-cargo-card-check">${isSelected ? "✓" : ""}</span>
+          </div>
+          <p class="po-cargo-card-desc">${desc}</p>
+        </div>
+      `;
+    }).join("");
+
+    container.querySelectorAll(".po-cargo-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        container.querySelectorAll(".po-cargo-card").forEach((c) => {
+          c.classList.remove("selected", "active");
+          const chk = c.querySelector(".po-cargo-card-check");
+          if (chk) chk.textContent = "";
+        });
+        card.classList.add("selected", "active");
+        const chk = card.querySelector(".po-cargo-card-check");
+        if (chk) chk.textContent = "✓";
+        provaOralState.cargo = card.dataset.cargo;
+        const input = $("#po-cargo");
+        if (input) input.value = card.dataset.cargo;
+      });
+    });
+  }
+
+  function renderCargoPills() {
+    renderCargoCards();
+  }
+
+  function updateQuestionUi(qid) {
+    const card = $(`#po-qcard-${qid}`);
+    const ind = $(`#po-qind-${qid}`);
+    if (!card || !ind) return;
+
+    const currentScore = provaOralState.scores[qid];
+    card.classList.remove("rated-correto", "rated-parcial", "rated-incorreto");
+    ind.classList.remove("active-correto", "active-parcial", "active-incorreto");
+
+    card.querySelectorAll(".po-btn-rate").forEach((b) => {
+      b.classList.remove("active-correto", "active-parcial", "active-incorreto");
+    });
+
+    if (currentScore === 1.0) {
+      card.classList.add("rated-correto");
+      ind.classList.add("active-correto");
+      ind.textContent = "1.0 pt (Correto)";
+      card.querySelector(".rate-correto")?.classList.add("active-correto");
+    } else if (currentScore === 0.5) {
+      card.classList.add("rated-parcial");
+      ind.classList.add("active-parcial");
+      ind.textContent = "0.5 pt (Parcial)";
+      card.querySelector(".rate-parcial")?.classList.add("active-parcial");
+    } else if (currentScore === 0.0) {
+      card.classList.add("rated-incorreto");
+      ind.classList.add("active-incorreto");
+      ind.textContent = "0.0 pt (Incorreto)";
+      card.querySelector(".rate-incorreto")?.classList.add("active-incorreto");
+    } else {
+      ind.textContent = "Não avaliada";
+    }
+  }
+
+  function updateProvaOralScore() {
+    const qIds = Object.keys(provaOralState.scores);
+    const answeredCount = qIds.length;
+    let totalScore = 0;
+    qIds.forEach((id) => {
+      totalScore += provaOralState.scores[id] || 0;
+    });
+
+    const maxScore = 12;
+    const pct = Math.round((totalScore / maxScore) * 100);
+
+    const valEl = $("#po-score-val");
+    const pctEl = $("#po-pct-text");
+    const ansEl = $("#po-answered-text");
+    const fillEl = $("#po-progress-fill");
+    const badgeEl = $("#po-status-badge");
+
+    if (valEl) valEl.textContent = totalScore.toFixed(1);
+    if (pctEl) pctEl.textContent = `${pct}% de aproveitamento`;
+    if (ansEl) ansEl.textContent = `${answeredCount} de ${maxScore} questões avaliadas`;
+    if (fillEl) fillEl.style.width = `${(answeredCount / maxScore) * 100}%`;
+
+    if (badgeEl) {
+      badgeEl.className = "po-badge";
+      if (answeredCount < maxScore) {
+        badgeEl.classList.add("status-pendente");
+        badgeEl.textContent = "Em Andamento";
+      } else if (totalScore >= 9.5) {
+        badgeEl.classList.add("status-aprovado");
+        badgeEl.textContent = "Aprovado";
+      } else if (totalScore >= 7.0) {
+        badgeEl.classList.add("status-reavaliar");
+        badgeEl.textContent = "Reavaliação";
+      } else {
+        badgeEl.classList.add("status-reprovado");
+        badgeEl.textContent = "Reprovado";
+      }
+    }
+
+    if (answeredCount === maxScore) {
+      let sugestao = "APROVADO";
+      if (totalScore < 7.0 || provaOralState.postura === "Inadequada") sugestao = "REPROVADO";
+      else if (totalScore < 9.5 || provaOralState.postura === "Precisa melhorar") sugestao = "REAVALIAR";
+      
+      const rad = $(`input[name="po_resultado"][value="${sugestao}"]`);
+      if (rad && !rad.dataset.manual) {
+        rad.checked = true;
+        provaOralState.resultado = sugestao;
+      }
+    }
+  }
+
+  function getProvaOralData() {
+    const recrutador = ($("#po-recrutador")?.value || "Zaith Frost").trim();
+    const recrutadorId = ($("#po-recrutador-id")?.value || "101").trim();
+    const candidato = ($("#po-candidato")?.value || "Candidato").trim();
+    const candidatoId = ($("#po-candidato-id")?.value || "—").trim();
+    const data = ($("#po-data")?.value || new Date().toLocaleDateString("pt-BR")).trim();
+    const hora = ($("#po-hora")?.value || new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })).trim();
+    const observacoes = ($("#po-observacoes")?.value || "").trim();
+    const cargo = ($("#po-cargo")?.value || provaOralState.cargo || "Estagiário").trim();
+    const despachoPresidencia = ($("#po-despacho-presidencia")?.value || "").trim();
+    const homologacao = "PENDENTE";
+    const homologacaoLabel = "⏳ Pendente de Homologação (Aguardando Zaith Frost / Mike Santaroni)";
+
+    let totalScore = 0;
+    const questions = PROVA_ORAL_CONFIG.questoes.map((q) => {
+      const score = typeof provaOralState.scores[q.id] === "number" ? provaOralState.scores[q.id] : 0;
+      totalScore += score;
+      let status = "Incorreto";
+      if (score === 1.0) status = "Correto";
+      else if (score === 0.5) status = "Parcial";
+      return {
+        id: q.id,
+        tema: q.tema,
+        tipo: q.tipo,
+        pergunta: q.pergunta,
+        score,
+        status,
+        observacao: provaOralState.notes[q.id] || ""
+      };
+    });
+
+    const selectedRadio = $(`input[name="po_resultado"]:checked`);
+    const resultado = selectedRadio ? selectedRadio.value : (totalScore >= 9.5 ? "APROVADO" : totalScore >= 7.0 ? "REAVALIAR" : "REPROVADO");
+    const percent = Math.round((totalScore / 12) * 100);
+
+    const checklistConfirmado = [];
+    provaOralState.checklist.forEach((idx) => {
+      if (PROVA_ORAL_CONFIG.checklist[idx]) checklistConfirmado.push(PROVA_ORAL_CONFIG.checklist[idx]);
+    });
+
+    return {
+      recrutador,
+      recrutadorId,
+      candidato,
+      candidatoId,
+      cargo,
+      homologacao,
+      homologacaoLabel,
+      despachoPresidencia,
+      data,
+      hora,
+      score: totalScore,
+      maxScore: 12,
+      percent,
+      resultado,
+      postura: provaOralState.postura,
+      checklist: checklistConfirmado,
+      questions,
+      observacoes,
+      cidade: CONFIG.cidade
+    };
+  }
+
+  function relatorioProvaOralTexto(dados) {
+    const emojis = {
+      APROVADO: "🟢",
+      REAVALIAR: "🟡",
+      REPROVADO: "🔴"
+    };
+    const emojiRes = emojis[dados.resultado] || "⚖️";
+
+    let t = "";
+    t += "========================================================\n";
+    t += `⚖️ ATA NOTARIAL DE PROVA ORAL — ${CONFIG.cidade.toUpperCase()}\n`;
+    t += "DEPARTAMENTO JURÍDICO · BANCA DE RECRUTAMENTO E ADMISSÃO\n";
+    t += "========================================================\n\n";
+
+    t += "👤 INFORMAÇÕES DO CANDIDATO E DO EXAMINADOR:\n";
+    t += `• Candidato: ${dados.candidato} (ID/Passaporte: ${dados.candidatoId})\n`;
+    t += `• Examinador Oficial: ${dados.recrutador} (ID/Passaporte: ${dados.recrutadorId})\n`;
+    t += `• Data do Exame: ${dados.data} às ${dados.hora}\n`;
+    t += `• Nível da Prova: Fácil (12 Questões Teóricas e Práticas)\n\n`;
+
+    t += "🎖️ INDICAÇÃO DE CARGO & EFETIVAÇÃO PELA PRESIDÊNCIA:\n";
+    t += `• Cargo Recomendado pela Banca: ${dados.cargo}\n`;
+    t += `• Homologação da Presidência: ${dados.homologacaoLabel}\n`;
+    if (dados.homologacao === "PENDENTE") {
+      t += "⚠️ AVISO REGULAMENTAR: A aprovação no exame oral qualifica o candidato, mas a nomeação e efetivação no cargo dependem OBRIGATORIAMENTE do \"Aprovado\" formal do Presidente (Zaith Frost) ou do Vice-Presidente (Mike Santaroni).\n";
+    }
+    if (dados.despachoPresidencia) {
+      t += `• Despacho da Presidência: "${dados.despachoPresidencia}"\n`;
+    }
+    t += "\n";
+
+    t += "📊 RESULTADO E DESEMPENHO OFICIAL:\n";
+    t += `• Pontuação: ${dados.score.toFixed(1)} / 12.0 pontos (${dados.percent}% de aproveitamento)\n`;
+    t += `• Postura Profissional: ${dados.postura}\n`;
+    t += `• Veredicto Final da Prova: ${emojiRes} **${dados.resultado}**\n\n`;
+
+    t += "📝 ESPELHO DAS 12 QUESTÕES APLICADAS:\n";
+    dados.questions.forEach((q) => {
+      const qIcon = q.score === 1.0 ? "✅" : q.score === 0.5 ? "⚠️" : "❌";
+      t += `[Q${String(q.id).padStart(2, "0")}] ${qIcon} ${q.tema} (${q.score.toFixed(1)} pt) — Status: ${q.status}\n`;
+      if (q.observacao) t += `     Obs: "${q.observacao}"\n`;
+    });
+
+    if (dados.checklist.length) {
+      t += "\n📋 CHECKLIST DE CONFORMIDADE DEMONSTRADO:\n";
+      dados.checklist.forEach((chk) => (t += `• [✓] ${chk}\n`));
+    }
+
+    if (dados.observacoes) {
+      t += `\n💬 CONSIDERAÇÕES DO EXAMINADOR:\n"${dados.observacoes}"\n`;
+    }
+
+    t += "\n========================================================\n";
+    t += `Gabinete da Presidência do Judiciário: ${PRESIDENCIA_JURIDICO.presidente} (Presidente) & ${PRESIDENCIA_JURIDICO.vice} (Vice-Presidente)\n`;
+    t += "========================================================";
+    return t;
+  }
+
+  // Configuração dos Botões e Listeners da Prova Oral
+  const btnTopProva = $("#btn-provaoral");
+  if (btnTopProva) {
+    btnTopProva.addEventListener("click", () => goTo("tab-provaoral", "Prova Oral do Recrutador"));
+  }
+
+  function resetProvaOral(keepExaminer = true) {
+    provaOralState.scores = {};
+    provaOralState.notes = {};
+    provaOralState.checklist.clear();
+    provaOralState.postura = "Adequada";
+    provaOralState.resultado = "APROVADO";
+    provaOralState.cargo = "Estagiário";
+    provaOralState.homologacao = "PENDENTE";
+    provaOralState.despachoPresidencia = "";
+    
+    if ($("#po-candidato")) $("#po-candidato").value = "";
+    if ($("#po-candidato-id")) $("#po-candidato-id").value = "";
+    if ($("#po-observacoes")) $("#po-observacoes").value = "";
+    if ($("#po-cargo")) $("#po-cargo").value = "Estagiário";
+    if ($("#po-despacho-presidencia")) $("#po-despacho-presidencia").value = "";
+
+    if (!keepExaminer) {
+      if ($("#po-recrutador")) $("#po-recrutador").value = "";
+      if ($("#po-recrutador-id")) $("#po-recrutador-id").value = "";
+    }
+    
+    $$("#po-postura-group button").forEach((b) => b.classList.toggle("on", b.dataset.postura === "Adequada"));
+    $$(`input[name="po_resultado"]`).forEach((r) => {
+      r.checked = r.value === "APROVADO";
+      delete r.dataset.manual;
+    });
+
+    renderProvaOral();
+    renderCargoCards();
+    renderChecklist();
+    updateProvaOralScore();
+    initProvaOralCampos();
+  }
+
+  const poBtnDiscord = $("#po-btn-discord");
+  if (poBtnDiscord) {
+    poBtnDiscord.innerHTML = DISCORD_LABEL;
+    poBtnDiscord.addEventListener("click", async (e) => {
+      if (e) e.preventDefault();
+
+      const candInput = $("#po-candidato");
+      const candNome = (candInput ? candInput.value : "").trim();
+      if (!candNome) {
+        toast("⚠️ Preencha o nome do candidato antes de enviar a ata para o Discord!", true);
+        candInput?.focus();
+        return;
+      }
+
+      const dados = getProvaOralData();
+      let pdfData = null;
+      try {
+        if (window.SDJ_PDF) {
+          pdfData = await window.SDJ_PDF.generateProvaOralPDF(dados);
+        }
+      } catch (err) {
+        console.warn("Falha ao gerar PDF da Prova Oral:", err);
+      }
+
+      const webhookUrl = (window.PROVA_ORAL_CONFIG && window.PROVA_ORAL_CONFIG.webhook) || "https://discord.com/api/webhooks/1560656685557883022/BLD5lMAwnsOd-PU5Do8cf6N25z071fagqj6kiuHsAZptB_u1qvknBf1Ji_0RvM2rJFXS";
+      
+      const embedColor = dados.resultado === "APROVADO" ? 3066993 : dados.resultado === "REAVALIAR" ? 15844367 : 15158332;
+
+      let msgContent = "";
+      if (dados.homologacao === "PENDENTE") {
+        msgContent = `📢 **[AGUARDANDO HOMOLOGAÇÃO DA PRESIDÊNCIA]**\nO candidato **${dados.candidato}** concluiu o exame oral para o cargo de **${dados.cargo}** com o veredicto **${dados.resultado}**.\n⚠️ **Efetivação Pendente:** Conforme o estatuto, a posse e efetivação dependem do **\"Aprovado\"** formal do Presidente **Zaith Frost** ou do Vice-Presidente **Mike Santaroni**.`;
+      } else if (dados.homologacao === "HOMOLOGADO_ZAITH") {
+        msgContent = `🏛️ **[EFETIVAÇÃO HOMOLOGADA]**\nO candidato **${dados.candidato}** teve sua aprovação e nomeação no cargo de **${dados.cargo}** homologadas pelo Presidente **Zaith Frost**.`;
+      } else if (dados.homologacao === "HOMOLOGADO_MIKE") {
+        msgContent = `🏛️ **[EFETIVAÇÃO HOMOLOGADA]**\nO candidato **${dados.candidato}** teve sua aprovação e nomeação no cargo de **${dados.cargo}** homologadas pelo Vice-Presidente **Mike Santaroni**.`;
+      } else {
+        msgContent = `🚫 **[EFETIVAÇÃO INDEFERIDA]**\nA efetivação do candidato **${dados.candidato}** para o cargo de **${dados.cargo}** foi indeferida pela Presidência.`;
+      }
+
+      const embed = {
+        title: `🎓 ATA NOTARIAL: PROVA ORAL DE RECRUTAMENTO — ${dados.resultado}`,
+        description: `Avaliação oral oficial de admissão ao Departamento Jurídico de **${CONFIG.cidade}** (Nível Fácil · 12 Perguntas).`,
+        color: embedColor,
+        fields: [
+          { name: "👤 Candidato", value: `**${dados.candidato}** (ID: ${dados.candidatoId})`, inline: true },
+          { name: "⚖️ Examinador", value: `**${dados.recrutador}** (ID: ${dados.recrutadorId})`, inline: true },
+          { name: "📅 Data / Hora", value: `${dados.data} às ${dados.hora}`, inline: true },
+          { name: "🎖️ Cargo Recomendado", value: `**${dados.cargo}**`, inline: true },
+          { name: "🏛️ Homologação / Efetivação", value: `**${dados.homologacaoLabel}**`, inline: true },
+          { name: "📊 Pontuação Final", value: `**${dados.score.toFixed(1)} / 12.0** (${dados.percent}%)`, inline: true },
+          { name: "🛡️ Postura & Ética", value: `**${dados.postura}**`, inline: true },
+          { name: "🏆 Veredicto da Banca", value: `**${dados.resultado}**`, inline: true },
+        ],
+        footer: { text: `Tribunal de Justiça — ${CONFIG.cidade} • Presidência: ${PRESIDENCIA_JURIDICO.presidente} & ${PRESIDENCIA_JURIDICO.vice}` },
+        timestamp: new Date().toISOString()
+      };
+
+      if (dados.despachoPresidencia) {
+        embed.fields.push({ name: "📜 Despacho da Presidência", value: dados.despachoPresidencia, inline: false });
+      }
+
+      if (dados.observacoes) {
+        embed.fields.push({ name: "💬 Parecer do Examinador", value: dados.observacoes, inline: false });
+      }
+
+      sendWebhook(
+        poBtnDiscord,
+        webhookUrl,
+        { content: msgContent, embeds: [embed] },
+        () => {
+          resetProvaOral(true);
+          toast("✓ Ata e PDF enviados ao Discord com sucesso! Formulário reiniciado para o próximo candidato.");
+          const tab = $("#tab-provaoral");
+          if (tab) {
+            tab.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        },
+        pdfData
+      );
+    });
+  }
+
+  $("#po-btn-copiar")?.addEventListener("click", () => {
+    const dados = getProvaOralData();
+    copyText(relatorioProvaOralTexto(dados));
+  });
+
+  $("#po-btn-pdf")?.addEventListener("click", async () => {
+    const dados = getProvaOralData();
+    try {
+      toast("Gerando Ata Notarial da Prova Oral...");
+      const pdfData = await window.SDJ_PDF.generateProvaOralPDF(dados);
+      pdfData.doc.save(pdfData.filename);
+      toast("✓ Ata em PDF baixada com sucesso!");
+    } catch (err) {
+      toast("Erro ao gerar PDF: " + err.message, true);
+    }
+  });
+
+  $("#po-btn-auto-fill")?.addEventListener("click", () => {
+    if (typeof PROVA_ORAL_CONFIG === "undefined") return;
+    PROVA_ORAL_CONFIG.questoes.forEach((q) => {
+      provaOralState.scores[q.id] = 1.0;
+      updateQuestionUi(q.id);
+    });
+    PROVA_ORAL_CONFIG.checklist.forEach((_, idx) => {
+      provaOralState.checklist.add(idx);
+    });
+    renderChecklist();
+    updateProvaOralScore();
+    toast("✓ Todas as 12 questões marcadas como Corretas (+1.0)!");
+  });
+
+  $("#po-btn-zerar")?.addEventListener("click", () => {
+    if (typeof PROVA_ORAL_CONFIG === "undefined") return;
+    PROVA_ORAL_CONFIG.questoes.forEach((q) => {
+      provaOralState.scores[q.id] = 0.0;
+      updateQuestionUi(q.id);
+    });
+    updateProvaOralScore();
+    toast("Notas das 12 questões zeradas.");
+  });
+
+  $("#po-btn-limpar")?.addEventListener("click", () => {
+    if (!confirm("Deseja realmente limpar todos os campos da prova oral?")) return;
+    resetProvaOral(true);
+    toast("Formulário da prova oral reiniciado.");
+  });
+
+  $$("#po-postura-group button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      $$("#po-postura-group button").forEach((b) => b.classList.toggle("on", b === btn));
+      provaOralState.postura = btn.dataset.postura;
+      updateProvaOralScore();
+    });
+  });
+
+  $$(`input[name="po_resultado"]`).forEach((rad) => {
+    rad.addEventListener("change", () => {
+      rad.dataset.manual = "true";
+      provaOralState.resultado = rad.value;
+    });
+  });
+
+  // Listener para Cargo
+  $("#po-cargo")?.addEventListener("input", (e) => {
+    provaOralState.cargo = e.target.value;
+    const cards = $$(".po-cargo-card");
+    cards.forEach((card) => {
+      const match = card.dataset.cargo.trim().toLowerCase() === e.target.value.trim().toLowerCase();
+      card.classList.toggle("selected", match);
+      card.classList.toggle("active", match);
+      const chk = card.querySelector(".po-cargo-card-check");
+      if (chk) chk.textContent = match ? "✓" : "";
+    });
+  });
+
+  $("#po-despacho-presidencia")?.addEventListener("input", (e) => {
+    provaOralState.despachoPresidencia = e.target.value;
+  });
+
   renderList();
   renderTabelaPrecos();
+  renderProvaOral();
+  initProvaOralCampos();
   aplicarPrecosPadrao();
   update();
 })();
