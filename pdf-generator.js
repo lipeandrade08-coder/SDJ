@@ -725,8 +725,17 @@
       "O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, no uso das prerrogativas conferidas pela Presidência do Poder Judiciário e pela Corregedoria Geral de Justiça, CERTIFICA que foram cumpridos todos os pressupostos legais e formais exigidos para a lavratura deste ato notarial. O presente assento encontra-se registrado, averbado e homologado, gozando de fé pública originária, presunção absoluta de veracidade e eficácia plena perante todos os órgãos públicos, corporações policiais e instituições civis.";
 
     if (opts.service && opts.service.id === "porte") {
+      const situacaoField = (opts.fields || []).find(f => f.label.toLowerCase().includes("situação") || f.label.toLowerCase().includes("emissão"));
+      const sitVal = situacaoField ? situacaoField.value : "Primeiro Porte";
+      let sitTxt = "concessão de Primeiro Porte de Arma de Fogo";
+      if (sitVal.toLowerCase().includes("roubo")) {
+        sitTxt = "emissão de 2ª Via do Porte de Arma de Fogo por motivo de Roubo/Furto do armamento anterior, conforme declaração e justificativa registradas";
+      } else if (sitVal.toLowerCase().includes("perda")) {
+        sitTxt = "emissão de 2ª Via do Porte de Arma de Fogo por motivo de Perda/Extravio do armamento anterior, conforme declaração e justificativa registradas";
+      }
+
       termoCompleto =
-        "O DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob homologação da Presidência do Judiciário e em conformidade com as diretrizes de Segurança Pública, CERTIFICA a concessão do Porte de Arma de Fogo exclusivo para 1 Pistola PT 9mm (R$ 80.000) e fornecimento de munições (R$ 400 por unidade), condicionado estritamente à apresentação do Laudo Psicotécnico emitido pelo Hospital Municipal com parecer 'Apto'. O presente registro possui fé pública e validade oficial perante todas as forças policiais do Estado de Brava.";
+        `O DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob homologação da Presidência do Judiciário e em conformidade com as diretrizes de Segurança Pública, CERTIFICA a ${sitTxt} exclusiva para 1 Pistola PT 9mm (R$ 80.000) e fornecimento de munições (R$ 400 por unidade), condicionado estritamente à apresentação do Laudo Psicotécnico emitido pelo Hospital Municipal com parecer 'Apto'. O presente registro possui fé pública e validade oficial perante todas as forças policiais do Estado de Brava.`;
     }
 
     doc.setFont("helvetica", "normal");

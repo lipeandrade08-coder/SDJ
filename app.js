@@ -533,7 +533,18 @@
         { id: "pa_cidadao", label: "👤 Nome do Cidadão (Requerente)" },
         { id: "pa_id", label: "🪪 Passaporte do Cidadão" },
         { id: "pa_emprego", label: "💼 Emprego / Ocupação Atual", placeholder: "Ex.: Empresário, Mecânico, Comerciante..." },
-        { id: "pa_motivo", label: "🎯 Motivo para Realizar o Porte", placeholder: "Ex.: Legítima defesa, segurança pessoal, transporte de valores..." },
+        { 
+          id: "pa_situacao", 
+          label: "📋 Situação da Emissão", 
+          type: "options", 
+          options: ["Primeiro Porte", "Perda do Armamento", "Roubo / Furto"] 
+        },
+        { 
+          id: "pa_justificativa", 
+          label: "📝 Justificativa / Declaração da Ocorrência", 
+          placeholder: "Ex.: Motivo para concessão do porte, ou circunstâncias detalhadas da perda/roubo...", 
+          isFull: true 
+        },
         { 
           id: "pa_psicotecnico", 
           label: "🏥 Laudo Psicotécnico Hospitalar", 
@@ -654,6 +665,20 @@
       const valInput = $("#al_valor");
       if (valInput) {
         valInput.value = precoMap[btn.dataset.val] || "";
+      }
+    }
+
+    // Se for Porte de Arma, ajusta dinamicamente a justificativa conforme a situação selecionada
+    if (inputId === "pa_situacao") {
+      const justInput = $("#pa_justificativa");
+      if (justInput) {
+        if (btn.dataset.val === "Primeiro Porte") {
+          justInput.placeholder = "Ex.: Legítima defesa pessoal, segurança do patrimônio e transporte de valores...";
+        } else if (btn.dataset.val.includes("Perda")) {
+          justInput.placeholder = "Ex.: Data aproximada, local e circunstâncias da perda ou extravio do armamento anterior...";
+        } else if (btn.dataset.val.includes("Roubo")) {
+          justInput.placeholder = "Ex.: Boletim de ocorrência policial, data, local e relato do roubo/furto sofrido...";
+        }
       }
     }
 
@@ -864,15 +889,25 @@
       let payload = { embeds: [embed] };
       if (sid === "porte") {
         const laudoVal = ($("#pa_psicotecnico")?.value || "").toLowerCase();
+        const situacaoVal = ($("#pa_situacao")?.value || "").toLowerCase();
+        let tagSituacao = "";
+        if (situacaoVal.includes("roubo")) {
+          tagSituacao = " · 2ª VIA POR ROUBO/FURTO";
+        } else if (situacaoVal.includes("perda")) {
+          tagSituacao = " · 2ª VIA POR PERDA";
+        } else {
+          tagSituacao = " · 1º PORTE";
+        }
+
         if (laudoVal.includes("inapto")) {
           embed.color = 15158332; // Vermelho
-          payload.content = "🚨 **[ALERTA DE SEGURANÇA · LAUDO INAPTO NO HOSPITAL]**\nO cidadão foi reprovado no exame psicotécnico hospitalar. Concessão de porte de arma e entrega de munições **RECUSADAS/BLOQUEADAS**.";
+          payload.content = `🚨 **[ALERTA DE SEGURANÇA · LAUDO INAPTO NO HOSPITAL${tagSituacao}]**\nO cidadão foi reprovado no exame psicotécnico hospitalar. Concessão de porte de arma e entrega de munições **RECUSADAS/BLOQUEADAS**.`;
         } else if (laudoVal.includes("pendente")) {
           embed.color = 15844367; // Amarelo
-          payload.content = "⏳ **[LAUDO HOSPITALAR PENDENTE]**\nA emissão do porte de arma e a entrega de munições aguardam a realização e laudo favorável do teste psicotécnico no Hospital.";
+          payload.content = `⏳ **[LAUDO HOSPITALAR PENDENTE${tagSituacao}]**\nA emissão do porte de arma e a entrega de munições aguardam a realização e laudo favorável do teste psicotécnico no Hospital.`;
         } else {
           embed.color = 3066993; // Verde
-          payload.content = "🔫 **[PORTE DE ARMA (PT) & MUNIÇÃO EMITIDO COM SUCESSO]**\nCidadão aprovado no teste psicotécnico hospitalar. Porte de pistola PT e munições liberados com fé pública.";
+          payload.content = `🔫 **[PORTE DE ARMA (PT) & MUNIÇÃO EMITIDO COM SUCESSO${tagSituacao}]**\nCidadão aprovado no teste psicotécnico hospitalar. Porte de pistola PT e munições liberados com fé pública.`;
         }
       }
 
