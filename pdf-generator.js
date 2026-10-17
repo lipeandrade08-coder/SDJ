@@ -1470,12 +1470,705 @@
     return { doc, blob, filename, protocolo };
   }
 
+  /* ==========================================================
+     4. RENDERIZADOR CANVAS DA CARTEIRINHA FUNCIONAL (HD)
+     Desenha a Frente, o Verso ou Ambos em alta resolução
+     ========================================================== */
+  function carregarImagemAsync(src) {
+    if (!src) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  function drawRoundRect(ctx, x, y, w, h, r, fill, stroke) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }
+
+  async function renderCarterinhaCanvas(dados, lado = "frente") {
+    if (typeof document === "undefined") return null;
+
+    const W = 960;
+    const H = 606; // Relação 1.584 padrão CR-80
+
+    // Carrega imagens necessárias
+    const [fotoImg, logoImg, qrImg] = await Promise.all([
+      carregarImagemAsync(dados.fotoUrl || null),
+      carregarImagemAsync("arte.png"),
+      carregarImagemAsync(dados.qrDataUrl || (dados.qrTexto ? gerarQrCodeDataUrl(dados.qrTexto, 180) : null))
+    ]);
+
+    if (lado === "ambos") {
+      // Cria imagem combinada elegante (Frente ao lado do Verso)
+      const canvasAmbos = document.createElement("canvas");
+      canvasAmbos.width = 2020;
+      canvasAmbos.height = 760;
+      const ctxA = canvasAmbos.getContext("2d");
+
+      // Fundo sofisticado escuro com acabamento metálico
+      const bgG = ctxA.createLinearGradient(0, 0, 2020, 760);
+      bgG.addColorStop(0, "#07090e");
+      bgG.addColorStop(0.5, "#0e1422");
+      bgG.addColorStop(1, "#06080d");
+      ctxA.fillStyle = bgG;
+      ctxA.fillRect(0, 0, 2020, 760);
+
+      // Título do documento
+      ctxA.font = "bold 24px 'Cinzel', serif";
+      ctxA.fillStyle = "#f6d285";
+      ctxA.textAlign = "center";
+      ctxA.fillText("REPÚBLICA DE BRAVA · DEPARTAMENTO JURÍDICO", 1010, 48);
+
+      ctxA.font = "14px 'Inter', sans-serif";
+      ctxA.fillStyle = "#a8a192";
+      ctxA.fillText("CARTEIRA DE IDENTIDADE FUNCIONAL OFICIAL — PADRÃO CR-80", 1010, 74);
+
+      // Renderiza Frente e Verso
+      const cFrente = await renderCarterinhaCanvas(dados, "frente");
+      const cVerso = await renderCarterinhaCanvas(dados, "verso");
+
+      // Sombra projetada para cada face
+      ctxA.shadowColor = "rgba(0, 0, 0, 0.75)";
+      ctxA.shadowBlur = 35;
+      ctxA.shadowOffsetY = 15;
+
+      ctxA.drawImage(cFrente, 40, 105, W, H);
+      ctxA.drawImage(cVerso, 1020, 105, W, H);
+
+      ctxA.shadowColor = "transparent";
+
+      // Legendas
+      ctxA.font = "bold 13px 'Inter', sans-serif";
+      ctxA.fillStyle = "#d4af5f";
+      ctxA.fillText("▼ ANVERSO (FRENTE)", 520, 735);
+      ctxA.fillText("▼ VERSO (REGISTROS & MRZ)", 1500, 735);
+
+      return canvasAmbos;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    if (lado === "frente") {
+      // 1. Fundo Gradiente Nobre
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, "#050a14");
+      bg.addColorStop(0.45, "#0b1526");
+      bg.addColorStop(1, "#040810");
+      ctx.fillStyle = bg;
+      drawRoundRect(ctx, 0, 0, W, H, 28, true, false);
+
+      // 2. Guilhochê de Segurança
+      ctx.save();
+      drawRoundRect(ctx, 0, 0, W, H, 28, false, false);
+      ctx.clip();
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.045)";
+      ctx.lineWidth = 1;
+      for (let y = -200; y < H + 200; y += 18) {
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 10) {
+          const cy = y + Math.sin(x * 0.02) * 14;
+          if (x === 0) ctx.moveTo(x, cy);
+          else ctx.lineTo(x, cy);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 3. Moldura Externa Dourada
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.75)";
+      ctx.lineWidth = 3.5;
+      drawRoundRect(ctx, 4, 4, W - 8, H - 8, 25, false, true);
+
+      // 4. Cabeçalho Oficial
+      if (logoImg) {
+        ctx.drawImage(logoImg, 38, 22, 66, 66);
+      }
+
+      ctx.fillStyle = "#c5bfae";
+      ctx.font = "bold 14px 'Inter', sans-serif";
+      ctx.fillText("REPÚBLICA DE BRAVA · CIDADE DE BRAVA RP", 120, 38);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px 'Inter', sans-serif";
+      ctx.fillText("DEPARTAMENTO JURÍDICO · PODER JUDICIÁRIO", 120, 60);
+
+      ctx.fillStyle = "#f6d285";
+      ctx.font = "bold 21px 'Cinzel', serif";
+      ctx.fillText("CARTEIRA DE IDENTIDADE FUNCIONAL", 120, 84);
+
+      // Ícone Balança no topo direito
+      ctx.font = "26px sans-serif";
+      ctx.fillText("⚖️", W - 68, 62);
+
+      // Barra dourada divisória
+      const barG = ctx.createLinearGradient(38, 98, W - 38, 98);
+      barG.addColorStop(0, "transparent");
+      barG.addColorStop(0.2, "#d4af5f");
+      barG.addColorStop(0.5, "#fff1b0");
+      barG.addColorStop(0.8, "#d4af5f");
+      barG.addColorStop(1, "transparent");
+      ctx.fillStyle = barG;
+      ctx.fillRect(38, 96, W - 76, 3);
+
+      // 5. Foto 3x4 do Personagem
+      const pX = 40;
+      const pY = 120;
+      const pW = 195;
+      const pH = 250;
+
+      // Fundo e Sombra da Foto
+      ctx.fillStyle = "#0c121d";
+      drawRoundRect(ctx, pX, pY, pW, pH, 12, true, false);
+
+      ctx.save();
+      drawRoundRect(ctx, pX, pY, pW, pH, 12, false, false);
+      ctx.clip();
+
+      if (fotoImg) {
+        // Enquadramento automático com aspect ratio mantido (cover)
+        const imgRatio = fotoImg.naturalWidth / fotoImg.naturalHeight;
+        const boxRatio = pW / pH;
+        let dw, dh, dx, dy;
+        if (imgRatio > boxRatio) {
+          dh = pH;
+          dw = pH * imgRatio;
+          dx = pX - (dw - pW) / 2;
+          dy = pY;
+        } else {
+          dw = pW;
+          dh = pW / imgRatio;
+          dx = pX;
+          dy = pY - (dh - pH) / 2;
+        }
+        ctx.drawImage(fotoImg, dx, dy, dw, dh);
+      } else {
+        // Silhueta padrão do brasão se não houver foto anexada
+        if (logoImg) {
+          ctx.globalAlpha = 0.45;
+          ctx.drawImage(logoImg, pX + 25, pY + 35, 145, 145);
+          ctx.globalAlpha = 1.0;
+        }
+        ctx.fillStyle = "#d4af5f";
+        ctx.font = "bold 13px 'Inter', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("FOTO 3x4", pX + pW / 2, pY + 220);
+        ctx.textAlign = "left";
+      }
+
+      // Tarja de Carimbo sobre a foto
+      ctx.fillStyle = "rgba(12, 18, 28, 0.92)";
+      ctx.fillRect(pX, pY + pH - 24, pW, 24);
+      ctx.fillStyle = "#f6d285";
+      ctx.font = "bold 10px 'Inter', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("SDJ · DOCUMENTO VÁLIDO", pX + pW / 2, pY + pH - 8);
+      ctx.textAlign = "left";
+
+      ctx.restore();
+
+      // Borda dourada chanfrada da foto
+      ctx.strokeStyle = "#d4af5f";
+      ctx.lineWidth = 3;
+      drawRoundRect(ctx, pX, pY, pW, pH, 12, false, true);
+
+      // 6. Chip EMV Inteligente Dourado
+      const cX = pX + 35;
+      const cY = pY + pH + 22;
+      const cW = 125;
+      const cH = 85;
+
+      const chipG = ctx.createLinearGradient(cX, cY, cX + cW, cY + cH);
+      chipG.addColorStop(0, "#fde68a");
+      chipG.addColorStop(0.5, "#d4af37");
+      chipG.addColorStop(1, "#927114");
+      ctx.fillStyle = chipG;
+      drawRoundRect(ctx, cX, cY, cW, cH, 8, true, false);
+      ctx.strokeStyle = "#6b5109";
+      ctx.lineWidth = 2;
+      drawRoundRect(ctx, cX, cY, cW, cH, 8, false, true);
+
+      // Linhas do circuito do chip
+      ctx.strokeStyle = "#6b5109";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(cX, cY + cH * 0.35); ctx.lineTo(cX + cW, cY + cH * 0.35);
+      ctx.moveTo(cX, cY + cH * 0.65); ctx.lineTo(cX + cW, cY + cH * 0.65);
+      ctx.moveTo(cX + cW * 0.45, cY); ctx.lineTo(cX + cW * 0.45, cY + cH);
+      ctx.stroke();
+
+      // Símbolo NFC / Contactless
+      ctx.strokeStyle = "#d4af37";
+      ctx.lineWidth = 2.5;
+      for (let r = 10; r <= 22; r += 6) {
+        ctx.beginPath();
+        ctx.arc(cX + cW + 28, cY + cH / 2, r, -Math.PI * 0.25, Math.PI * 0.25);
+        ctx.stroke();
+      }
+
+      // 7. Dados do Membro (Coluna Direita)
+      const dX = 265;
+      let curY = 130;
+
+      // NOME
+      ctx.fillStyle = "#9f9788";
+      ctx.font = "bold 13px 'Inter', sans-serif";
+      ctx.fillText("NOME DO TITULAR", dX, curY);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 26px 'Cinzel', serif";
+      const nomeText = (dados.nome || "Zaith Frost").toUpperCase();
+      ctx.fillText(nomeText, dX, curY + 28);
+
+      curY += 62;
+
+      // CARGO & ID
+      ctx.fillStyle = "#9f9788";
+      ctx.font = "bold 13px 'Inter', sans-serif";
+      ctx.fillText("CARGO / FUNÇÃO", dX, curY);
+      ctx.fillText("PASSAPORTE (ID)", dX + 380, curY);
+
+      // Badge Cargo
+      const cargoText = (dados.cargo || "Advogado Júnior").toUpperCase();
+      ctx.font = "bold 18px 'Inter', sans-serif";
+      const cargoW = ctx.measureText(cargoText).width + 24;
+
+      ctx.fillStyle = "rgba(212, 175, 95, 0.22)";
+      drawRoundRect(ctx, dX, curY + 8, Math.min(cargoW, 350), 34, 6, true, false);
+      ctx.strokeStyle = "#d4af5f";
+      ctx.lineWidth = 1.5;
+      drawRoundRect(ctx, dX, curY + 8, Math.min(cargoW, 350), 34, 6, false, true);
+
+      ctx.fillStyle = "#fce080";
+      ctx.fillText(cargoText, dX + 12, curY + 31);
+
+      // Valor ID
+      ctx.fillStyle = "#4ade80";
+      ctx.font = "bold 24px 'Inter', sans-serif";
+      ctx.fillText("#" + (dados.id || "101"), dX + 380, curY + 32);
+
+      curY += 72;
+
+      // INSCRIÇÃO & NATURALIDADE
+      ctx.fillStyle = "#9f9788";
+      ctx.font = "bold 13px 'Inter', sans-serif";
+      ctx.fillText("INSCRIÇÃO OFICIAL OAB/SDJ", dX, curY);
+      ctx.fillText("NATURALIDADE", dX + 380, curY);
+
+      ctx.fillStyle = "#f6d285";
+      ctx.font = "bold 22px 'Cinzel', serif";
+      ctx.fillText(dados.inscricao || "OAB/SDJ-2026-0101", dX, curY + 26);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 20px 'Inter', sans-serif";
+      ctx.fillText(dados.naturalidade || "Brava City", dX + 380, curY + 26);
+
+      curY += 66;
+
+      // Tarja Holográfica de Segurança
+      const holoG = ctx.createLinearGradient(dX, curY, dX + 640, curY);
+      holoG.addColorStop(0, "rgba(212, 175, 95, 0.18)");
+      holoG.addColorStop(0.5, "rgba(147, 214, 255, 0.22)");
+      holoG.addColorStop(1, "rgba(212, 175, 95, 0.18)");
+      ctx.fillStyle = holoG;
+      drawRoundRect(ctx, dX, curY, 650, 28, 4, true, false);
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.5)";
+      ctx.lineWidth = 1;
+      drawRoundRect(ctx, dX, curY, 650, 28, 4, false, true);
+
+      ctx.fillStyle = "#ffea9f";
+      ctx.font = "bold 11.5px 'Inter', sans-serif";
+      ctx.fillText("AUTÊNTICO · PODER JUDICIÁRIO DE BRAVA · FÉ PÚBLICA · OFICIAL REGISTRAL", dX + 14, curY + 18);
+
+      // 8. Rodapé da Frente
+      ctx.fillStyle = "rgba(212, 175, 95, 0.4)";
+      ctx.fillRect(38, H - 42, W - 76, 1.2);
+
+      ctx.fillStyle = "#8a8172";
+      ctx.font = "bold 11px 'Inter', sans-serif";
+      ctx.fillText("DOCUMENTO DE IDENTIFICAÇÃO OFICIAL VÁLIDO EM TODA A JURISDIÇÃO", 40, H - 20);
+      ctx.textAlign = "right";
+      ctx.fillText("SEGURANÇA REGISTRAL 2026", W - 40, H - 20);
+      ctx.textAlign = "left";
+
+      return canvas;
+    }
+
+    if (lado === "verso") {
+      // 1. Fundo Gradiente Verso
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, "#05080e");
+      bg.addColorStop(0.5, "#0d131f");
+      bg.addColorStop(1, "#060911");
+      ctx.fillStyle = bg;
+      drawRoundRect(ctx, 0, 0, W, H, 28, true, false);
+
+      // Moldura Externa
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.65)";
+      ctx.lineWidth = 3.5;
+      drawRoundRect(ctx, 4, 4, W - 8, H - 8, 25, false, true);
+
+      // 2. Tarja Magnética Superior
+      const magG = ctx.createLinearGradient(0, 10, 0, 85);
+      magG.addColorStop(0, "#191a1e");
+      magG.addColorStop(0.5, "#0b0c0e");
+      magG.addColorStop(1, "#181a1d");
+      ctx.fillStyle = magG;
+      ctx.fillRect(4, 10, W - 8, 75);
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(4, 10, W - 8, 75);
+
+      // 3. Faixa de Assinatura do Titular
+      const sigX = 36;
+      const sigY = 100;
+      const sigW = W - 72;
+      const sigH = 55;
+
+      ctx.fillStyle = "#f5f0e6";
+      drawRoundRect(ctx, sigX, sigY, sigW, sigH, 6, true, false);
+      ctx.strokeStyle = "#c4b69d";
+      ctx.lineWidth = 1.5;
+      drawRoundRect(ctx, sigX, sigY, sigW, sigH, 6, false, true);
+
+      // Microtexto de segurança na faixa
+      ctx.fillStyle = "rgba(90, 75, 45, 0.14)";
+      ctx.font = "bold 8.5px 'Inter', sans-serif";
+      const microtext = "FÉ PÚBLICA · DEPARTAMENTO JURÍDICO BRAVA · FÉ PÚBLICA · DEPARTAMENTO JURÍDICO BRAVA · FÉ PÚBLICA · DEPARTAMENTO JURÍDICO BRAVA";
+      ctx.fillText(microtext, sigX + 12, sigY + 18);
+      ctx.fillText(microtext, sigX + 12, sigY + 48);
+
+      // Assinatura Caligráfica do Titular
+      ctx.fillStyle = "#072146";
+      ctx.font = "italic bold 32px 'Dancing Script', cursive";
+      ctx.fillText(toSignatureCase(dados.nome || "Zaith Frost"), sigX + 24, sigY + 38);
+
+      ctx.fillStyle = "#7a6e5b";
+      ctx.font = "bold 10px 'Inter', sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText("ASSINATURA DO TITULAR", sigX + sigW - 14, sigY + 33);
+      ctx.textAlign = "left";
+
+      // 4. Metadados do Verso
+      const mX = 40;
+      let mY = 185;
+
+      ctx.fillStyle = "#948c7f";
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.fillText("TELEFONE:", mX, mY);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px 'Inter', sans-serif";
+      ctx.fillText(dados.telefone || "555-0101", mX + 110, mY);
+
+      ctx.fillStyle = "#948c7f";
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.fillText("EXPEDIÇÃO:", mX + 310, mY);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px 'Inter', sans-serif";
+      ctx.fillText(dados.expedicao || new Date().toLocaleDateString("pt-BR"), mX + 410, mY);
+
+      mY += 32;
+
+      ctx.fillStyle = "#948c7f";
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.fillText("SITUAÇÃO:", mX, mY);
+      ctx.fillStyle = "#4ade80";
+      ctx.font = "bold 17px 'Inter', sans-serif";
+      ctx.fillText(dados.situacao || "REGULAR / ATIVO", mX + 110, mY);
+
+      ctx.fillStyle = "#948c7f";
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.fillText("VALIDADE:", mX + 310, mY);
+      ctx.fillStyle = "#f6d285";
+      ctx.font = "bold 17px 'Inter', sans-serif";
+      ctx.fillText("INDETERMINADA", mX + 410, mY);
+
+      mY += 32;
+
+      ctx.fillStyle = "#948c7f";
+      ctx.font = "bold 11px 'Inter', sans-serif";
+      ctx.fillText("ÓRGÃO EMISSOR: SECRETARIA GERAL DO DEPARTAMENTO JURÍDICO · TRIBUNAL DE JUSTIÇA", mX, mY);
+
+      mY += 18;
+
+      // 5. Linha divisória e Assinaturas da Presidência
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(mX, mY); ctx.lineTo(mX + 640, mY);
+      ctx.stroke();
+
+      mY += 28;
+
+      // Zaith Frost
+      ctx.fillStyle = "#fce080";
+      ctx.font = "italic bold 24px 'Dancing Script', cursive";
+      ctx.fillText("Zaith Frost", mX + 10, mY);
+      ctx.fillStyle = "#8a8172";
+      ctx.font = "bold 11px 'Inter', sans-serif";
+      ctx.fillText("Zaith Frost · Presidente do SDJ", mX + 10, mY + 18);
+
+      // Mike Santaroni
+      ctx.fillStyle = "#fce080";
+      ctx.font = "italic bold 24px 'Dancing Script', cursive";
+      ctx.fillText("Mike Santaroni", mX + 320, mY);
+      ctx.fillStyle = "#8a8172";
+      ctx.font = "bold 11px 'Inter', sans-serif";
+      ctx.fillText("Mike Santaroni · Vice-Presidente", mX + 320, mY + 18);
+
+      // 6. QR Code de Autenticação Digital
+      const qrBoxX = W - 220;
+      const qrBoxY = 175;
+      const qrBoxS = 180;
+
+      ctx.fillStyle = "#ffffff";
+      drawRoundRect(ctx, qrBoxX, qrBoxY, qrBoxS, qrBoxS, 10, true, false);
+      ctx.strokeStyle = "#d4af5f";
+      ctx.lineWidth = 2;
+      drawRoundRect(ctx, qrBoxX, qrBoxY, qrBoxS, qrBoxS, 10, false, true);
+
+      if (qrImg) {
+        ctx.drawImage(qrImg, qrBoxX + 10, qrBoxY + 10, qrBoxS - 20, qrBoxS - 32);
+      } else {
+        // Fallback gráfico se não carregar
+        ctx.fillStyle = "#121824";
+        ctx.fillRect(qrBoxX + 15, qrBoxY + 15, qrBoxS - 30, qrBoxS - 40);
+      }
+
+      ctx.fillStyle = "#121824";
+      ctx.font = "bold 10px 'Inter', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("VALIDAÇÃO DIGITAL", qrBoxX + qrBoxS / 2, qrBoxY + qrBoxS - 8);
+      ctx.textAlign = "left";
+
+      // 7. Texto Legal
+      ctx.fillStyle = "#817869";
+      ctx.font = "11px 'Inter', sans-serif";
+      const legalText = "O titular desta identidade funcional possui livre acesso aos órgãos públicos, delegacias e estabelecimentos prisionais, gozando das prerrogativas e imunidades da advocacia na Cidade de Brava RP.";
+      ctx.fillText(legalText, 40, H - 96);
+
+      // 8. Zona MRZ (Machine Readable Zone)
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      ctx.fillRect(4, H - 72, W - 8, 68);
+      ctx.strokeStyle = "rgba(212, 175, 95, 0.4)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(4, H - 72, W - 8, 68);
+
+      ctx.fillStyle = "#e2dacf";
+      ctx.font = "bold 17px 'Courier New', Courier, monospace";
+      const idClean = (dados.id || "0000").replace(/[^0-9]/g, "").padStart(6, "0");
+      const safeDoc = (dados.inscricao || "SDJ2026").replace(/[^A-Za-z0-9]/g, "").toUpperCase().padEnd(12, "<");
+      const line1 = `IDBRA<<SDJ<2026<${safeDoc}<<<<<<<<<<<<<<<<<<<<<<`;
+      const line2 = `${idClean}9BRA<<<<<<<<<<<<<<<<<<<0<<<<<<<<<<<<<<`;
+      ctx.fillText(line1.substring(0, 44), 36, H - 42);
+      ctx.fillText(line2.substring(0, 44), 36, H - 18);
+
+      return canvas;
+    }
+
+    return canvas;
+  }
+
+  /* ==========================================================
+     5. GERAÇÃO DE PDF DA CARTEIRINHA FUNCIONAL (A4 OFICIAL)
+     Emite a Certidão Notarial com as Cédulas Frente e Verso
+     em tamanho padrão de crachá prontas para impressão
+     ========================================================== */
+  async function generateCarterinhaPDF(dados) {
+    const jsPDF = getJsPDF();
+    if (!jsPDF) throw new Error("Biblioteca jsPDF não encontrada.");
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const { logo, watermark } = await getLogoAndWatermark();
+
+    const dataHora = new Date().toLocaleString("pt-BR");
+    const protocolo = gerarProtocolo();
+    const titulo = "Carteira de Identidade Funcional — Registro Geral SDJ";
+    const cidade = (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
+
+    // 1. Estrutura base com moldura e cabeçalho notarial
+    let curY = desenharEstruturaBase(doc, logo, watermark, titulo, protocolo, dataHora, cidade);
+
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+
+    // Seção 1: Assento Cadastral do Membro
+    curY = desenharCabecalhoSecao(doc, curY, "1. Assento de Credenciamento Notarial do Membro");
+
+    const colW = (boxW - 3) / 2;
+    const rowH = 8.6;
+
+    const campos = [
+      { label: "NOME DO TITULAR", value: dados.nome || "Não informado" },
+      { label: "PASSAPORTE / ID", value: "#" + (dados.id || "Não informado") },
+      { label: "CARGO INSTITUCIONAL", value: (dados.cargo || "Advogado Júnior").toUpperCase() },
+      { label: "INSCRIÇÃO OFICIAL OAB/SDJ", value: dados.inscricao || "OAB/SDJ-2026-0000" },
+      { label: "TELEFONE DE CONTATO", value: dados.telefone || "Não informado" },
+      { label: "NATURALIDADE", value: dados.naturalidade || "Brava City" },
+      { label: "DATA DE EXPEDIÇÃO", value: dados.expedicao || new Date().toLocaleDateString("pt-BR") },
+      { label: "SITUAÇÃO FUNCIONAL", value: dados.situacao || "REGULAR / ATIVO" }
+    ];
+
+    for (let i = 0; i < campos.length; i += 2) {
+      const f1 = campos[i];
+      const f2 = campos[i + 1];
+
+      // Coluna 1
+      const x1 = 14;
+      const isEven = (i / 2) % 2 === 0;
+      doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+      doc.setDrawColor(220, 226, 238);
+      doc.setLineWidth(0.25);
+      doc.roundedRect(x1, curY, colW, rowH, 0.8, 0.8, "FD");
+      doc.setFillColor(...ORO);
+      doc.rect(x1, curY, 1.8, rowH, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(110, 118, 134);
+      doc.text(f1.label, x1 + 4, curY + (rowH * 0.35));
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.setTextColor(18, 24, 38);
+      doc.text(String(f1.value), x1 + 4, curY + (rowH * 0.78), { maxWidth: colW - 7 });
+
+      // Coluna 2
+      if (f2) {
+        const x2 = 14 + colW + 3;
+        doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.25);
+        doc.roundedRect(x2, curY, colW, rowH, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(x2, curY, 1.8, rowH, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.5);
+        doc.setTextColor(110, 118, 134);
+        doc.text(f2.label, x2 + 4, curY + (rowH * 0.35));
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(18, 24, 38);
+        doc.text(String(f2.value), x2 + 4, curY + (rowH * 0.78), { maxWidth: colW - 7 });
+      }
+
+      curY += rowH + 1.2;
+    }
+
+    curY += 3;
+
+    // Seção 2: Cédula Funcional Impressa (Padrão CR-80: 85.6mm x 53.98mm)
+    curY = desenharCabecalhoSecao(doc, curY, "2. Cédula Funcional Oficial — Padrão CR-80 Regulamentar (85.6mm × 53.98mm)");
+
+    // Subtítulo de instrução
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(5.8);
+    doc.setTextColor(100, 108, 124);
+    doc.text("Cédula oficial em alta definição. Recorte nas linhas pontilhadas abaixo para plastificação ou porte em crachá/porta-funcional.", 14, curY);
+    curY += 4.5;
+
+    // Renderiza os canvas em alta definição
+    const cFrente = await renderCarterinhaCanvas(dados, "frente");
+    const cVerso = await renderCarterinhaCanvas(dados, "verso");
+
+    const cardW = 86.0;
+    const cardH = 54.2;
+
+    const xFrente = 15;
+    const xVerso = 109.0;
+    const cardY = curY + 2;
+
+    // Insere imagem da Frente
+    if (cFrente) {
+      doc.addImage(cFrente.toDataURL("image/png"), "PNG", xFrente, cardY, cardW, cardH);
+    }
+
+    // Insere imagem do Verso
+    if (cVerso) {
+      doc.addImage(cVerso.toDataURL("image/png"), "PNG", xVerso, cardY, cardW, cardH);
+    }
+
+    // Linhas de corte pontilhadas ao redor de cada cartão
+    doc.setDrawColor(180, 185, 195);
+    doc.setLineWidth(0.25);
+    doc.setLineDashPattern([1.5, 1.5], 0);
+
+    doc.rect(xFrente - 0.5, cardY - 0.5, cardW + 1.0, cardH + 1.0);
+    doc.rect(xVerso - 0.5, cardY - 0.5, cardW + 1.0, cardH + 1.0);
+
+    doc.setLineDashPattern([], 0); // Restaura linha sólida
+
+    // Legendas sob cada cartão
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("[ANVERSO / FRENTE DA CARTEIRA]", xFrente + (cardW / 2), cardY + cardH + 3.8, { align: "center" });
+    doc.text("[VERSO / REGISTRO & MRZ]", xVerso + (cardW / 2), cardY + cardH + 3.8, { align: "center" });
+
+    curY = cardY + cardH + 8.5;
+
+    // Seção 3: Fé Pública & Homologação
+    const boxAvisoH = 13.5;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(215, 222, 235);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(14, curY, boxW, boxAvisoH, 0.8, 0.8, "FD");
+
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, boxAvisoH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("DECLARAÇÃO NOTARIAL DE FÉ PÚBLICA E PRERROGATIVAS FUNCIONAIS", 19, curY + 4.2);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.4);
+    doc.setTextColor(45, 52, 68);
+    const textoFe = "Certifico e dou fé que a presente Carteira de Identidade Funcional foi devidamente emitida e homologada pela Presidência do Departamento Jurídico de Brava City, conferindo ao titular livre acesso aos órgãos públicos e imunidade profissional no exercício legítimo de suas funções, nos termos do Regimento Interno Notarial.";
+    doc.text(textoFe, 19, curY + 7.8, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.25 });
+
+    // 4. Assinaturas e Chancela Notarial
+    const sigStartY = Math.max(curY + boxAvisoH + 4.0, 230);
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, "Zaith Frost", "101", "Presidente do Departamento Jurídico", protocolo);
+
+    const safeNome = (dados.nome || "Membro").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `Carteira_Funcional_SDJ_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
   // Exporta globalmente para o aplicativo
   window.SDJ_PDF = {
     generateServicePDF,
     generatePenalPDF,
     generateProvaOralPDF,
+    generateCarterinhaPDF,
+    renderCarterinhaCanvas,
     getLogoAndWatermark,
-    toSignatureCase
+    toSignatureCase,
+    gerarQrCodeDataUrl
   };
 })();
+

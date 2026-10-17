@@ -2103,6 +2103,1006 @@ body.intro-active .topbar, body.intro-active main { opacity: 0; transform: trans
   }
 }
 
+/* ==========================================================
+   MÓDULO: GERADOR DE CARTEIRINHAS FUNCIONAIS DO SDJ (3D)
+   ========================================================== */
+.carterinha-wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.carterinha-grid-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(460px, 1.15fr);
+  gap: 28px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.carterinha-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.carterinha-section-panel {
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+/* Upload de Foto 3x4 */
+.photo-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.photo-dropzone {
+  position: relative;
+  border: 2px dashed var(--line-strong);
+  border-radius: 12px;
+  background: rgba(18, 20, 27, 0.6);
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  overflow: hidden;
+}
+
+.photo-dropzone:hover,
+.photo-dropzone.dragover {
+  border-color: var(--gold);
+  background: rgba(212, 175, 95, 0.08);
+  box-shadow: 0 0 20px rgba(212, 175, 95, 0.15);
+}
+
+.photo-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.photo-preview-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.photo-cam-icon {
+  width: 38px;
+  height: 38px;
+  stroke: var(--gold);
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.photo-placeholder span {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.photo-placeholder small {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.photo-preview-img {
+  max-height: 150px;
+  width: auto;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.photo-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-photo-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  padding: 8px 14px;
+}
+
+/* Seletor de Cargos (Pills) */
+.cart-cargo-selector-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-sublabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cart-cargo-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cart-cargo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.cart-cargo-pill:hover {
+  border-color: var(--gold);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.cart-cargo-pill.active {
+  background: var(--gold);
+  border-color: var(--gold-3);
+  color: #0d0e12;
+  box-shadow: 0 4px 14px rgba(212, 175, 95, 0.35);
+}
+
+.cart-select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.cart-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 95, 0.2);
+}
+
+/* Ações da Carteirinha */
+.carterinha-actions-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.carterinha-actions-box button {
+  flex: 1;
+  min-width: 130px;
+  justify-content: center;
+}
+
+/* ==========================================================
+   COLUNA PREVIEW 3D DA CARTEIRINHA
+   ========================================================== */
+.carterinha-preview-col {
+  position: relative;
+  width: 100%;
+}
+
+.carterinha-sticky-card {
+  position: sticky;
+  top: 90px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+  width: 100%;
+}
+
+.preview-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview-badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--gold);
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: halo 1.8s infinite ease-in-out;
+}
+
+.preview-hint-text {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.card-face-toggles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-2);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.face-toggle-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.face-toggle-btn.active {
+  background: var(--gold);
+  color: #0b0d13;
+  box-shadow: 0 2px 8px rgba(212, 175, 95, 0.35);
+}
+
+.btn-flip-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-flip-card svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-flip-card:hover {
+  background: var(--accent-soft);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ==========================================================
+   PALCO DO CARTÃO 3D (PADRÃO INTERNACIONAL CR-80)
+   ========================================================== */
+.cart-stage {
+  perspective: 1400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 4px 0;
+  box-sizing: border-box;
+}
+
+.cart-card-3d {
+  position: relative;
+  width: 100%;
+  max-width: 485px;
+  aspect-ratio: 1.586; /* Padrão CR-80 (85.6mm x 53.98mm) */
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.2, 0.85, 0.25, 1);
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.cart-card-3d.flipped {
+  transform: rotateY(180deg);
+}
+
+.cart-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(212, 175, 95, 0.5);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* Guillochê de segurança */
+.cart-guilloche {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(212, 175, 95, 0.06) 0%, transparent 68%),
+    repeating-linear-gradient(45deg, rgba(212, 175, 95, 0.035) 0px, rgba(212, 175, 95, 0.035) 1px, transparent 1px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(212, 175, 95, 0.035) 0px, rgba(212, 175, 95, 0.035) 1px, transparent 1px, transparent 14px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Efeito Holográfico iridescente */
+.cart-hologram-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 215, 0, 0.09) 36%,
+    rgba(147, 214, 255, 0.13) 48%,
+    rgba(255, 140, 200, 0.1) 60%,
+    transparent 78%
+  );
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: color-dodge;
+  opacity: 0.65;
+  transition: opacity 0.3s;
+}
+
+.cart-card-3d:hover .cart-hologram-sheen {
+  opacity: 1;
+}
+
+/* ---------------- FRENTE DO CARTÃO ---------------- */
+.cart-face-front {
+  background: linear-gradient(145deg, #060b14 0%, #0c1524 45%, #050a12 100%);
+  border: 1.5px solid rgba(212, 175, 95, 0.75);
+  padding: 10px 14px 8px 14px;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.c-front-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+  min-height: 38px;
+}
+
+.c-front-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+  flex-shrink: 0;
+}
+
+.c-front-titles {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.c-republica {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #c4beaf;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c-depto {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c-titulo-doc {
+  font-size: 11.5px;
+  font-weight: 800;
+  font-family: 'Cinzel', serif;
+  color: var(--gold-3);
+  letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c-front-badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid rgba(212, 175, 95, 0.45);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.c-justice-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--gold-3);
+  stroke-width: 2.2;
+}
+
+.c-gold-bar {
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, #d4af5f 20%, #fff1b0 50%, #d4af5f 80%, transparent 100%);
+  margin: 3px 0 5px 0;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Corpo Frente */
+.c-front-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 12px;
+  align-items: stretch;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+}
+
+.c-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+}
+
+.c-photo-frame {
+  position: relative;
+  width: 98px;
+  height: 124px;
+  border-radius: 6px;
+  border: 1.5px solid var(--gold);
+  background: #0d121c;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.85), inset 0 0 12px rgba(0, 0, 0, 0.6);
+  flex-shrink: 0;
+}
+
+.c-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.c-photo-overlay-stamp {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(13, 18, 28, 0.92);
+  border-top: 1px solid var(--gold);
+  color: var(--gold-3);
+  font-size: 6.8px;
+  font-weight: 800;
+  text-align: center;
+  padding: 1.5px 0;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.c-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.c-smart-chip {
+  position: relative;
+  width: 32px;
+  height: 22px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #fce080 0%, #d4af37 50%, #997819 100%);
+  border: 1px solid #73580e;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.c-smart-chip .chip-line {
+  position: absolute;
+  background: #73580e;
+}
+.c-smart-chip .c1 { width: 100%; height: 1px; top: 7px; }
+.c-smart-chip .c2 { width: 100%; height: 1px; bottom: 7px; }
+.c-smart-chip .c3 { width: 1px; height: 100%; left: 15px; }
+
+.chip-nfc {
+  display: inline-flex;
+  align-items: center;
+  color: var(--gold);
+  opacity: 0.85;
+}
+.chip-nfc svg { width: 13px; height: 13px; }
+
+/* Coluna de Informações Frente */
+.c-info-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3px;
+  min-width: 0;
+}
+
+.c-field-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.c-label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #a39c8e;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+
+.c-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c-val-nome {
+  font-size: 13.5px;
+  font-weight: 800;
+  font-family: 'Cinzel', serif;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c-badge-cargo {
+  display: inline-flex;
+  align-items: center;
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  background: rgba(212, 175, 95, 0.16);
+  border: 1px solid var(--gold);
+  color: var(--gold-3);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.c-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.c-val-id {
+  color: #6ee7b7;
+  font-weight: 800;
+}
+
+.c-val-inscricao {
+  font-family: 'Cinzel', serif;
+  color: var(--gold-3);
+  font-size: 10.5px;
+}
+
+.c-hologram-strip {
+  margin-top: 2px;
+  padding: 2px 6px;
+  background: linear-gradient(90deg, rgba(212, 175, 95, 0.15), rgba(120, 200, 255, 0.15), rgba(212, 175, 95, 0.15));
+  border: 1px dashed rgba(212, 175, 95, 0.45);
+  border-radius: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.holo-text {
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #f7e2a9;
+}
+
+/* Rodapé Frente */
+.c-front-foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(212, 175, 95, 0.3);
+  padding-top: 3px;
+  font-size: 6.8px;
+  font-weight: 700;
+  color: #8b8375;
+  letter-spacing: 0.4px;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* ---------------- VERSO DO CARTÃO ---------------- */
+.cart-face-back {
+  background: linear-gradient(145deg, #05080e 0%, #0d121c 50%, #060910 100%);
+  border: 1.5px solid rgba(212, 175, 95, 0.6);
+  transform: rotateY(180deg);
+  padding: 0;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Tarja Magnética */
+.c-magnetic-strip {
+  width: 100%;
+  height: 28px;
+  background: linear-gradient(180deg, #18191d 0%, #08090b 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  flex-shrink: 0;
+}
+
+/* Faixa de Assinatura */
+.c-signature-strip {
+  position: relative;
+  margin: 5px 12px 3px 12px;
+  height: 26px;
+  background: #f4efe4;
+  border-radius: 3px;
+  border: 1px solid #c9beaa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.c-sig-strip-pattern {
+  position: absolute;
+  inset: 0;
+  font-size: 5px;
+  color: rgba(90, 75, 45, 0.12);
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  font-weight: 800;
+  user-select: none;
+  pointer-events: none;
+}
+
+.c-sig-titular {
+  position: relative;
+  font-family: 'Dancing Script', cursive;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0b2246;
+  z-index: 1;
+}
+
+.c-sig-caption {
+  position: relative;
+  font-size: 6px;
+  font-weight: 800;
+  color: #7d725f;
+  letter-spacing: 0.5px;
+  z-index: 1;
+}
+
+/* Corpo Verso */
+.c-back-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 10px;
+  padding: 2px 14px 0 14px;
+  z-index: 2;
+  flex: 1;
+}
+
+.c-back-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px 8px;
+}
+
+.c-meta-item {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.c-meta-item.full {
+  grid-column: span 2;
+}
+
+.c-meta-k {
+  font-size: 6.8px;
+  font-weight: 700;
+  color: #928a7c;
+  letter-spacing: 0.4px;
+}
+
+.c-meta-v {
+  font-size: 9px;
+  font-weight: 700;
+  color: #f1ede3;
+}
+
+.c-status-green {
+  color: #4ade80;
+}
+
+/* Rubricas Presidência Verso */
+.c-back-presidencia-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(212, 175, 95, 0.25);
+}
+
+.c-back-auth-sign {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-auth-rubrica {
+  font-family: 'Dancing Script', cursive;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-3);
+  line-height: 1;
+}
+
+.c-auth-label {
+  font-size: 6.2px;
+  font-weight: 700;
+  color: #8c8475;
+}
+
+/* QR Code Box */
+.c-back-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.c-qr-frame {
+  background: #ffffff;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--gold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.c-qr-code-canvas {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.c-qr-code-canvas img,
+.c-qr-code-canvas canvas {
+  width: 58px !important;
+  height: 58px !important;
+}
+
+.c-qr-label {
+  font-size: 5.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #121824;
+  margin-top: 2px;
+}
+
+/* Texto Legal Verso */
+.c-back-legal {
+  position: relative;
+  font-size: 6.5px;
+  line-height: 1.25;
+  color: #7b7364;
+  padding: 0 14px;
+  margin-top: 2px;
+  text-align: justify;
+  z-index: 2;
+}
+
+/* Zona MRZ (Machine Readable Zone) */
+.c-mrz-zone {
+  background: rgba(0, 0, 0, 0.65);
+  border-top: 1px solid rgba(212, 175, 95, 0.3);
+  padding: 4px 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: #d8d0c0;
+  line-height: 1.2;
+}
+
+.mrz-line {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ==========================================================
+   BOTOEIRA DE EXPORTAÇÃO DE IMAGENS (ABAIXO DO CARTÃO)
+   ========================================================== */
+.card-export-buttons-row {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px;
+  width: 100% !important;
+  margin-top: 4px;
+  box-sizing: border-box;
+  clear: both;
+}
+
+.card-export-buttons-row button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  box-sizing: border-box;
+}
+
+.card-export-buttons-row button:hover {
+  background: var(--accent-soft);
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.card-export-buttons-row button svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   RESPONSIVIDADE DA CARTEIRINHA
+   ========================================================== */
+@media (max-width: 1100px) {
+  .carterinha-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .carterinha-sticky-card {
+    position: static;
+  }
+}
+
+@media (max-width: 540px) {
+  .card-export-buttons-row {
+    grid-template-columns: 1fr !important;
+  }
+  .c-front-head {
+    gap: 6px;
+  }
+  .c-front-logo {
+    width: 28px;
+    height: 28px;
+  }
+  .c-titulo-doc {
+    font-size: 10px;
+  }
+}
+
+
 
 
 

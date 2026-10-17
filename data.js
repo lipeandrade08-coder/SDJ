@@ -26,6 +26,24 @@ const PRESIDENCIA_JURIDICO = {
   cargoVice: "Vice-Presidente do Departamento Jurídico",
 };
 
+const CARTERINHA_CONFIG = {
+  titulo: "Carteira de Identidade Funcional — SDJ Brava",
+  webhook: "https://discord.com/api/webhooks/1561013193592016948/KAD218Y07otK0VZTv6euOd0Lig-Yc-FJf-0N2VRrzjXwEk8J2Ab8bh2gflYRqgoz9dMm",
+  webhookAssistenteSocial: "https://discord.com/api/webhooks/1561029128336183415/PjkrMmEQCN5a6rgevDaTg8UatuLi2sFzsSE3dLVNrzcSTjfcwbrFuDOwXMhUNFHpMkFP",
+  cargosPadrao: [
+    { nome: "Estagiário", icone: "🎓", desc: "Estágio Forense e Auxílio Jurídico", cor: "#4a7a96" },
+    { nome: "Assistente Social", icone: "🤝", desc: "Apoio Psicossocial, Acolhimento e Perícia Social Forense", cor: "#10b981" },
+    { nome: "Advogado Júnior", icone: "👥", desc: "Atuação Inicial · OAB Ativa", cor: "#2b8a6a" },
+    { nome: "Advogado Pleno", icone: "📝", desc: "Atuação Intermediária e Peças", cor: "#24689c" },
+    { nome: "Advogado Sênior", icone: "👤", desc: "Titular e Casos Complexos", cor: "#8a4f9e" },
+    { nome: "Advogado Administrativo", icone: "📑", desc: "Gestão, Contratos e Normas", cor: "#965b2d" },
+    { nome: "Vice-Presidente", icone: "⚖️", desc: "Gabinete da Vice-Presidência", cor: "#b87333" },
+    { nome: "Presidente", icone: "👑", desc: "Presidência Geral do SDJ", cor: "#cba358" },
+    { nome: "Juiz de Direito", icone: "🏛️", desc: "Magistratura Estadual", cor: "#c73e3a" },
+    { nome: "Promotor de Justiça", icone: "🛡️", desc: "Ministério Público Estadual", cor: "#7e2a3c" }
+  ]
+};
+
 const PROVA_ORAL_CONFIG = {
   titulo: "Prova Oral de Admissão — Judiciário Brava City",
   webhook: "https://discord.com/api/webhooks/1560656685557883022/BLD5lMAwnsOd-PU5Do8cf6N25z071fagqj6kiuHsAZptB_u1qvknBf1Ji_0RvM2rJFXS",
@@ -311,6 +329,17 @@ const TABELA_PRECOS = [
     categoria: "Segurança & Defesa",
     desc: "Munições calibre 9mm para Pistola PT autorizada (R$ 400 por unidade / R$ 20.000 a cada 50 un).",
     targetId: "porte",
+  },
+  {
+    item: "Carteira Funcional do SDJ",
+    icone: "🪪",
+    retirada: null,
+    retiradaDisplay: "Gratuito / Oficial",
+    venda: 0,
+    vendaDisplay: "Emissão Institucional",
+    categoria: "Credenciamento",
+    desc: "Carteira de Identidade Funcional do Departamento Jurídico de Brava com foto do personagem, QR Code, verso e validação notarial.",
+    targetId: "carterinha",
   },
 ];
 

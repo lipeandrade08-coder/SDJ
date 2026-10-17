@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261017-social-webhook" />
   <script>
     // Aplica o tema salvo antes de renderizar (evita "piscar")
     (function () {
@@ -131,6 +131,10 @@
       <button id="btn-provaoral" class="btn-outline" type="button" title="Prova Oral do Recrutador">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/></svg>
         <span>Prova Oral</span>
+      </button>
+      <button id="btn-carterinha" class="btn-outline" type="button" title="Gerador de Carteirinhas Funcionais SDJ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/></svg>
+        <span>Carteirinha SDJ</span>
       </button>
       <button id="btn-tema" class="theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema">
         <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -616,6 +620,389 @@
         </div>
       </div>
 
+      <!-- GERADOR DE CARTEIRINHAS DO SDJ -->
+      <div id="tab-carterinha" class="tab-content">
+        <div class="service-wrap carterinha-wrap">
+          <header class="service-hero">
+            <span class="card-icon">🪪</span>
+            <div>
+              <div class="hero-badge-row">
+                <span class="badge-tag-cat">Credenciamento Oficial</span>
+                <span class="badge-tag-cat gold">Padrão OAB / SDJ 2026</span>
+                <span class="badge-tag-cat">Frente &amp; Verso 3D</span>
+              </div>
+              <h2>Gerador de Carteirinhas — Departamento Jurídico</h2>
+              <p>Emissão oficial da Carteira de Identidade Funcional dos membros do SDJ de Brava City. Anexe a foto do personagem, preencha os dados funcionais, visualize em tempo real no cartão 3D e exporte a imagem oficial Frente e Verso em alta definição.</p>
+            </div>
+          </header>
+
+          <div class="carterinha-grid-layout">
+            <!-- Coluna 1: Formulário de Cadastro e Emissão -->
+            <div class="carterinha-form-col">
+              
+              <!-- Painel 1: Foto do Personagem -->
+              <section class="panel carterinha-section-panel">
+                <div class="panel-head">
+                  <div class="panel-title">
+                    <span class="panel-icon">📸</span>
+                    <div>
+                      <h2>1. Foto Oficial do Personagem (3x4)</h2>
+                      <span class="muted">Anexe o retrato do personagem para estampar na carteirinha</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="photo-upload-container">
+                  <div class="photo-dropzone" id="photo-dropzone">
+                    <input type="file" id="cart-file-input" accept="image/*" class="photo-file-input" />
+                    <div class="photo-preview-box" id="photo-preview-box">
+                      <div class="photo-placeholder" id="photo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="photo-cam-icon"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                        <span>Clique ou arraste a foto do personagem aqui</span>
+                        <small>PNG, JPG ou WEBP (Enquadramento 3x4 automático)</small>
+                      </div>
+                      <img id="photo-preview-img" class="photo-preview-img hidden" alt="Foto do Personagem" />
+                    </div>
+                  </div>
+                  <div class="photo-actions-row">
+                    <label for="cart-file-input" class="btn-outline btn-photo-upload" title="Selecionar foto do personagem">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <span>Selecionar Imagem</span>
+                    </label>
+                    <button type="button" id="cart-btn-remove-photo" class="btn-ghost-sm hidden" title="Remover foto e usar silhueta padrão">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      <span>Remover</span>
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Painel 2: Dados Funcionais do Membro -->
+              <section class="panel carterinha-section-panel">
+                <div class="panel-head">
+                  <div class="panel-title">
+                    <span class="panel-icon">📋</span>
+                    <div>
+                      <h2>2. Dados Pessoais &amp; Identificação</h2>
+                      <span class="muted">Informações cadastrais civis e funcionais</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-grid fields">
+                  <label class="full">Nome Completo do Membro
+                    <input id="cart-nome" type="text" placeholder="Ex.: Zaith Frost" autocomplete="off" />
+                  </label>
+                  
+                  <label>Passaporte / ID
+                    <input id="cart-id" type="text" placeholder="Ex.: 101" autocomplete="off" />
+                  </label>
+
+                  <label>Telefone do Personagem
+                    <input id="cart-telefone" type="text" placeholder="Ex.: 555-0101" autocomplete="off" />
+                  </label>
+
+                  <label>Naturalidade
+                    <input id="cart-naturalidade" type="text" placeholder="Ex.: Brava City" value="Brava City" autocomplete="off" />
+                  </label>
+
+                  <label>Data de Expedição
+                    <input id="cart-expedicao" type="text" placeholder="DD/MM/AAAA" autocomplete="off" />
+                  </label>
+
+                  <label class="full">Número de Inscrição da Carteirinha
+                    <span class="input-with-btn">
+                      <input id="cart-inscricao" type="text" placeholder="Ex.: OAB/SDJ-2026-0101" autocomplete="off" />
+                      <button type="button" class="btn-outline" id="cart-btn-gerar-inscricao" title="Gerar número sequencial oficial">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        <span>Gerar Inscrição</span>
+                      </button>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <!-- Painel 3: Cargo e Carreira no SDJ -->
+              <section class="panel carterinha-section-panel">
+                <div class="panel-head">
+                  <div class="panel-title">
+                    <span class="panel-icon">🎖️</span>
+                    <div>
+                      <h2>3. Cargo &amp; Situação Funcional</h2>
+                      <span class="muted">Selecione o cargo oficial ou digite a função exercida</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cart-cargo-selector-wrap">
+                  <span class="cart-sublabel">Selecione o cargo institucional:</span>
+                  <div class="cart-cargo-pills" id="cart-cargo-pills">
+                    <!-- Gerado dinamicamente via JS (Estagiário, Advogado Jr, Pleno, Sênior, Presidência, etc.) -->
+                  </div>
+
+                  <div class="cart-cargo-custom-row">
+                    <label class="full">Cargo que constará na carteirinha:
+                      <input id="cart-cargo" type="text" placeholder="Ex.: Advogado Sênior" value="Advogado Júnior" autocomplete="off" />
+                    </label>
+                  </div>
+
+                  <div class="form-grid fields" style="margin-top:14px;">
+                    <label>Situação Cadastral
+                      <select id="cart-situacao" class="cart-select">
+                        <option value="REGULAR / ATIVO" selected>🟢 Regular / Em Atividade</option>
+                        <option value="EM LICENÇA">🟡 Em Licença Oficial</option>
+                        <option value="SUSPENSO">🔴 Suspenso Preventivamente</option>
+                      </select>
+                    </label>
+
+                    <label>Validade do Documento
+                      <input id="cart-validade" type="text" value="INDETERMINADA (ENQUANTO EM CARGO)" readonly style="background:var(--bg-card);color:var(--muted);cursor:not-allowed;" />
+                    </label>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Ações da Carteirinha -->
+              <div class="carterinha-actions-box">
+                <button type="button" id="cart-btn-limpar" class="btn-outline" title="Limpar todos os campos">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  <span>Limpar</span>
+                </button>
+                <button type="button" id="cart-btn-copiar" class="btn-outline" title="Copiar ficha funcional em texto">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span>Copiar Ficha</span>
+                </button>
+                <button type="button" id="cart-btn-discord" class="btn-primary btn-discord" title="Registrar e enviar foto da carteirinha (Frente e Verso) para o Discord">
+                  <!-- Injetado via JS -->
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Coluna 2: Preview Interativo 3D (Frente e Verso da Carteirinha) -->
+            <div class="carterinha-preview-col">
+              <div class="carterinha-sticky-card">
+                
+                <div class="card-preview-header">
+                  <div class="preview-title-group">
+                    <span class="preview-badge-live"><span class="pulse-dot"></span> LIVE PREVIEW 3D</span>
+                    <span class="preview-hint-text">Clique no cartão para girar</span>
+                  </div>
+
+                  <div class="card-face-toggles">
+                    <button type="button" id="cart-toggle-frente" class="face-toggle-btn active" data-face="frente">Frente</button>
+                    <button type="button" id="cart-toggle-verso" class="face-toggle-btn" data-face="verso">Verso</button>
+                    <button type="button" id="cart-btn-flip" class="btn-flip-card" title="Girar cartão Frente/Verso">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                      <span>Girar</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Palco 3D do Cartão -->
+                <div class="cart-stage">
+                  <div class="cart-card-3d" id="cart-card-3d">
+                    
+                    <!-- FRENTE DO CARTÃO -->
+                    <div class="cart-face cart-face-front">
+                      <div class="cart-guilloche"></div>
+                      <div class="cart-hologram-sheen"></div>
+
+                      <!-- Cabeçalho Frente -->
+                      <div class="c-front-head">
+                        <img src="arte.png" alt="Brasão SDJ" class="c-front-logo" />
+                        <div class="c-front-titles">
+                          <span class="c-republica">REPÚBLICA DE BRAVA · CIDADE DE BRAVA RP</span>
+                          <span class="c-depto">DEPARTAMENTO JURÍDICO &bull; PODER JUDICIÁRIO</span>
+                          <span class="c-titulo-doc">CARTEIRA DE IDENTIDADE FUNCIONAL</span>
+                        </div>
+                        <div class="c-front-badge-icon" title="Poder Judiciário">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="c-justice-icon"><path d="M12 3v18M6 8l6-5 6 5M3 13l3-5 3 5a3 3 0 0 1-6 0zM15 13l3-5 3 5a3 3 0 0 1-6 0zM2 21h20"/></svg>
+                        </div>
+                      </div>
+
+                      <div class="c-gold-bar"></div>
+
+                      <!-- Corpo Frente -->
+                      <div class="c-front-body">
+                        <!-- Foto e Chip -->
+                        <div class="c-photo-col">
+                          <div class="c-photo-frame">
+                            <img id="card-display-photo" src="arte.png" alt="Foto do Membro" class="c-photo-img" />
+                            <div class="c-photo-overlay-stamp">SDJ · AUTÊNTICO</div>
+                          </div>
+                          
+                          <div class="c-chip-row">
+                            <div class="c-smart-chip">
+                              <div class="chip-line c1"></div>
+                              <div class="chip-line c2"></div>
+                              <div class="chip-line c3"></div>
+                            </div>
+                            <span class="chip-nfc" title="Identificação Funcional NFC / Contactless">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 0 0-14"/><path d="M5 14a2 2 0 0 1 0-4"/></svg>
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Dados do Membro -->
+                        <div class="c-info-col">
+                          <div class="c-field-group">
+                            <span class="c-label">TITULAR DO DOCUMENTO</span>
+                            <span class="c-val c-val-nome" id="card-val-nome">NOME DO TITULAR</span>
+                          </div>
+
+                          <div class="c-field-group">
+                            <span class="c-label">CARGO INSTITUCIONAL</span>
+                            <span class="c-badge-cargo" id="card-val-cargo">ADVOGADO JÚNIOR</span>
+                          </div>
+
+                          <div class="c-field-row">
+                            <div class="c-field-group">
+                              <span class="c-label">PASSAPORTE (ID)</span>
+                              <span class="c-val c-val-id" id="card-val-id">#000</span>
+                            </div>
+                            <div class="c-field-group">
+                              <span class="c-label">INSCRIÇÃO OFICIAL</span>
+                              <span class="c-val c-val-inscricao" id="card-val-inscricao">OAB/SDJ-2026-0000</span>
+                            </div>
+                          </div>
+
+                          <div class="c-field-row">
+                            <div class="c-field-group">
+                              <span class="c-label">NATURALIDADE</span>
+                              <span class="c-val" id="card-val-naturalidade">Brava City</span>
+                            </div>
+                            <div class="c-field-group">
+                              <span class="c-label">EXPEDIÇÃO</span>
+                              <span class="c-val" id="card-val-expedicao">17/10/2026</span>
+                            </div>
+                          </div>
+
+                          <div class="c-hologram-strip">
+                            <span class="holo-text">★ REPÚBLICA DE BRAVA ★ DEPARTAMENTO JURÍDICO ★ FÉ PÚBLICA NOTARIAL ★ OFICIAL ★</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Rodapé Frente -->
+                      <div class="c-front-foot">
+                        <span class="c-foot-auth">DOCUMENTO DE IDENTIFICAÇÃO OFICIAL VÁLIDO EM TODA A JURISDIÇÃO</span>
+                        <span class="c-foot-security">SEGURANÇA REGISTRAL 2026</span>
+                      </div>
+                    </div>
+
+                    <!-- VERSO DO CARTÃO -->
+                    <div class="cart-face cart-face-back">
+                      <div class="cart-guilloche"></div>
+
+                      <!-- Tarja Magnética Superior -->
+                      <div class="c-magnetic-strip"></div>
+
+                      <!-- Faixa de Assinatura do Titular -->
+                      <div class="c-signature-strip">
+                        <span class="c-sig-strip-pattern">FÉ PÚBLICA &bull; DEPARTAMENTO JURÍDICO BRAVA &bull; FÉ PÚBLICA &bull; DEPARTAMENTO JURÍDICO BRAVA</span>
+                        <span class="c-sig-titular" id="card-sig-titular">Dr. Nome do Titular</span>
+                        <span class="c-sig-caption">ASSINATURA DO TITULAR</span>
+                      </div>
+
+                      <!-- Grade de Metadados do Verso -->
+                      <div class="c-back-body">
+                        <div class="c-back-data-col">
+                          <div class="c-back-meta-grid">
+                            <div class="c-meta-item">
+                              <span class="c-meta-k">TELEFONE:</span>
+                              <span class="c-meta-v" id="card-back-telefone">555-0101</span>
+                            </div>
+                            <div class="c-meta-item">
+                              <span class="c-meta-k">EXPEDIÇÃO:</span>
+                              <span class="c-meta-v" id="card-back-expedicao">17/10/2026</span>
+                            </div>
+                            <div class="c-meta-item">
+                              <span class="c-meta-k">SITUAÇÃO:</span>
+                              <span class="c-meta-v c-status-green" id="card-back-situacao">REGULAR / ATIVO</span>
+                            </div>
+                            <div class="c-meta-item">
+                              <span class="c-meta-k">VALIDADE:</span>
+                              <span class="c-meta-v">INDETERMINADA</span>
+                            </div>
+                            <div class="c-meta-item full">
+                              <span class="c-meta-k">ÓRGÃO EMISSOR:</span>
+                              <span class="c-meta-v">SECRETARIA GERAL DO DEPARTAMENTO JURÍDICO · TRIBUNAL DE JUSTIÇA</span>
+                            </div>
+                          </div>
+
+                          <!-- Assinatura da Presidência no Verso -->
+                          <div class="c-back-presidencia-row">
+                            <div class="c-back-auth-sign">
+                              <span class="c-auth-rubrica">Zaith Frost</span>
+                              <span class="c-auth-label">Zaith Frost · Presidente SDJ</span>
+                            </div>
+                            <div class="c-back-auth-sign">
+                              <span class="c-auth-rubrica">Mike Santaroni</span>
+                              <span class="c-auth-label">Mike Santaroni · Vice-Presidente</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- QR Code Oficial -->
+                        <div class="c-back-qr-col">
+                          <div class="c-qr-frame">
+                            <div id="card-qr-box" class="c-qr-code-canvas"></div>
+                            <span class="c-qr-label">VALIDAÇÃO DIGITAL</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Texto Estatutário -->
+                      <p class="c-back-legal">
+                        O titular desta identidade funcional possui livre acesso aos órgãos públicos, delegacias e estabelecimentos prisionais, gozando das prerrogativas e imunidades previstas na legislação municipal de Brava City.
+                      </p>
+
+                      <!-- MRZ (Machine Readable Zone) -->
+                      <div class="c-mrz-zone">
+                        <div class="mrz-line" id="card-mrz-1">IDBRA<<SDJ<2026<<<<<<<<<<<<<<<<<<<<<<<</div>
+                        <div class="mrz-line" id="card-mrz-2">0000000BRA<<<<<<<<<<<<000000<0<<<<<<<<</div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Botoeira de Exportação de Imagem -->
+                <div class="card-export-buttons-row">
+                  <button type="button" id="cart-btn-download-front" class="btn-ghost-sm" title="Baixar imagem em PNG de alta definição da Frente">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Baixar Frente (PNG)</span>
+                  </button>
+                  <button type="button" id="cart-btn-download-back" class="btn-ghost-sm" title="Baixar imagem em PNG de alta definição do Verso">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Baixar Verso (PNG)</span>
+                  </button>
+                  <button type="button" id="cart-btn-download-both" class="btn-ghost-sm" title="Baixar Frente e Verso em imagem única combinada">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                    <span>Frente + Verso (HD)</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Banner Oficial Homologado -->
+          <div class="precos-presidencia-banner">
+            <div class="presidencia-stamp">
+              <span class="seal">🪪</span>
+              <div>
+                <b>Credenciamento Institucional Homologado pela Presidência do SDJ</b>
+                <p>Zaith Frost (Presidente) &bull; Mike Santaroni (Vice-Presidente) &bull; Ordem dos Advogados de Brava City</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- OUTROS SERVIÇOS SERÃO INJETADOS PELO JS -->
       <div id="dynamic-services"></div>
     </div>
@@ -662,8 +1049,8 @@
 
   <script src="jspdf.umd.min.js"></script>
   <script src="qrcode.min.js"></script>
-  <script src="pdf-generator.js?v=20261016-porte-situacao"></script>
-  <script src="data.js?v=20261016-porte-situacao"></script>
-  <script src="app.js?v=20261016-porte-situacao"></script>
+  <script src="pdf-generator.js?v=20261017-social-webhook"></script>
+  <script src="data.js?v=20261017-social-webhook"></script>
+  <script src="app.js?v=20261017-social-webhook"></script>
 </body>
 </html>

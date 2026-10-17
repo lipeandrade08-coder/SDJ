@@ -24,6 +24,7 @@
     tabela: svg('<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
     prova: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/>'),
     porte: svg('<path d="M4 11h11l2-3h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2l-2 5H9l1.5-4H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"/>'),
+    credencial: svg('<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -481,24 +482,24 @@
       fields: [
         { id: "cn_crianca", label: "👶 Nome da Criança" },
         { id: "cn_id", label: "🪪 Passaporte da Criança" },
-        { id: "cn_mae", label: "👩 Nome da Mãe" },
-        { id: "cn_id_mae", label: "🪪 Passaporte da Mãe" },
-        { id: "cn_pai", label: "👨 Nome do Pai" },
-        { id: "cn_id_pai", label: "🪪 Passaporte do Pai" },
+        { id: "cn_resp1", label: "👤 Nome do(a) Responsável 1" },
+        { id: "cn_id_resp1", label: "🪪 Passaporte do(a) Responsável 1" },
+        { id: "cn_resp2", label: "👤 Nome do(a) Responsável 2" },
+        { id: "cn_id_resp2", label: "🪪 Passaporte do(a) Responsável 2" },
         { id: "cn_data", label: "📅 Data de Nascimento" },
         { id: "cn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000" }
       ]
     },
     {
       id: "adocao", title: "Certidão de Adoção", icon: "📝", svg: "adocao", tag: "Certidão",
-      desc: "Formalização da adoção com até dois adotantes.", webhook: "https://discord.com/api/webhooks/1557910119419871333/hbKX69nBb5VT4JQsKWpcp5JRrAXa-_jglzxtOEi6nrpn7g3mWiTar4ILjb7LA8ev9rNd",
+      desc: "Formalização da adoção com filiação e responsáveis adotantes.", webhook: "https://discord.com/api/webhooks/1557910119419871333/hbKX69nBb5VT4JQsKWpcp5JRrAXa-_jglzxtOEi6nrpn7g3mWiTar4ILjb7LA8ev9rNd",
       fields: [
         { id: "ca_adotado", label: "👤 Nome do Adotado" },
         { id: "ca_id_adotado", label: "🪪 Passaporte do Adotado" },
-        { id: "ca_adotante1", label: "👨‍👦 Nome do Adotante 1" },
-        { id: "ca_id_adotante1", label: "🪪 Passaporte 1" },
-        { id: "ca_adotante2", label: "👨‍👦 Nome do Adotante 2 (Opcional)" },
-        { id: "ca_id_adotante2", label: "🪪 Passaporte 2 (Opcional)" },
+        { id: "ca_resp1", label: "👤 Nome do(a) Responsável 1" },
+        { id: "ca_id_resp1", label: "🪪 Passaporte do(a) Responsável 1" },
+        { id: "ca_resp2", label: "👤 Nome do(a) Responsável 2 (Opcional)" },
+        { id: "ca_id_resp2", label: "🪪 Passaporte do(a) Responsável 2 (Opcional)" },
         { id: "ca_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
       ]
     },
@@ -765,8 +766,18 @@
     desc: "Aplicação do teste oral oficial de admissão (12 perguntas nível fácil), gabarito e ata notarial em PDF."
   };
 
+  /* ---------- Card: Carteirinha Funcional SDJ ---------- */
+  const carterinhaCard = {
+    id: "carterinha",
+    title: "Carteirinha Funcional SDJ",
+    svg: "credencial",
+    tag: "Credenciamento",
+    featured: true,
+    desc: "Emissão oficial de identidade funcional para membros do Judiciário com foto, QR Code, verso e download em PDF/PNG."
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, provaOralCard, precosCard, ...servicesConfig];
+  const allCards = [calculadoraCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
     <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" style="animation-delay:${0.05 * i}s">
@@ -1757,10 +1768,560 @@
     provaOralState.despachoPresidencia = e.target.value;
   });
 
+  /* ==========================================================
+     MÓDULO: GERADOR DE CARTEIRINHAS FUNCIONAIS DO SDJ (3D)
+     ========================================================== */
+  const cartState = {
+    fotoUrl: null,
+    qrDataUrl: null,
+    flipped: false
+  };
+
+  function getCarterinhaData() {
+    const nome = $("#cart-nome")?.value.trim() || "";
+    const id = $("#cart-id")?.value.trim() || "";
+    const telefone = $("#cart-telefone")?.value.trim() || "";
+    const cargo = $("#cart-cargo")?.value.trim() || "Advogado Júnior";
+    const naturalidade = $("#cart-naturalidade")?.value.trim() || "Brava City";
+    const expedicao = $("#cart-expedicao")?.value.trim() || new Date().toLocaleDateString("pt-BR");
+    const inscricao = $("#cart-inscricao")?.value.trim() || "OAB/SDJ-2026-0000";
+    const situacao = $("#cart-situacao")?.value || "REGULAR / ATIVO";
+
+    return {
+      nome,
+      id,
+      telefone,
+      cargo,
+      naturalidade,
+      expedicao,
+      inscricao,
+      situacao,
+      fotoUrl: cartState.fotoUrl,
+      qrDataUrl: cartState.qrDataUrl,
+      qrTexto: `SDJ BRAVA RP | TITULAR: ${nome || "MEMBRO"} | ID: ${id || "000"} | CARGO: ${cargo} | REGISTRO: ${inscricao} | SITUAÇÃO: ${situacao} | EXPEDIÇÃO: ${expedicao}`
+    };
+  }
+
+  function obterPrefixoInscricao(cargo) {
+    const c = (cargo || $("#cart-cargo")?.value || "").toLowerCase();
+    if (c.includes("assistente social") || c.includes("social")) return "CRESS/SDJ";
+    if (c.includes("juiz") || c.includes("magistrad")) return "TJ/SDJ";
+    if (c.includes("promotor") || c.includes("ministério") || c.includes("ministerio")) return "MP/SDJ";
+    if (c.includes("estagiário") || c.includes("estagio")) return "EST/SDJ";
+    return "OAB/SDJ";
+  }
+
+  function gerarNumeroInscricaoAleatorio(cargo) {
+    const ano = new Date().getFullYear();
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    const prefix = obterPrefixoInscricao(cargo);
+    return `${prefix}-${ano}-${rand}`;
+  }
+
+  function renderCargoPills() {
+    const container = $("#cart-cargo-pills");
+    if (!container) return;
+
+    const cargos = (typeof CARTERINHA_CONFIG !== "undefined" && CARTERINHA_CONFIG.cargosPadrao) || [
+      { nome: "Estagiário", icone: "🎓" },
+      { nome: "Assistente Social", icone: "🤝" },
+      { nome: "Advogado Júnior", icone: "👥" },
+      { nome: "Advogado Pleno", icone: "📝" },
+      { nome: "Advogado Sênior", icone: "👤" },
+      { nome: "Advogado Administrativo", icone: "📑" },
+      { nome: "Vice-Presidente", icone: "⚖️" },
+      { nome: "Presidente", icone: "👑" },
+      { nome: "Juiz de Direito", icone: "🏛️" },
+      { nome: "Promotor de Justiça", icone: "🛡️" }
+    ];
+
+    const currentCargo = $("#cart-cargo")?.value || "Advogado Júnior";
+
+    container.innerHTML = cargos.map((c) => {
+      const active = c.nome.toLowerCase() === currentCargo.toLowerCase();
+      return `
+        <button type="button" class="cart-cargo-pill ${active ? "active" : ""}" data-cargo="${c.nome}">
+          <span>${c.icone}</span>
+          <span>${c.nome}</span>
+        </button>
+      `;
+    }).join("");
+
+    container.querySelectorAll(".cart-cargo-pill").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        container.querySelectorAll(".cart-cargo-pill").forEach((p) => p.classList.remove("active"));
+        pill.classList.add("active");
+        if ($("#cart-cargo")) {
+          $("#cart-cargo").value = pill.dataset.cargo;
+        }
+
+        // Se a inscrição atual for vazia ou for um padrão gerado, atualiza o prefixo correspondente ao cargo
+        const currentInsc = $("#cart-inscricao")?.value || "";
+        if (!currentInsc || /^(OAB|CRESS|TJ|MP|EST)\/SDJ-\d{4}-\d{4}$/.test(currentInsc)) {
+          const idVal = $("#cart-id")?.value.trim();
+          const prefix = obterPrefixoInscricao(pill.dataset.cargo);
+          const ano = new Date().getFullYear();
+          if (idVal && !isNaN(idVal)) {
+            if ($("#cart-inscricao")) $("#cart-inscricao").value = `${prefix}-${ano}-${idVal.padStart(4, "0")}`;
+          } else {
+            if ($("#cart-inscricao")) $("#cart-inscricao").value = gerarNumeroInscricaoAleatorio(pill.dataset.cargo);
+          }
+        }
+
+        updateCarterinhaPreview();
+      });
+    });
+  }
+
+  let qrTimeout;
+  function updateCarterinhaPreview() {
+    const d = getCarterinhaData();
+
+    // Atualiza Frente
+    if ($("#card-val-nome")) {
+      $("#card-val-nome").textContent = d.nome ? d.nome.toUpperCase() : "NOME DO TITULAR";
+    }
+    if ($("#card-val-cargo")) {
+      $("#card-val-cargo").textContent = d.cargo ? d.cargo.toUpperCase() : "ADVOGADO JÚNIOR";
+    }
+    if ($("#card-val-id")) {
+      $("#card-val-id").textContent = d.id ? "#" + d.id : "#000";
+    }
+    if ($("#card-val-inscricao")) {
+      $("#card-val-inscricao").textContent = d.inscricao || "OAB/SDJ-2026-0000";
+    }
+    if ($("#card-val-naturalidade")) {
+      $("#card-val-naturalidade").textContent = d.naturalidade || "Brava City";
+    }
+    if ($("#card-val-expedicao")) {
+      $("#card-val-expedicao").textContent = d.expedicao || new Date().toLocaleDateString("pt-BR");
+    }
+
+    // Atualiza Verso
+    if ($("#card-sig-titular")) {
+      const titularNome = d.nome || "Dr. Titular";
+      $("#card-sig-titular").textContent = window.SDJ_PDF ? window.SDJ_PDF.toSignatureCase(titularNome) : titularNome;
+    }
+    if ($("#card-back-telefone")) {
+      $("#card-back-telefone").textContent = d.telefone || "555-0101";
+    }
+    if ($("#card-back-expedicao")) {
+      $("#card-back-expedicao").textContent = d.expedicao || new Date().toLocaleDateString("pt-BR");
+    }
+    if ($("#card-back-situacao")) {
+      $("#card-back-situacao").textContent = d.situacao || "REGULAR / ATIVO";
+      const isReg = (d.situacao || "").includes("REGULAR");
+      const isLic = (d.situacao || "").includes("LICENÇA");
+      $("#card-back-situacao").style.color = isReg ? "#4ade80" : (isLic ? "#fde047" : "#f87171");
+    }
+
+    // MRZ Lines
+    if ($("#card-mrz-1")) {
+      const cleanInscr = (d.inscricao || "SDJ2026").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      $("#card-mrz-1").textContent = `IDBRA<<SDJ<2026<${cleanInscr}<<<<<<<<<<<<<<<<<<<<<<`.substring(0, 44);
+    }
+    if ($("#card-mrz-2")) {
+      const cleanId = (d.id || "0000").replace(/[^0-9]/g, "").padStart(6, "0");
+      $("#card-mrz-2").textContent = `${cleanId}9BRA<<<<<<<<<<<<<<<<<<<0<<<<<<<<<<<<<<`.substring(0, 44);
+    }
+
+    // Foto da carteira
+    if ($("#card-display-photo")) {
+      $("#card-display-photo").src = cartState.fotoUrl || "arte.png";
+    }
+
+    // Atualiza QR Code com debounce leve
+    clearTimeout(qrTimeout);
+    qrTimeout = setTimeout(() => {
+      const qrBox = $("#card-qr-box");
+      if (qrBox && typeof window !== "undefined" && window.QRCode) {
+        qrBox.innerHTML = "";
+        try {
+          new window.QRCode(qrBox, {
+            text: d.qrTexto,
+            width: 58,
+            height: 58,
+            correctLevel: window.QRCode.CorrectLevel.M
+          });
+          setTimeout(() => {
+            const img = qrBox.querySelector("img");
+            const cvs = qrBox.querySelector("canvas");
+            if (img && img.src) cartState.qrDataUrl = img.src;
+            else if (cvs) cartState.qrDataUrl = cvs.toDataURL("image/png");
+          }, 60);
+        } catch (e) {
+          console.warn("Erro ao atualizar QR Code:", e);
+        }
+      }
+    }, 180);
+  }
+
+  function setCardFlip(flipped) {
+    cartState.flipped = !!flipped;
+    const card = $("#cart-card-3d");
+    if (card) {
+      card.classList.toggle("flipped", cartState.flipped);
+    }
+    const btnFrente = $("#cart-toggle-frente");
+    const btnVerso = $("#cart-toggle-verso");
+    if (btnFrente) btnFrente.classList.toggle("active", !cartState.flipped);
+    if (btnVerso) btnVerso.classList.toggle("active", cartState.flipped);
+  }
+
+  function processPhotoFile(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      toast("Por favor selecione um arquivo de imagem válido (PNG, JPG, WEBP).", true);
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast("A imagem é muito grande. Escolha uma foto com até 8 MB.", true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      cartState.fotoUrl = e.target.result;
+
+      const imgPrev = $("#photo-preview-img");
+      const ph = $("#photo-placeholder");
+      const btnRemove = $("#cart-btn-remove-photo");
+
+      if (imgPrev) {
+        imgPrev.src = cartState.fotoUrl;
+        imgPrev.classList.remove("hidden");
+      }
+      if (ph) ph.classList.add("hidden");
+      if (btnRemove) btnRemove.classList.remove("hidden");
+
+      updateCarterinhaPreview();
+      toast("✓ Foto do personagem anexada com sucesso!");
+    };
+    reader.onerror = () => {
+      toast("Erro ao ler o arquivo de foto.", true);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function initCarterinha() {
+    // Botão de acesso na topbar
+    const btnTopCart = $("#btn-carterinha");
+    if (btnTopCart) {
+      btnTopCart.addEventListener("click", () => goTo("tab-carterinha", "Carteirinha SDJ"));
+    }
+
+    // Inicializa rótulo do Discord
+    const btnDiscord = $("#cart-btn-discord");
+    if (btnDiscord) {
+      btnDiscord.innerHTML = DISCORD_LABEL;
+    }
+
+    // Valores Iniciais
+    if ($("#cart-expedicao") && !$("#cart-expedicao").value) {
+      $("#cart-expedicao").value = new Date().toLocaleDateString("pt-BR");
+    }
+    if ($("#cart-inscricao") && !$("#cart-inscricao").value) {
+      $("#cart-inscricao").value = gerarNumeroInscricaoAleatorio();
+    }
+    if ($("#cart-naturalidade") && !$("#cart-naturalidade").value) {
+      $("#cart-naturalidade").value = "Brava City";
+    }
+
+    renderCargoPills();
+
+    // Listeners de Input para Live Preview em tempo real
+    const inputs = [
+      "#cart-nome", "#cart-id", "#cart-telefone", "#cart-cargo",
+      "#cart-naturalidade", "#cart-expedicao", "#cart-inscricao", "#cart-situacao"
+    ];
+    inputs.forEach((sel) => {
+      const el = $(sel);
+      if (el) {
+        el.addEventListener("input", () => {
+          if (sel === "#cart-cargo") {
+            const pills = $$(".cart-cargo-pill");
+            pills.forEach((p) => {
+              p.classList.toggle("active", p.dataset.cargo.trim().toLowerCase() === el.value.trim().toLowerCase());
+            });
+          }
+          updateCarterinhaPreview();
+        });
+        el.addEventListener("change", updateCarterinhaPreview);
+      }
+    });
+
+    // Botão Gerar Inscrição
+    $("#cart-btn-gerar-inscricao")?.addEventListener("click", () => {
+      const idVal = $("#cart-id")?.value.trim();
+      const cargo = $("#cart-cargo")?.value || "";
+      const prefix = obterPrefixoInscricao(cargo);
+      const ano = new Date().getFullYear();
+      let novaInscricao = "";
+      if (idVal && !isNaN(idVal)) {
+        novaInscricao = `${prefix}-${ano}-${idVal.padStart(4, "0")}`;
+      } else {
+        novaInscricao = gerarNumeroInscricaoAleatorio(cargo);
+      }
+      if ($("#cart-inscricao")) $("#cart-inscricao").value = novaInscricao;
+      updateCarterinhaPreview();
+      toast("✓ Número de inscrição oficial gerado: " + novaInscricao);
+    });
+
+    // Upload de Foto
+    const dropzone = $("#photo-dropzone");
+    const fileInput = $("#cart-file-input");
+
+    if (fileInput) {
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          processPhotoFile(e.target.files[0]);
+        }
+      });
+    }
+
+    if (dropzone) {
+      ["dragenter", "dragover"].forEach((evt) => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add("dragover");
+        });
+      });
+      ["dragleave", "drop"].forEach((evt) => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove("dragover");
+        });
+      });
+      dropzone.addEventListener("drop", (e) => {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          processPhotoFile(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    // Botão Remover Foto
+    $("#cart-btn-remove-photo")?.addEventListener("click", () => {
+      cartState.fotoUrl = null;
+      if (fileInput) fileInput.value = "";
+      const imgPrev = $("#photo-preview-img");
+      const ph = $("#photo-placeholder");
+      const btnRemove = $("#cart-btn-remove-photo");
+
+      if (imgPrev) {
+        imgPrev.src = "";
+        imgPrev.classList.add("hidden");
+      }
+      if (ph) ph.classList.remove("hidden");
+      if (btnRemove) btnRemove.classList.add("hidden");
+
+      updateCarterinhaPreview();
+      toast("Foto removida. Utilizando brasão oficial padrão.");
+    });
+
+    // Controles de Giro 3D
+    $("#cart-card-3d")?.addEventListener("click", () => setCardFlip(!cartState.flipped));
+    $("#cart-btn-flip")?.addEventListener("click", () => setCardFlip(!cartState.flipped));
+    $("#cart-toggle-frente")?.addEventListener("click", () => setCardFlip(false));
+    $("#cart-toggle-verso")?.addEventListener("click", () => setCardFlip(true));
+
+    // Botão Limpar
+    $("#cart-btn-limpar")?.addEventListener("click", () => {
+      if ($("#cart-nome")) $("#cart-nome").value = "";
+      if ($("#cart-id")) $("#cart-id").value = "";
+      if ($("#cart-telefone")) $("#cart-telefone").value = "";
+      if ($("#cart-cargo")) $("#cart-cargo").value = "Advogado Júnior";
+      if ($("#cart-naturalidade")) $("#cart-naturalidade").value = "Brava City";
+      if ($("#cart-expedicao")) $("#cart-expedicao").value = new Date().toLocaleDateString("pt-BR");
+      if ($("#cart-inscricao")) $("#cart-inscricao").value = gerarNumeroInscricaoAleatorio();
+      if ($("#cart-situacao")) $("#cart-situacao").value = "REGULAR / ATIVO";
+
+      cartState.fotoUrl = null;
+      if (fileInput) fileInput.value = "";
+      const imgPrev = $("#photo-preview-img");
+      const ph = $("#photo-placeholder");
+      const btnRemove = $("#cart-btn-remove-photo");
+      if (imgPrev) { imgPrev.src = ""; imgPrev.classList.add("hidden"); }
+      if (ph) ph.classList.remove("hidden");
+      if (btnRemove) btnRemove.classList.add("hidden");
+
+      renderCargoPills();
+      setCardFlip(false);
+      updateCarterinhaPreview();
+      toast("Formulário da carteirinha limpo com sucesso!");
+    });
+
+    // Botão Copiar Ficha Funcional
+    $("#cart-btn-copiar")?.addEventListener("click", () => {
+      const d = getCarterinhaData();
+      if (!d.nome) {
+        toast("Preencha o nome do membro antes de copiar a ficha.", true);
+        return;
+      }
+      let t = "========================================================\n";
+      t += "🪪 FICHA FUNCIONAL — DEPARTAMENTO JURÍDICO DE BRAVA\n";
+      t += "========================================================\n\n";
+      t += `• Titular: ${d.nome} (Passaporte/ID: #${d.id || "000"})\n`;
+      t += `• Cargo Oficial: ${d.cargo}\n`;
+      t += `• Inscrição OAB/SDJ: ${d.inscricao}\n`;
+      t += `• Telefone de Contato: ${d.telefone || "Não informado"}\n`;
+      t += `• Naturalidade: ${d.naturalidade}\n`;
+      t += `• Data da Expedição: ${d.expedicao}\n`;
+      t += `• Situação Cadastral: ${d.situacao}\n`;
+      t += `• Validade: INDETERMINADA (ENQUANTO EM CARGO)\n\n`;
+      t += "🏛️ Homologação Oficial:\n";
+      t += `Zaith Frost (Presidente do SDJ) & Mike Santaroni (Vice-Presidente)\n`;
+      t += "========================================================";
+      copyText(t);
+    });
+
+    function downloadCanvasAsPng(canvas, filename) {
+      if (!canvas) return;
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    // Baixar PNG Frente
+    $("#cart-btn-download-front")?.addEventListener("click", async () => {
+      const d = getCarterinhaData();
+      const safe = (d.nome || "Membro").replace(/[^a-zA-Z0-9_-]/g, "_");
+      toast("Gerando imagem da Frente em alta resolução...");
+      try {
+        const canvas = await window.SDJ_PDF.renderCarterinhaCanvas(d, "frente");
+        downloadCanvasAsPng(canvas, `Carteira_SDJ_Frente_${safe}.png`);
+        toast("✓ Imagem da Frente baixada com sucesso!");
+      } catch (err) {
+        toast("Erro ao gerar imagem: " + err.message, true);
+      }
+    });
+
+    // Baixar PNG Verso
+    $("#cart-btn-download-back")?.addEventListener("click", async () => {
+      const d = getCarterinhaData();
+      const safe = (d.nome || "Membro").replace(/[^a-zA-Z0-9_-]/g, "_");
+      toast("Gerando imagem do Verso em alta resolução...");
+      try {
+        const canvas = await window.SDJ_PDF.renderCarterinhaCanvas(d, "verso");
+        downloadCanvasAsPng(canvas, `Carteira_SDJ_Verso_${safe}.png`);
+        toast("✓ Imagem do Verso baixada com sucesso!");
+      } catch (err) {
+        toast("Erro ao gerar imagem: " + err.message, true);
+      }
+    });
+
+    // Baixar PNG Frente + Verso (Ambos)
+    $("#cart-btn-download-both")?.addEventListener("click", async () => {
+      const d = getCarterinhaData();
+      const safe = (d.nome || "Membro").replace(/[^a-zA-Z0-9_-]/g, "_");
+      toast("Gerando composição Frente + Verso em alta definição...");
+      try {
+        const canvas = await window.SDJ_PDF.renderCarterinhaCanvas(d, "ambos");
+        downloadCanvasAsPng(canvas, `Carteira_SDJ_Completa_${safe}.png`);
+        toast("✓ Imagem combinada da Carteirinha baixada com sucesso!");
+      } catch (err) {
+        toast("Erro ao gerar imagem combinada: " + err.message, true);
+      }
+    });
+
+    // Enviar Foto da Carteirinha (Frente + Verso) para o Discord
+    $("#cart-btn-discord")?.addEventListener("click", async function () {
+      const btn = this;
+      const d = getCarterinhaData();
+      if (!d.nome) {
+        toast("Por favor preencha o Nome do membro antes de enviar ao Discord.", true);
+        $("#cart-nome")?.focus();
+        return;
+      }
+
+      const isAssistenteSocial = (d.cargo || "").toLowerCase().includes("assistente social") ||
+                                 (d.cargo || "").toLowerCase().includes("social");
+
+      const webhookGeral = (typeof CARTERINHA_CONFIG !== "undefined" && CARTERINHA_CONFIG.webhook) ||
+        "https://discord.com/api/webhooks/1561013193592016948/KAD218Y07otK0VZTv6euOd0Lig-Yc-FJf-0N2VRrzjXwEk8J2Ab8bh2gflYRqgoz9dMm";
+
+      const webhookAssistenteSocial = (typeof CARTERINHA_CONFIG !== "undefined" && CARTERINHA_CONFIG.webhookAssistenteSocial) ||
+        "https://discord.com/api/webhooks/1561029128336183415/PjkrMmEQCN5a6rgevDaTg8UatuLi2sFzsSE3dLVNrzcSTjfcwbrFuDOwXMhUNFHpMkFP";
+
+      const webhookUrl = isAssistenteSocial ? webhookAssistenteSocial : webhookGeral;
+
+      try {
+        btn.innerHTML = "<span>Gerando foto da carteirinha...</span>";
+        btn.disabled = true;
+
+        // Renderiza a imagem combinada HD (Frente + Verso)
+        const canvas = await window.SDJ_PDF.renderCarterinhaCanvas(d, "ambos");
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 0.95));
+        const safeName = (d.nome || "membro").toLowerCase().replace(/[^a-z0-9]/g, "_");
+        const filename = `carteirinha_${safeName}_frente_verso.png`;
+
+        const embedTitle = isAssistenteSocial
+          ? "🤝 CARTEIRA FUNCIONAL — SERVIÇO SOCIAL & APOIO PSICOSSOCIAL SDJ"
+          : "🪪 CARTEIRA DE IDENTIDADE FUNCIONAL — REGISTRO GERAL SDJ";
+
+        const embedDesc = isAssistenteSocial
+          ? "Identidade funcional oficial emitida para o Serviço Social do Departamento Jurídico de Brava City."
+          : "Identidade funcional oficial emitida e homologada pela Secretaria Geral do Departamento Jurídico de Brava City.";
+
+        const embedColor = isAssistenteSocial ? 0x10B981 : 0xD4AF37;
+
+        const msgContent = isAssistenteSocial
+          ? `🤝 **[CARTEIRA FUNCIONAL DO SERVIÇO SOCIAL EMITIDA]**\nA profissional **${d.nome}** (Passaporte: **#${d.id || "000"}**) foi devidamente credenciada como **${d.cargo}** (Registro: **${d.inscricao}**).`
+          : `🪪 **[CARTEIRA FUNCIONAL DO DEPARTAMENTO JURÍDICO EMITIDA]**\nO membro **${d.nome}** (Passaporte: **#${d.id || "000"}**) foi devidamente credenciado como **${d.cargo}** com fé pública notarial.`;
+
+        const toastMsg = isAssistenteSocial
+          ? "✓ Foto da carteirinha de Assistente Social enviada para o canal dedicado!"
+          : "✓ Foto da carteirinha Frente e Verso enviada para o Discord!";
+
+        const payload = {
+          content: msgContent,
+          embeds: [
+            {
+              title: embedTitle,
+              description: embedDesc,
+              color: embedColor,
+              fields: [
+                { name: "👤 Titular", value: `${d.nome} (ID: #${d.id || "000"})`, inline: true },
+                { name: "🎖️ Cargo Institucional", value: d.cargo, inline: true },
+                { name: "🔢 Inscrição Oficial", value: d.inscricao, inline: true },
+                { name: "📱 Telefone", value: d.telefone || "Não informado", inline: true },
+                { name: "📍 Naturalidade", value: d.naturalidade, inline: true },
+                { name: "📅 Data de Expedição", value: d.expedicao, inline: true },
+                { name: "🟢 Situação Cadastral", value: d.situacao, inline: true },
+                { name: "🏛️ Homologação Oficial", value: "Zaith Frost (Presidente) & Mike Santaroni (Vice)", inline: true }
+              ],
+              image: {
+                url: `attachment://${filename}`
+              },
+              footer: {
+                text: `Credenciamento SDJ · Poder Judiciário Brava City`
+              },
+              timestamp: new Date().toISOString()
+            }
+          ]
+        };
+
+        await sendWebhook(btn, webhookUrl, payload, () => {
+          toast(toastMsg);
+        }, { blob, filename });
+
+      } catch (err) {
+        toast("Erro ao preparar foto da carteirinha para o Discord: " + err.message, true);
+        btn.disabled = false;
+        btn.innerHTML = DISCORD_LABEL;
+      }
+    });
+
+    // Render inicial da carteirinha
+    updateCarterinhaPreview();
+  }
+
   renderList();
   renderTabelaPrecos();
   renderProvaOral();
   initProvaOralCampos();
+  initCarterinha();
   aplicarPrecosPadrao();
   update();
 })();
