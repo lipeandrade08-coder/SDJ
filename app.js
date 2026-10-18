@@ -447,7 +447,7 @@
         { id: "tn_novo", label: "📝 Novo Nome" },
         { id: "tn_id", label: "🪪 Passaporte" },
         { id: "tn_motivo", label: "❓ Motivo da Troca" },
-        { id: "tn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 100.000", isFull: true }
+        { id: "tn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
       ]
     },
     {
@@ -510,7 +510,7 @@
         { id: "rf_familia", label: "👥 Nome da Família" },
         { id: "rf_fundador", label: "👑 Nome do Fundador" },
         { id: "rf_id", label: "🪪 Passaporte do Fundador" },
-        { id: "rf_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000" },
+        { id: "rf_valor", label: "💰 Valor Cobrado", placeholder: "R$ 250.000" },
         { id: "rf_membros", label: "📝 Quantidade de Membros Iniciais", placeholder: "Ex: 10", isFull: true }
       ]
     },
@@ -709,8 +709,8 @@
   function aplicarPrecosPadrao() {
     if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
     if ($("#cas_valor") && !$("#cas_valor").value) $("#cas_valor").value = "R$ 200.000";
-    if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 100.000";
-    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 150.000";
+    if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 150.000";
+    if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 250.000";
     if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 250.000";
     if ($("#cn_valor") && !$("#cn_valor").value) $("#cn_valor").value = "R$ 150.000";
     if ($("#ca_valor") && !$("#ca_valor").value) $("#ca_valor").value = "R$ 150.000";
@@ -776,11 +776,22 @@
     desc: "Emissão oficial de identidade funcional para membros do Judiciário com foto, QR Code, verso e download em PDF/PNG."
   };
 
+  /* ---------- Card: Tribunal de Justiça ---------- */
+  const tribunalCard = {
+    id: "tribunal",
+    title: "Tribunal de Justiça",
+    svg: "balanca",
+    tag: "Poder Judiciário",
+    featured: true,
+    desc: "Portal solene do Tribunal: petições iniciais, mandados, autorizações judiciais, processos cíveis/criminais, decisões e audiências.",
+    url: "tribunal.html"
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
+  const allCards = [calculadoraCard, tribunalCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
-    <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" style="animation-delay:${0.05 * i}s">
+    <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" ${c.url ? `data-url="${c.url}"` : ""} style="animation-delay:${0.05 * i}s">
       <div class="card-top">
         <span class="card-icon">${ICONS[c.svg]}</span>
         <span class="card-tag">${c.tag}</span>
@@ -825,7 +836,13 @@
     $("#main").scrollTop = 0;
   }
   $$("#home-grid .nav-card").forEach((btn) =>
-    btn.addEventListener("click", () => goTo(btn.dataset.target, btn.dataset.title))
+    btn.addEventListener("click", () => {
+      if (btn.dataset.url) {
+        window.location.href = btn.dataset.url;
+        return;
+      }
+      goTo(btn.dataset.target, btn.dataset.title);
+    })
   );
   $("#btn-back").addEventListener("click", () => goTo("home"));
   $("#crumb-home").addEventListener("click", (e) => { e.preventDefault(); goTo("home"); });
@@ -1101,13 +1118,13 @@
         } else if (target === "tab-casamento" || title.includes("Casamento")) {
           if ($("#cas_valor")) $("#cas_valor").value = "R$ 200.000";
         } else if (target === "tab-trocanome") {
-          if ($("#tn_valor")) $("#tn_valor").value = "R$ 100.000";
+          if ($("#tn_valor")) $("#tn_valor").value = "R$ 150.000";
         } else if (target === "tab-nascimento") {
           if ($("#cn_valor")) $("#cn_valor").value = "R$ 150.000";
         } else if (target === "tab-adocao") {
           if ($("#ca_valor")) $("#ca_valor").value = "R$ 150.000";
         } else if (target === "tab-familia") {
-          if ($("#rf_valor")) $("#rf_valor").value = "R$ 150.000";
+          if ($("#rf_valor")) $("#rf_valor").value = "R$ 250.000";
         } else if (target === "tab-cnpj") {
           if ($("#cp_valor")) $("#cp_valor").value = title.includes("Semanal") ? "R$ 50.000" : "R$ 250.000";
         } else if (target === "tab-porte") {
@@ -2317,11 +2334,168 @@
     updateCarterinhaPreview();
   }
 
+  /* ==========================================================
+     QUADRO DE AVISOS — DISCORD #quadro-de-avisos
+     ========================================================== */
+  function initAvisosModal() {
+    const btnAvisos = $("#btn-avisos");
+    const modalAvisos = $("#modal-avisos");
+    if (!btnAvisos || !modalAvisos) return;
+
+    const textarea = $("#aviso-conteudo");
+    const charCount = $("#aviso-char-count");
+    const btnEnviar = $("#btn-enviar-aviso");
+
+    const webhookUrl = (window.CONFIG && window.CONFIG.webhookAvisos) ||
+                       (window.AVISOS_CONFIG && window.AVISOS_CONFIG.webhook) ||
+                       "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj";
+
+    function updateChars() {
+      if (!textarea || !charCount) return;
+      const len = textarea.value.length;
+      charCount.textContent = `${len} / 2000`;
+      charCount.style.color = len > 2000 ? "var(--red)" : len > 1800 ? "var(--accent)" : "var(--muted)";
+    }
+
+    if (textarea) textarea.addEventListener("input", updateChars);
+
+    btnAvisos.addEventListener("click", () => {
+      modalAvisos.classList.add("open");
+      modalAvisos.setAttribute("aria-hidden", "false");
+      if (textarea && !textarea.value.trim()) {
+        carregarModeloAtualizacao();
+      }
+      updateChars();
+    });
+
+    modalAvisos.addEventListener("click", (e) => {
+      if (e.target.closest("[data-close]")) {
+        modalAvisos.classList.remove("open");
+        modalAvisos.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modalAvisos.classList.contains("open")) {
+        modalAvisos.classList.remove("open");
+        modalAvisos.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    function carregarModeloAtualizacao() {
+      if (!textarea) return;
+      textarea.value = `# 🏛️ ATUALIZAÇÃO OFICIAL | JURÍDICO & TRIBUNAL DE JUSTIÇA ⚖️
+────────────────────────────────────────────
+> **Aos Membros, Servidores e Cidadãos de Brava RP:**
+> Comunicamos a implementação de atualizações em nosso ecossistema judiciário: novo portal exclusivo do Tribunal, reajuste de custas e integração automática de documentos com o Discord.
+
+### 💰 REAJUSTE DE VALORES E ATOS NOTARIAIS
+* 👨‍👩‍👧‍👦 **Registro de Família:** \`R$ 250.000\`
+* 📝 **Troca de Nome:** \`R$ 150.000\`
+* 🚓 **Atendimento em Delegacia:** \`R$ 30.000\` a \`R$ 80.000\`
+
+### ⚖️ NOVO PORTAL DO TRIBUNAL DE JUSTIÇA
+Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatizados**:
+* 📄 **Petição Inicial:** Distribuição de ações cíveis e criminais.
+* 🔱 **Processos Criminais & 📃 Cíveis:** Abertura, andamento e acusação.
+* 🏛️ **Decisões & Sentenças:** Fundamentação e publicação pelo Juízo.
+* 📖 **Mandados:** Prisão preventiva, busca e apreensão e condução.
+* ✅ **Autorizações Judiciais:** Quebras de sigilo, interceptações e eventos.
+* 📚 **Mandados Concluídos:** Certidão de cumprimento do Oficial de Justiça.
+* 📢 **Intimações & ⏰ Agendamentos:** Comunicações e pauta de audiências.
+
+### ⚡ INTEGRAÇÃO DISCORD & PDF COM FÉ PÚBLICA
+* 📬 **Envio Imediato:** Cada ato é despachado automaticamente ao canal respectivo.
+* 📜 **PDF Oficial com QR Code:** Gera documento A4 com chancela digital e protocolo.
+* ⚖️ **Artigos & Enquadramento:** Campo dedicado para artigos penais sem cortes.
+* ✍️ **Rubricas Oficiais:** Assinaturas manuscritas ampliadas da Presidência e do Juiz.
+────────────────────────────────────────────
+*Poder Judiciário · Comarca de Brava RP*`;
+      updateChars();
+    }
+
+    function carregarModeloPrecos() {
+      if (!textarea) return;
+      textarea.value = `# 💰 TABELA OFICIAL DE CUSTAS & SERVIÇOS NOTARIAIS ⚖️
+────────────────────────────────────────────
+> **Poder Judiciário & Cartório Notarial de Brava RP**
+> Vigência Atualizada · 2026
+
+* 👨‍👩‍👧‍👦 **Registro de Família:** \`R$ 250.000\`
+* 📝 **Troca de Nome:** \`R$ 150.000\`
+* 💒 **Certidão Notarial de Casamento:** \`R$ 200.000\`
+* 👶 **Certidão de Nascimento:** \`R$ 150.000\`
+* 📜 **Certidão de Adoção:** \`R$ 150.000\`
+* 🏢 **Registro de CNPJ (Empresarial):** \`R$ 250.000\` (ou \`R$ 50.000\` semanal)
+* 💍 **Venda de Alianças:** Namoro \`R$ 15.000\` · Noivado \`R$ 30.000\` · Casamento \`R$ 45.000\`
+* 🔫 **Porte de Arma (PT 9mm):** \`R$ 80.000\` | Munição: \`R$ 400\` /unidade
+* 🚓 **Honorários Delegacia:** \`R$ 30.000\` a \`R$ 80.000\`
+────────────────────────────────────────────
+*Atos com fé pública e validade jurídica em toda a comarca.*`;
+      updateChars();
+    }
+
+    const btnModAtualizacao = $("#btn-modelo-atualizacao");
+    if (btnModAtualizacao) btnModAtualizacao.addEventListener("click", carregarModeloAtualizacao);
+
+    const btnModPrecos = $("#btn-modelo-precos");
+    if (btnModPrecos) btnModPrecos.addEventListener("click", carregarModeloPrecos);
+
+    const btnModLimpar = $("#btn-modelo-limpar");
+    if (btnModLimpar) btnModLimpar.addEventListener("click", () => {
+      if (textarea) textarea.value = "";
+      updateChars();
+    });
+
+    if (btnEnviar) {
+      btnEnviar.addEventListener("click", async () => {
+        const text = (textarea ? textarea.value : "").trim();
+        if (!text) {
+          toast("Digite o conteúdo do comunicado antes de publicar.", true);
+          return;
+        }
+        if (text.length > 2000) {
+          toast(`O aviso ultrapassou 2.000 caracteres (${text.length}). Diminua o texto.`, true);
+          return;
+        }
+
+        const originalText = btnEnviar.innerHTML;
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = "Publicando no Discord...";
+
+        try {
+          const res = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: text })
+          });
+
+          if (res.ok) {
+            toast("Aviso publicado com sucesso no #quadro-de-avisos! 📢");
+            modalAvisos.classList.remove("open");
+            modalAvisos.setAttribute("aria-hidden", "true");
+          } else {
+            const err = await res.text();
+            toast("Erro ao despachar webhook para o Discord (" + res.status + ")", true);
+            console.error("Discord error:", err);
+          }
+        } catch (e) {
+          console.error("Falha na requisição:", e);
+          toast("Erro de conexão ao enviar para o Discord.", true);
+        } finally {
+          btnEnviar.disabled = false;
+          btnEnviar.innerHTML = originalText;
+        }
+      });
+    }
+  }
+
   renderList();
   renderTabelaPrecos();
   renderProvaOral();
   initProvaOralCampos();
   initCarterinha();
+  initAvisosModal();
   aplicarPrecosPadrao();
   update();
 })();

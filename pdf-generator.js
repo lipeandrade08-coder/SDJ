@@ -199,16 +199,16 @@
     try {
       const nome = toSignatureCase(nomeRaw);
       const canvas = document.createElement("canvas");
-      // Resolução aumentada para traço nítido sem pixelização
-      canvas.width = 850;
-      canvas.height = 280;
+      // Resolução ultra-HD aumentada para rubricas grandes e encorpadas
+      canvas.width = 950;
+      canvas.height = 340;
       const ctx = canvas.getContext("2d");
       if (!ctx) return null;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.save();
-      ctx.translate(canvas.width / 2, (canvas.height / 2) - 6);
+      ctx.translate(canvas.width / 2, (canvas.height / 2) - 8);
       ctx.rotate((estilo.rot || -3.2) * Math.PI / 180);
 
       // Tinta de caneta tinteiro azul nobre autêntica
@@ -216,55 +216,55 @@
       ctx.fillStyle = corTinta;
       ctx.strokeStyle = corTinta;
 
-      // Tamanho de fonte ampliado expressivamente para preencher o bloco
-      let fontSize = 84;
-      if (nome.length > 28) fontSize = 54;
-      else if (nome.length > 20) fontSize = 66;
-      else if (nome.length > 14) fontSize = 76;
+      // Tamanho de fonte ampliado expressivamente para preencher todo o bloco de assinatura
+      let fontSize = 108;
+      if (nome.length > 28) fontSize = 68;
+      else if (nome.length > 20) fontSize = 84;
+      else if (nome.length > 14) fontSize = 96;
 
       ctx.font = estilo.font || `italic bold ${fontSize}px 'Dancing Script', 'Brush Script MT', 'Segoe Script', 'Great Vibes', cursive`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
       // Leve sombra de tinta para efeito de profundidade caligráfica
-      ctx.shadowColor = "rgba(7, 33, 70, 0.22)";
-      ctx.shadowBlur = 1.2;
-      ctx.shadowOffsetX = 0.5;
-      ctx.shadowOffsetY = 0.5;
+      ctx.shadowColor = "rgba(7, 33, 70, 0.28)";
+      ctx.shadowBlur = 1.8;
+      ctx.shadowOffsetX = 0.6;
+      ctx.shadowOffsetY = 0.6;
 
-      // Escreve o nome caligráfico
+      // Escreve o nome caligráfico grande
       ctx.fillText(nome, 0, -4);
 
-      // Traçado do floreio / rubrica por baixo
+      // Traçado do floreio / rubrica por baixo com traço mais imponente
       ctx.shadowColor = "transparent";
       ctx.beginPath();
-      ctx.lineWidth = 3.6;
+      ctx.lineWidth = 4.6;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
 
       const textWidth = ctx.measureText(nome).width;
-      const startX = -textWidth / 2 - 14;
-      const endX = textWidth / 2 + 22;
-      const baseY = fontSize * 0.32;
+      const startX = -textWidth / 2 - 20;
+      const endX = textWidth / 2 + 28;
+      const baseY = fontSize * 0.34;
 
       if (estilo.tipo === "zaith") {
-        // Rubrica imponente de Zaith Frost (laço arrojado + sweep expansivo)
+        // Rubrica imponente de Zaith Frost (laço arrojado + sweep expansivo ampliado)
         ctx.moveTo(startX, baseY);
-        ctx.bezierCurveTo(startX + 60, baseY + 28, endX - 50, baseY - 12, endX + 8, baseY + 14);
-        ctx.bezierCurveTo(endX + 32, baseY + 24, endX + 22, baseY + 38, endX - 45, baseY + 32);
-        ctx.bezierCurveTo(endX - 120, baseY + 24, endX - 220, baseY + 36, endX - 300, baseY + 28);
+        ctx.bezierCurveTo(startX + 75, baseY + 36, endX - 60, baseY - 16, endX + 12, baseY + 18);
+        ctx.bezierCurveTo(endX + 40, baseY + 30, endX + 28, baseY + 48, endX - 55, baseY + 40);
+        ctx.bezierCurveTo(endX - 150, baseY + 30, endX - 280, baseY + 45, endX - 380, baseY + 35);
       } else if (estilo.tipo === "mike") {
-        // Rubrica dinâmica de Mike Santaroni (duplo sweep + cauda estendida)
-        ctx.moveTo(startX - 6, baseY + 2);
-        ctx.bezierCurveTo(startX + 45, baseY + 26, endX - 35, baseY - 8, endX + 12, baseY + 12);
-        ctx.bezierCurveTo(endX + 26, baseY + 22, endX + 16, baseY + 34, endX - 38, baseY + 30);
-        ctx.bezierCurveTo(endX - 90, baseY + 25, endX - 160, baseY + 36, endX - 240, baseY + 28);
+        // Rubrica dinâmica de Mike Santaroni (duplo sweep + cauda estendida ampliada)
+        ctx.moveTo(startX - 8, baseY + 2);
+        ctx.bezierCurveTo(startX + 55, baseY + 32, endX - 42, baseY - 10, endX + 15, baseY + 15);
+        ctx.bezierCurveTo(endX + 32, baseY + 28, endX + 20, baseY + 42, endX - 48, baseY + 38);
+        ctx.bezierCurveTo(endX - 110, baseY + 32, endX - 200, baseY + 45, endX - 300, baseY + 35);
       } else {
-        // Rubrica dinâmica personalizada para qualquer oficial/agente
+        // Rubrica dinâmica personalizada para qualquer oficial/agente ampliada
         ctx.moveTo(startX, baseY);
-        ctx.bezierCurveTo(startX + 50, baseY + 24, endX - 40, baseY - 10, endX + 10, baseY + 12);
-        ctx.bezierCurveTo(endX + 24, baseY + 22, endX + 15, baseY + 32, endX - 35, baseY + 28);
-        ctx.bezierCurveTo(endX - 80, baseY + 22, endX - 140, baseY + 32, endX - 200, baseY + 26);
+        ctx.bezierCurveTo(startX + 65, baseY + 30, endX - 50, baseY - 12, endX + 14, baseY + 16);
+        ctx.bezierCurveTo(endX + 30, baseY + 28, endX + 18, baseY + 40, endX - 44, baseY + 35);
+        ctx.bezierCurveTo(endX - 100, baseY + 28, endX - 180, baseY + 40, endX - 260, baseY + 32);
       }
       ctx.stroke();
 
@@ -459,14 +459,16 @@
     const col1X = 18;
     const col2X = 112;
 
-    // Y da primeira linha de assinaturas
-    const row1SigY = startY;
+    // Y da primeira linha de assinaturas (posicionamento imponente ampliado)
+    const sigW = 78;
+    const sigH = 28;
     const row1LineY = startY + 16;
+    const row1SigY = row1LineY - 23;
 
     // Coluna 1: Zaith Frost (Presidente)
     if (sigZaithImg) {
       try {
-        doc.addImage(sigZaithImg, "PNG", col1X + 5, row1SigY, 70, 22);
+        doc.addImage(sigZaithImg, "PNG", col1X + 1, row1SigY, sigW, sigH);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -486,7 +488,7 @@
     // Coluna 2: Mike Santaroni (Vice-Presidente)
     if (sigMikeImg) {
       try {
-        doc.addImage(sigMikeImg, "PNG", col2X + 5, row1SigY, 70, 22);
+        doc.addImage(sigMikeImg, "PNG", col2X + 1, row1SigY, sigW, sigH);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -505,8 +507,8 @@
 
     // Linha 2 de Assinaturas: Oficial Registrador à esquerda + Chancela Notarial com QR Code à direita
     const row2Y = row1LineY + 9.5;
-    const row2SigY = row2Y - 1;
     const row2LineY = row2Y + 16;
+    const row2SigY = row2LineY - 23;
 
     // Coluna Esquerda: Agente/Oficial Responsável com RUBRICA GRANDE DINÂMICA
     const nomeLimpo = toSignatureCase(agenteNome);
@@ -514,7 +516,7 @@
 
     if (sigAgenteImg) {
       try {
-        doc.addImage(sigAgenteImg, "PNG", col1X + 5, row2SigY, 70, 22);
+        doc.addImage(sigAgenteImg, "PNG", col1X + 1, row2SigY, sigW, sigH);
       } catch (_) {}
     }
     doc.setDrawColor(...AZUL_NOITE);
@@ -864,6 +866,212 @@
 
     const safeTitle = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
     const filename = `${safeTitle}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
+  /* ==========================================================
+     1-B. GERAÇÃO DE PDF PARA OS ATOS DO TRIBUNAL
+          (Petições, Mandados, Intimações, Processos, Decisões...)
+          opts = { titulo, fields:[{label,value,long}], agente, agenteId,
+                   cargo, termo, natureza, eficacia, cidade, secaoDados, secaoTexto }
+     ========================================================== */
+  async function generateTribunalPDF(opts) {
+    const jsPDF = getJsPDF();
+    if (!jsPDF) throw new Error("Biblioteca jsPDF não encontrada.");
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const { logo, watermark } = await getLogoAndWatermark();
+
+    const dataHora = new Date().toLocaleString("pt-BR");
+    const protocolo = gerarProtocolo();
+    const titulo = opts.titulo || "Ato Oficial do Tribunal";
+    const cidade = opts.cidade || "Brava RP";
+
+    let curY = desenharEstruturaBase(doc, logo, watermark, titulo, protocolo, dataHora, cidade);
+
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+    const vazio = (v) => !v || v === "—" || v === "Não informado";
+    const isDestaque = (f) => !!f.isFull || /artigo|infrac|crime|acusação|dispositivo|amparo|base legal/i.test(f.label);
+    const curtosNormais = (opts.fields || []).filter((f) => !f.long && !isDestaque(f));
+    const destaques = (opts.fields || []).filter((f) => !f.long && isDestaque(f) && !vazio(f.value));
+    const longos = (opts.fields || []).filter((f) => f.long && !vazio(f.value));
+    let sec = 1;
+
+    // Seção 1: Identificação (grade de 2 colunas para dados breves)
+    curY = desenharCabecalhoSecao(doc, curY, `${sec++}. ${opts.secaoDados || "Identificação do Ato Judicial"}`);
+    const colW = (boxW - 3) / 2;
+    const rowH = 8.6;
+    const rowGap = 1.0;
+
+    const celula = (f, x, w, y, zebra) => {
+      doc.setFillColor(zebra ? 255 : 249, zebra ? 255 : 250, zebra ? 255 : 253);
+      doc.setDrawColor(220, 226, 238);
+      doc.setLineWidth(0.25);
+      doc.roundedRect(x, y, w, rowH, 0.8, 0.8, "FD");
+      doc.setFillColor(...ORO);
+      doc.rect(x, y, 1.8, rowH, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(110, 118, 134);
+      doc.text(String(f.label).toUpperCase(), x + 4, y + rowH * 0.35, { maxWidth: w - 7 });
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.setTextColor(18, 24, 38);
+      let val = vazio(f.value) ? "NÃO INFORMADO" : String(f.value);
+      const linhas = doc.splitTextToSize(val, w - 7);
+      if (linhas.length > 1) val = linhas[0].replace(/\s*\S{0,3}$/, "") + "...";
+      doc.text(val, x + 4, y + rowH * 0.78);
+    };
+
+    for (let i = 0; i < curtosNormais.length; i += 2) {
+      const zebra = (i / 2) % 2 === 0;
+      const f1 = curtosNormais[i];
+      const f2 = curtosNormais[i + 1];
+      celula(f1, 14, f2 ? colW : boxW, curY, zebra);
+      if (f2) celula(f2, 14 + colW + 3, colW, curY, zebra);
+      curY += rowH + rowGap;
+    }
+
+    // Campos de destaque com linha inteira (ex.: Artigos / Infrações Penais / Base Legal)
+    if (destaques.length) {
+      destaques.forEach((f) => {
+        const val = vazio(f.value) ? "NÃO INFORMADO" : String(f.value);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        const valLines = doc.splitTextToSize(val, boxW - 10);
+        const cardH = Math.max(9.6, 5.6 + valLines.length * 3.4);
+
+        doc.setFillColor(252, 253, 255);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.28);
+        doc.roundedRect(14, curY, boxW, cardH, 0.8, 0.8, "FD");
+
+        // Barra lateral dourada de destaque
+        doc.setFillColor(...ORO);
+        doc.rect(14, curY, 2.2, cardH, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.8);
+        doc.setTextColor(...ORO_ESCURO);
+        doc.text(String(f.label).toUpperCase(), 18, curY + 3.8);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(15, 23, 42);
+        valLines.forEach((ln, lIdx) => {
+          doc.text(ln, 18, curY + 7.4 + lIdx * 3.4);
+        });
+
+        curY += cardH + rowGap;
+      });
+    }
+    curY += 1.5;
+
+    // Pré-calcula o termo (para reservar espaço antes das assinaturas)
+    const termo = opts.termo ||
+      "A SECRETARIA DO TRIBUNAL DE JUSTIÇA DA COMARCA DE BRAVA RP CERTIFICA que o presente ato foi registrado nos assentamentos oficiais, com fé pública e eficácia plena perante todos os órgãos públicos, corporações policiais e instituições civis.";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.8);
+    const termoLines = doc.splitTextToSize(termo, boxW - 8);
+    const termoBoxH = 17.4 + termoLines.length * 3.2;
+    const SIG_TOP = 226;
+
+    // Seção 2: Teor / Fundamentação (textos longos com quebra de linha)
+    if (longos.length) {
+      curY = desenharCabecalhoSecao(doc, curY, `${sec++}. ${opts.secaoTexto || "Teor e Fundamentação"}`);
+      const limite = SIG_TOP - 2 - (8.2 + termoBoxH + 2.5);
+      const lh = 3.4;
+
+      longos.forEach((f, idx) => {
+        if (curY + 9 > limite) return;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.4);
+        let linhas = doc.splitTextToSize(String(f.value), boxW - 8);
+        const reservaOutros = (longos.length - idx - 1) * 10;
+        const maxLinhas = Math.max(1, Math.floor((limite - reservaOutros - (curY + 7)) / lh));
+        if (linhas.length > maxLinhas) {
+          linhas = linhas.slice(0, maxLinhas);
+          linhas[maxLinhas - 1] = linhas[maxLinhas - 1].replace(/\s*\S{0,3}$/, "") + "...";
+        }
+        const h = 6 + linhas.length * lh + 1.5;
+
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.25);
+        doc.roundedRect(14, curY, boxW, h, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(14, curY, 1.8, h, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.8);
+        doc.setTextColor(110, 118, 134);
+        doc.text(String(f.label).toUpperCase(), 18, curY + 3.6);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.4);
+        doc.setTextColor(18, 24, 38);
+        linhas.forEach((ln, i) => doc.text(ln, 18, curY + 7.4 + i * lh));
+
+        curY += h + 1.2;
+      });
+      curY += 1;
+    }
+
+    // Seção 3: Certidão da Secretaria
+    curY = desenharCabecalhoSecao(doc, curY, `${sec++}. Certidão da Secretaria e Fé Pública`);
+    const textStartY = curY + 8.2;
+    const divY = textStartY + termoLines.length * 3.2 + 1.8;
+    const attrY = divY + 3.8;
+
+    doc.setFillColor(251, 252, 255);
+    doc.setDrawColor(...ORO);
+    doc.setLineWidth(0.4);
+    doc.roundedRect(14, curY, boxW, termoBoxH, 1.2, 1.2, "FD");
+    doc.setDrawColor(230, 234, 245);
+    doc.setLineWidth(0.18);
+    doc.rect(15.2, curY + 1.0, boxW - 2.4, termoBoxH - 2.0);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.0);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("CERTIDÃO DO CARTÓRIO JUDICIAL", 18, curY + 4.8);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.8);
+    doc.setTextColor(45, 52, 68);
+    doc.text(termoLines, 18, textStartY, { maxWidth: boxW - 8, align: "justify", lineHeightFactor: 1.22 });
+
+    doc.setDrawColor(235, 238, 245);
+    doc.setLineWidth(0.2);
+    doc.line(18, divY, 14 + boxW - 4, divY);
+
+    const attrs = [
+      ["· NATUREZA:", opts.natureza || "Ato Judicial", 18, 34],
+      ["· EFICÁCIA:", opts.eficacia || "Imediata", 78, 93],
+      ["· SEGURANÇA:", "Criptografia SHA-256", 140, 158],
+    ];
+    doc.setFontSize(5.8);
+    attrs.forEach(([rot, val, xr, xv]) => {
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...ORO_ESCURO);
+      doc.text(rot, xr, attrY);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...TEXTO_ESCURO);
+      doc.text(String(val), xv, attrY);
+    });
+
+    curY += termoBoxH + 2.5;
+
+    // Assinaturas: Presidência + Responsável pelo ato + Chancela com QR Code
+    const signatureStartY = Math.min(Math.max(curY + 1, SIG_TOP), 231);
+    desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, opts.cargo || "Juiz de Direito", protocolo);
+
+    const safeTitle = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `Tribunal_${safeTitle}_${protocolo}.pdf`;
     const blob = doc.output("blob");
 
     return { doc, blob, filename, protocolo };
@@ -2162,6 +2370,7 @@
   // Exporta globalmente para o aplicativo
   window.SDJ_PDF = {
     generateServicePDF,
+    generateTribunalPDF,
     generatePenalPDF,
     generateProvaOralPDF,
     generateCarterinhaPDF,

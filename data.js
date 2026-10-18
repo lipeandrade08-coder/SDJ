@@ -10,6 +10,7 @@ const CONFIG = {
   penaMaxima: 0,            // 0 = sem limite
   reducaoAdvogado: 50,      // % de redução na pena e na multa
   descontoPrimario: 25,     // % de desconto na fiança para réu primário
+  webhookAvisos: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
   regras: [
     ["Direito à Defesa", "Todo civil possui direito garantido a um advogado, independentemente do crime cometido."],
     ["Atuação do Advogado", "Garante 50% de redução na pena (meses) e 50% de redução na multa ($)."],
@@ -17,6 +18,11 @@ const CONFIG = {
     ["Réu Primário", "Recebe 25% de desconto adicional no valor da fiança. Reincidente paga o valor integral."],
     ["Crimes Inafiançáveis", "Os artigos marcados como INAFIANÇÁVEL não possuem opção de fiança sob nenhuma hipótese."],
   ],
+};
+
+const AVISOS_CONFIG = {
+  titulo: "Quadro de Avisos Oficiais — SDJ & Tribunal de Justiça",
+  webhook: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
 };
 
 const PRESIDENCIA_JURIDICO = {
@@ -236,8 +242,8 @@ const TABELA_PRECOS = [
     icone: "📝",
     retirada: 30000,
     retiradaDisplay: "R$ 30.000",
-    venda: 100000,
-    vendaDisplay: "R$ 100.000",
+    venda: 150000,
+    vendaDisplay: "R$ 150.000",
     categoria: "Registro Civil",
     desc: "Processo de alteração de certidão e registro civil do cidadão.",
     targetId: "trocanome",
@@ -245,10 +251,10 @@ const TABELA_PRECOS = [
   {
     item: "Registro de Família",
     icone: "👨‍👩‍👧",
-    retirada: 15000,
-    retiradaDisplay: "10% (R$ 15.000)",
-    venda: 150000,
-    vendaDisplay: "R$ 150.000",
+    retirada: 25000,
+    retiradaDisplay: "10% (R$ 25.000)",
+    venda: 250000,
+    vendaDisplay: "R$ 250.000",
     categoria: "Organização",
     desc: "Cadastro oficial de entidade familiar e seu fundador.",
     targetId: "familia",
@@ -302,8 +308,8 @@ const TABELA_PRECOS = [
     icone: "⚖️",
     retirada: null,
     retiradaDisplay: "—",
-    venda: 60000,
-    vendaDisplay: "R$ 20.000 a R$ 60.000",
+    venda: 80000,
+    vendaDisplay: "R$ 30.000 a R$ 80.000",
     categoria: "Advocacia Penal",
     desc: "Acompanhamento criminal e assistência jurídica ao cidadão em sede policial.",
     targetId: "calculadora",
