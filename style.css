@@ -2018,7 +2018,9 @@ body[data-view="tab-calculadora"] #view-service,
     font-size: 15px;
   }
 
-  #btn-codigo span {
+  #btn-codigo span,
+  #btn-codigo-civil span,
+  #btn-codigo-penal span {
     display: none;
   }
 }
@@ -5251,4 +5253,2292 @@ body:not([data-view="tab-calculadora"]) .tab-content {
   border-color: var(--accent);
   box-shadow: 0 4px 12px var(--accent-soft);
 }
+
+/* ==========================================================
+   TRIBUNAL DE JUSTIÇA — GUIA JURÍDICO & DÚVIDAS DO ADVOGADO (*)
+   Estilos exclusivos dos serviços do Tribunal (tribunal.html)
+   ========================================================== */
+
+/* Badges e Pílulas de Asterisco '*' */
+.star-pill,
+.star-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cinzel", serif, sans-serif;
+  font-weight: 800;
+  color: var(--gold-3);
+  background: rgba(212, 175, 95, 0.16);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  line-height: 1;
+  box-shadow: 0 0 10px rgba(212, 175, 95, 0.12);
+}
+
+.star-pill {
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  margin-right: 2px;
+}
+
+.star-badge {
+  padding: 2px 7px;
+  font-size: 13px;
+}
+
+.star-pill-lg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gold-3);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.25), rgba(212, 175, 95, 0.08));
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 14px rgba(212, 175, 95, 0.2);
+  flex-shrink: 0;
+}
+
+/* Botão do Topbar */
+.btn-guia-topbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-guia-topbar:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--strong);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(212, 175, 95, 0.2);
+}
+
+/* Botão do Código Civil e Penal no Topbar */
+.btn-codigo-civil-topbar,
+.btn-codigo-penal-topbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-codigo-civil-topbar svg,
+.btn-codigo-penal-topbar svg {
+  color: var(--gold-2);
+  width: 16px;
+  height: 16px;
+}
+
+.btn-codigo-civil-topbar:hover,
+.btn-codigo-penal-topbar:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--strong);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(212, 175, 95, 0.2);
+}
+
+/* Botão de Alternar entre Código Civil e Código Penal nos Modais */
+.btn-alternar-codigos {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-alternar-codigos svg {
+  color: var(--gold-2);
+}
+
+.btn-alternar-codigos:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--strong);
+  transform: translateY(-1px);
+}
+
+/* Botão do Código Civil no Cabeçalho do Modal */
+.btn-cc-modal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-cc-modal:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+}
+
+.btn-cc-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  color: var(--accent-text);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-cc-inline:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+}
+
+/* Link Oficial do Código Civil no Rodapé */
+.sdj-footer-link {
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 12.5px;
+  transition: all 0.2s ease;
+}
+
+.sdj-footer-link:hover {
+  color: var(--gold-3);
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   TRIBUNAL — BARRA DE CONTROLE, FILTROS & DÚVIDAS (REDESENHADA)
+   ========================================================== */
+.trib-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 20px;
+  margin: 22px 0 32px 0;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(20, 24, 32, 0.85) 0%, rgba(12, 14, 19, 0.95) 100%);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  z-index: 5;
+}
+
+[data-theme="light"] .trib-filter-bar {
+  background: linear-gradient(180deg, rgba(222, 215, 201, 0.95) 0%, rgba(211, 203, 187, 0.98) 100%);
+  box-shadow: 0 8px 24px rgba(50, 38, 15, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-color: rgba(120, 88, 30, 0.28);
+}
+
+.trib-filter-bar-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Container de Busca */
+.trib-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 260px;
+  max-width: 440px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(7, 8, 11, 0.6);
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+
+[data-theme="light"] .trib-search-wrap {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.trib-search-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(212, 175, 95, 0.25);
+  background: rgba(7, 8, 11, 0.85);
+}
+
+[data-theme="light"] .trib-search-wrap:focus-within {
+  background: #fff;
+}
+
+.trib-search-ico {
+  width: 18px;
+  height: 18px;
+  color: var(--gold-2);
+  margin-right: 10px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.trib-search-wrap input {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--strong);
+}
+
+.trib-search-wrap input::placeholder {
+  color: var(--muted);
+}
+
+.trib-search-counter {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-soft);
+  color: var(--muted);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  transition: all 0.2s ease;
+}
+
+.trib-search-counter.is-filtering {
+  background: rgba(212, 175, 95, 0.16);
+  border-color: rgba(212, 175, 95, 0.35);
+  color: var(--accent-text);
+  font-weight: 800;
+}
+
+/* Filtros Rápidos por Categoria (Pills) */
+.trib-category-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  user-select: none;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .category-pill {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.category-pill:hover {
+  color: var(--strong);
+  border-color: var(--line-strong);
+  background: rgba(212, 175, 95, 0.08);
+  transform: translateY(-1px);
+}
+
+.category-pill.active {
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.22), rgba(212, 175, 95, 0.06));
+  border-color: var(--gold);
+  color: var(--gold-3);
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(212, 175, 95, 0.22);
+}
+
+[data-theme="light"] .category-pill.active {
+  color: var(--gold-2);
+  border-color: var(--gold);
+  background: rgba(212, 175, 95, 0.2);
+}
+
+/* Botão CTA Destacado de Dúvidas Jurídicas */
+.btn-guia-home-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 95, 0.35);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.14) 0%, rgba(20, 24, 32, 0.8) 100%);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .btn-guia-home-cta {
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.2) 0%, rgba(255, 255, 255, 0.8) 100%);
+}
+
+.btn-guia-home-cta:hover {
+  border-color: var(--gold-3);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.28) 0%, rgba(26, 29, 37, 0.9) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 95, 0.28);
+}
+
+.star-pill-glow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #d4af37, #9b7823);
+  color: #0d0f14;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 0 12px rgba(212, 175, 95, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-guia-home-cta:hover .star-pill-glow {
+  transform: scale(1.1) rotate(12deg);
+  box-shadow: 0 0 18px rgba(212, 175, 95, 0.85);
+}
+
+.btn-guia-cta-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.25;
+}
+
+.btn-guia-cta-text strong {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--strong);
+  letter-spacing: 0.2px;
+}
+
+.btn-guia-cta-text small {
+  font-size: 11px;
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+.btn-guia-cta-arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  stroke-width: 2.2;
+  transition: transform 0.2s var(--ease);
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+.btn-guia-home-cta:hover .btn-guia-cta-arrow {
+  transform: translateX(4px);
+  color: var(--gold-3);
+}
+
+/* Seções de Grupos do Tribunal */
+.trib-group {
+  margin-bottom: 38px;
+}
+
+.trib-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-soft);
+  flex-wrap: wrap;
+}
+
+.trib-group-head h3 {
+  font-family: "Cinzel", serif, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--gold-3);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.trib-group-head .muted {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Botão de Dúvida '*' nos Cards da Home */
+.card-top-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.card-star-doubt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-text);
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  user-select: none;
+}
+
+.card-star-doubt .star-char {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--gold-3);
+  text-shadow: 0 0 6px rgba(212, 175, 95, 0.5);
+}
+
+.card-star-doubt:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  transform: scale(1.05);
+  box-shadow: 0 2px 10px rgba(212, 175, 95, 0.35);
+}
+
+.card-star-doubt:hover .star-char {
+  color: var(--on-accent);
+  text-shadow: none;
+}
+
+/* Botão de Dúvida no Hero do Serviço */
+.service-hero-content {
+  flex: 1;
+}
+
+.service-hero-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-hero-guia {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid var(--line-strong);
+  color: var(--accent-text);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-hero-guia:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  box-shadow: 0 4px 14px rgba(212, 175, 95, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-hero-guia:hover .star-badge {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+
+/* Banner de Alerta de Dúvidas Acima do Formulário */
+.doubt-alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.10), rgba(26, 29, 37, 0.6));
+  border: 1px solid var(--line-strong);
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+}
+
+.doubt-alert-banner:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.18), rgba(26, 29, 37, 0.75));
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.doubt-alert-content {
+  flex: 1;
+}
+
+.doubt-alert-headline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.doubt-alert-headline strong {
+  font-size: 14.5px;
+  color: var(--strong);
+}
+
+.doubt-alert-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.doubt-alert-content p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.doubt-alert-content em {
+  font-style: normal;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.btn-doubt-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: var(--panel-solid);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  transition: all 0.2s var(--ease);
+}
+
+.doubt-alert-banner:hover .btn-doubt-trigger {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+}
+
+/* Cabeçalho de Campo de Opções com Link de Diferenças */
+.opt-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trib-opt-label-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btn-diferencas-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-diferencas-link:hover {
+  background: var(--accent-soft);
+  color: var(--strong);
+  text-decoration: underline;
+}
+
+/* Estrelinha '*' de Dúvida nos Botões de Opção */
+.opt-doubt-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--gold-3);
+  background: rgba(212, 175, 95, 0.15);
+  border: 1px solid var(--line-strong);
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.opt-card:hover .opt-doubt-star {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  transform: scale(1.15);
+}
+
+.opt-card.active .opt-doubt-star {
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--strong);
+}
+
+/* ==========================================================
+   MODAL DO GUIA JURÍDICO & DÚVIDAS DO ADVOGADO / ESTAGIÁRIO
+   ========================================================== */
+.modal-box-guia {
+  max-width: 960px;
+  width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+/* Barra de Ferramentas do Modal */
+.guia-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 22px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.guia-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--input-bg, rgba(12, 14, 19, 0.65));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 14px;
+  color: var(--muted);
+  transition: border-color 0.2s var(--ease);
+}
+
+.guia-search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-soft);
+}
+
+.guia-search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13.5px;
+}
+
+.guia-search-box input::placeholder {
+  color: var(--muted);
+}
+
+/* Barra de Abas Horizontais com Scroll Suave */
+.guia-tabs-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.guia-tabs-bar::-webkit-scrollbar {
+  height: 5px;
+}
+
+.guia-tabs-bar::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 4px;
+}
+
+.guia-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--panel-solid);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  flex-shrink: 0;
+}
+
+.guia-tab-btn .guia-tab-star {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--gold-3);
+  margin-left: 2px;
+}
+
+.guia-tab-btn:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: var(--panel-2);
+}
+
+.guia-tab-btn.active {
+  color: var(--strong);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.2), rgba(26, 29, 37, 0.9));
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(212, 175, 95, 0.25);
+}
+
+/* Corpo do Modal Guia */
+.guia-modal-body {
+  padding: 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.guia-article {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card Cabeçalho do Serviço no Guia */
+.guia-head-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  flex-wrap: wrap;
+}
+
+.guia-head-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.guia-head-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(212, 175, 95, 0.15);
+  border: 1px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  color: var(--accent-text);
+  flex-shrink: 0;
+}
+
+.guia-head-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.guia-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.guia-focus-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid var(--line-strong);
+  color: var(--accent-text);
+}
+
+.guia-head-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 21px;
+  font-family: "Cinzel", serif, sans-serif;
+  color: var(--strong);
+}
+
+.guia-desc-lead {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+.btn-ir-servico {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 9px;
+  background: var(--panel-solid);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-ir-servico:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+}
+
+/* Alerta de Cruzamento de Busca */
+.guia-search-cross-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(212, 175, 95, 0.08);
+  border: 1px dashed var(--line-strong);
+  font-size: 12.5px;
+  color: var(--text);
+  flex-wrap: wrap;
+}
+
+.guia-cross-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-cross-svc {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+.btn-cross-svc:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Blocos de Seção */
+.guia-section-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.guia-sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.guia-sec-title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--strong);
+}
+
+.guia-sec-count {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.guia-quando-card {
+  margin-top: 10px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--panel-2);
+  border-left: 4px solid var(--accent);
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.guia-quando-card p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* Grid de Diferenças entre as Opções */
+.guia-diferencas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 16px;
+}
+
+.guia-dif-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+
+.guia-dif-card:hover {
+  border-color: var(--hover-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Variações de Cores dos Cards de Diferença */
+.guia-dif-card.dif-green { border-top: 3px solid #10b981; }
+.guia-dif-card.dif-blue  { border-top: 3px solid #3b82f6; }
+.guia-dif-card.dif-amber { border-top: 3px solid #f59e0b; }
+.guia-dif-card.dif-purple{ border-top: 3px solid #8b5cf6; }
+.guia-dif-card.dif-red   { border-top: 3px solid #ef4444; }
+
+.dif-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dif-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dif-star {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--gold-3);
+  line-height: 1;
+}
+
+.dif-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--strong);
+}
+
+.dif-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid var(--line-strong);
+  color: var(--accent-text);
+  white-space: nowrap;
+}
+
+.dif-desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.dif-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.dif-lbl {
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.dif-txt {
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.dif-exemplo {
+  background: rgba(212, 175, 95, 0.08);
+  border-color: rgba(212, 175, 95, 0.16);
+}
+
+.dif-exemplo .dif-txt {
+  font-style: italic;
+  color: var(--strong);
+}
+
+.dif-resultado {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.16);
+}
+
+/* Dicas de Ouro */
+.guia-dicas-box {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.08), rgba(26, 29, 37, 0.5));
+  border: 1px solid var(--line-strong);
+}
+
+.guia-dicas-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guia-dicas-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.dica-bullet {
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Base Legal no Rodapé do Guia */
+.guia-legal-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.guia-legal-footer strong {
+  color: var(--strong);
+  margin-right: 6px;
+}
+
+.guia-legal-icon {
+  font-size: 18px;
+}
+
+/* Dicas de Preenchimento & Roteiros Rápidos nos Formulários */
+.field-hint {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-top: 4px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+
+.hint-ico {
+  font-size: 12px;
+  line-height: 1.2;
+  flex-shrink: 0;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 2px rgba(212, 175, 95, 0.3));
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.hint-text {
+  flex: 1;
+}
+
+/* Efeito de destaque quando o usuário foca no campo para digitar */
+.fields label:focus-within .field-hint,
+.opt-field-block:focus-within .field-hint {
+  color: var(--accent-text);
+  background: rgba(212, 175, 95, 0.08);
+  border-color: rgba(212, 175, 95, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.fields label:focus-within .hint-ico,
+.opt-field-block:focus-within .hint-ico {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.field-label-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Barra superior da Textarea com Botão de Roteiro Rápido */
+.textarea-head-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+  width: 100%;
+}
+
+.textarea-label-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-modelo-rapido {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 95, 0.35);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.14), rgba(212, 175, 95, 0.04));
+  color: var(--gold-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-modelo-rapido:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.26), rgba(212, 175, 95, 0.1));
+  border-color: var(--gold-2);
+  color: var(--strong);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 10px rgba(212, 175, 95, 0.2);
+}
+
+.btn-modelo-rapido:active {
+  transform: translateY(0);
+}
+
+.btn-modelo-rapido.btn-modelo-success {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: #22c55e;
+  color: #4ade80;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.btn-modelo-ico {
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ==========================================================
+   MODAL DE CONSULTA DO CÓDIGO CIVIL DE BRAVA RP (VADE MECUM)
+   ========================================================== */
+.modal-box-cc {
+  max-width: 1040px;
+  width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+}
+
+.modal-head-cc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.btn-cc-modal-dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  color: var(--gold-3);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-cc-modal-dl:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+}
+
+/* Barra de Ferramentas do Código Civil */
+.cc-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 22px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.cc-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--input-bg, rgba(12, 14, 19, 0.65));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: var(--muted);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s;
+}
+
+.cc-search-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(212, 175, 95, 0.25);
+  background: rgba(12, 14, 19, 0.85);
+}
+
+[data-theme="light"] .cc-search-wrap:focus-within {
+  background: #fff;
+}
+
+.cc-search-ico {
+  width: 17px;
+  height: 17px;
+  color: var(--gold-2);
+  flex-shrink: 0;
+}
+
+.cc-search-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--strong);
+  font: inherit;
+  font-size: 13.5px;
+}
+
+.cc-search-wrap input::placeholder {
+  color: var(--muted);
+}
+
+.cc-search-counter {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-soft);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.cc-search-counter.is-filtering {
+  background: rgba(212, 175, 95, 0.16);
+  border-color: rgba(212, 175, 95, 0.35);
+  color: var(--accent-text);
+}
+
+/* Abas de Livros */
+.cc-tabs-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.cc-tabs-bar::-webkit-scrollbar {
+  height: 5px;
+}
+
+.cc-tabs-bar::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 4px;
+}
+
+.cc-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--panel-solid);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  flex-shrink: 0;
+}
+
+.cc-tab-btn:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: var(--panel-2);
+}
+
+.cc-tab-btn.active {
+  color: var(--strong);
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.22), rgba(26, 29, 37, 0.9));
+  border-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(212, 175, 95, 0.25);
+}
+
+/* Corpo do Modal CC */
+.cc-modal-body {
+  padding: 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+/* Card Preâmbulo */
+.cc-preambulo-card {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212, 175, 95, 0.10), rgba(26, 29, 37, 0.7));
+  border: 1px solid var(--line-strong);
+}
+
+.cc-preambulo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cc-preambulo-head strong {
+  font-size: 14.5px;
+  color: var(--gold-3);
+  font-family: "Cinzel", serif, sans-serif;
+}
+
+.cc-tag-versao {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(212, 175, 95, 0.15);
+  border: 1px solid var(--line-strong);
+  color: var(--accent-text);
+}
+
+.cc-preambulo-txt {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+}
+
+.cc-preambulo-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Seção de Livro */
+.cc-livro-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cc-livro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.cc-livro-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cc-livro-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(212, 175, 95, 0.18);
+  border: 1px solid var(--accent);
+  color: var(--gold-3);
+  letter-spacing: 0.5px;
+}
+
+.cc-livro-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-family: "Cinzel", serif, sans-serif;
+  color: var(--strong);
+}
+
+.cc-livro-count {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Grid de Artigos */
+.cc-artigos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: 14px;
+}
+
+.cc-article-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+
+.cc-article-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.cc-art-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cc-art-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cc-art-num {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gold-3);
+  font-family: "Cinzel", serif, sans-serif;
+}
+
+.cc-art-sep {
+  color: var(--muted);
+}
+
+.cc-art-epigrafe {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--strong);
+}
+
+.cc-livro-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.cc-art-texto {
+  margin: 0 0 12px 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text);
+  flex: 1;
+}
+
+.cc-art-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+  flex-wrap: wrap;
+}
+
+.btn-art-action {
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-insert-art {
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Anexos */
+.cc-anexos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cc-anexo-card {
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+}
+
+.cc-anexo-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cc-anexo-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.cc-anexo-card h4 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--strong);
+}
+
+.cc-table-wrap {
+  overflow-x: auto;
+}
+
+.cc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.cc-table th,
+.cc-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.cc-table th {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.cc-setor-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1px solid var(--line-strong);
+  color: var(--gold-3);
+  white-space: nowrap;
+}
+
+.cc-passos-list {
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cc-passos-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.cc-passo-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.cc-modelo-pre {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Botão Consultar Código Civil dentro dos formulários */
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.btn-consultar-cc-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 95, 0.3);
+  background: rgba(212, 175, 95, 0.08);
+  color: var(--accent-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-consultar-cc-field:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+}
+
+.cc-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 12px;
+}
+
+.cc-empty-ico {
+  font-size: 32px;
+  opacity: 0.7;
+}
+
+.cc-empty-state h4 {
+  margin: 0;
+  font-size: 17px;
+  color: var(--strong);
+}
+
+.cc-empty-state p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 480px;
+}
+
+/* Ajustes Responsivos */
+@media (max-width: 980px) {
+  .trib-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .trib-filter-bar-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .trib-search-wrap {
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+  .trib-category-filters {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    flex-wrap: nowrap;
+  }
+  .btn-guia-home-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .cc-artigos-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-head-cc {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .modal-head-cc .modal-head-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .btn-cc-modal-dl {
+    flex: 1;
+    justify-content: center;
+  }
+  .field-label-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .guia-diferencas-grid {
+    grid-template-columns: 1fr;
+  }
+  .guia-head-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-ir-servico {
+    justify-content: center;
+  }
+  .doubt-alert-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-doubt-trigger {
+    justify-content: center;
+  }
+  .textarea-head-bar {
+    flex-wrap: wrap;
+  }
+  .btn-modelo-rapido {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================
+   CARDS VISUAIS DE ALIANÇAS COM FOTOS ILUSTRATIVAS (SDJ)
+   ========================================================== */
+.aliancas-selector-block {
+  margin-bottom: 6px;
+}
+
+.badge-alianca-count {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.aliancas-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.alianca-visual-card {
+  position: relative;
+  background: var(--panel-2);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  display: flex;
+  flex-direction: column;
+}
+
+.alianca-visual-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.alianca-visual-card.active {
+  border-color: var(--accent);
+  background: var(--panel-solid);
+  box-shadow: 0 0 0 2px rgba(212, 175, 95, 0.35), 0 8px 28px rgba(212, 175, 95, 0.2);
+}
+
+.alianca-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #0d0f14;
+  overflow: hidden;
+}
+
+.alianca-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.alianca-visual-card:hover .alianca-card-img {
+  transform: scale(1.05);
+}
+
+.alianca-card-price-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(13, 15, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--accent);
+  color: var(--gold-3);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.alianca-card-check {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0d0f14;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.alianca-visual-card.active .alianca-card-check {
+  display: flex;
+}
+
+.alianca-card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.alianca-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.alianca-radio-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  background: transparent;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.alianca-visual-card.active .alianca-radio-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(212, 175, 95, 0.6);
+}
+
+.alianca-card-title {
+  font-size: 13.5px;
+  color: var(--strong);
+  line-height: 1.3;
+}
+
+.alianca-card-sub {
+  font-size: 11.5px;
+  color: var(--gold-2);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.alianca-card-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 0 0 12px;
+  flex: 1;
+}
+
+.alianca-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+}
+
+.alianca-meta-retirada {
+  color: var(--muted);
+}
+
+.alianca-meta-venda b {
+  color: var(--gold-3);
+  font-size: 12px;
+}
+
+@media (max-width: 860px) {
+  .aliancas-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .alianca-card-img-wrap {
+    height: 150px;
+  }
+}
+
+/* ==========================================================
+   MODALIDADE DE PETIÇÃO & ANEXO DE PDF (TRIBUNAL)
+   ========================================================== */
+.peticao-mode-banner {
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.peticao-mode-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.peticao-mode-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.peticao-mode-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel-solid);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s var(--ease);
+}
+
+.peticao-mode-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.peticao-mode-card.active {
+  border-color: var(--accent);
+  background: rgba(212, 175, 95, 0.08);
+  box-shadow: 0 0 12px rgba(212, 175, 95, 0.15);
+}
+
+.peticao-mode-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.peticao-mode-info strong {
+  font-size: 13px;
+  color: var(--strong);
+}
+
+.peticao-mode-info span {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Área de Upload */
+.peticao-upload-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.peticao-drop-area {
+  border: 2px dashed var(--line-strong);
+  background: rgba(212, 175, 95, 0.03);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.peticao-drop-area:hover,
+.peticao-drop-area.dragover {
+  border-color: var(--accent);
+  background: rgba(212, 175, 95, 0.08);
+}
+
+.peticao-drop-area.has-file {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.peticao-drop-area.trib-invalid-drop {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  animation: shake 0.4s ease;
+}
+
+.peticao-upload-ico {
+  width: 32px;
+  height: 32px;
+  color: var(--accent);
+}
+
+.peticao-upload-texts strong {
+  display: block;
+  font-size: 13.5px;
+  color: var(--strong);
+  margin-bottom: 2px;
+}
+
+.peticao-upload-texts span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.peticao-file-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel-solid);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.peticao-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.peticao-file-ico {
+  font-size: 24px;
+}
+
+.peticao-file-details strong {
+  display: block;
+  font-size: 13px;
+  color: var(--strong);
+}
+
+.peticao-file-details span {
+  font-size: 11px;
+}
+
+.peticao-file-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.peticao-upload-alert {
+  background: rgba(212, 175, 95, 0.06);
+  border: 1px solid rgba(212, 175, 95, 0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.field-dimmed {
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+
+@media (max-width: 680px) {
+  .peticao-mode-selector {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 

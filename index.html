@@ -4,10 +4,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO Primário -->
   <title>Sistema do Departamento Jurídico | Brava RP</title>
+  <meta name="title" content="Sistema do Departamento Jurídico | Brava RP" />
   <meta name="description"
-    content="Sistema do Departamento Jurídico oficial da Brava RP. Calcule pena, multa e fiança, emita certidões e registros e consulte o Código Penal." />
+    content="Sistema oficial do Departamento Jurídico de Brava RP. Calculadora penal automatizada, dosimetria de penas, cálculo de fianças, certidões e registros notariais, carteiras OAB e Código Penal." />
+  <meta name="keywords"
+    content="calculadora penal, sdj brava rp, departamento juridico, dosimetria da pena, fianca gta rp, certidao antecedentes, oab brava, codigo penal brava rp, prisao em flagrante, livramento condicional, casamento notarial" />
+  <meta name="author" content="Secretaria do Departamento Jurídico - Brava RP" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="Portuguese" />
+
+  <!-- Cor de Tema & Mobile Web App (Discord embed highlight dourado) -->
+  <meta name="theme-color" content="#d4af37" />
+  <meta name="msapplication-TileColor" content="#0d0f14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SDJ Brava RP" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Open Graph / Facebook / Discord Embeds -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Sistema do Departamento Jurídico | Brava RP" />
+  <meta property="og:title" content="SDJ | Brava RP - Calculadora Penal & Notarial" />
+  <meta property="og:description"
+    content="Sistema oficial do Departamento Jurídico de Brava RP. Calcule penas, fianças e atenuantes com dosimetria exata, emita certidões notariais e consulte o Código Penal." />
+  <meta property="og:image" content="arte.png" />
+  <meta property="og:image:alt" content="Brasão Oficial do Departamento Jurídico de Brava RP" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sistema do Departamento Jurídico | Brava RP" />
+  <meta name="twitter:description"
+    content="Portal oficial do SDJ Brava RP: Calculadora Penal, emissão de certidões notariais, carteiras profissionais e Código Penal." />
+  <meta name="twitter:image" content="arte.png" />
+
+  <!-- Favicon & Touch Icons -->
   <link rel="icon" type="image/png" href="arte.png" />
+  <link rel="apple-touch-icon" href="arte.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -150,13 +185,21 @@
         </svg>
         <span>Tabela de Preços</span>
       </button>
-      <button id="btn-codigo" class="btn-outline" type="button">
+      <button id="btn-codigo" class="btn-outline btn-codigo-penal-topbar" type="button" title="Consultar Código Penal de Brava RP">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
         </svg>
         <span>Código Penal</span>
+      </button>
+      <button id="btn-codigo-civil" class="btn-outline btn-codigo-civil-topbar" type="button" title="Consultar Código Civil Oficial de Brava RP (106 Artigos)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <path d="M9 7h7M9 11h5"/>
+        </svg>
+        <span>Código Civil</span>
       </button>
       <button id="btn-provaoral" class="btn-outline" type="button" title="Prova Oral do Recrutador">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -1233,6 +1276,9 @@
           <button id="tab-tabela" class="tab on" data-tab="tabela" type="button" role="tab">Tabela</button>
           <button id="tab-pdf" class="tab" data-tab="pdf" type="button" role="tab">PDF oficial</button>
         </div>
+        <button type="button" class="btn-outline btn-alternar-codigos" data-switch-to="civil" title="Alternar para o Código Civil" style="margin-left: auto; font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px;">
+          <span>📜</span><span>Código Civil</span>
+        </button>
         <button class="modal-close" type="button" data-close aria-label="Fechar">×</button>
       </div>
 
@@ -1256,6 +1302,63 @@
           <a id="pdf-download" class="btn-outline" download>Baixar PDF</a>
         </div>
         <iframe id="pdf-frame" title="Código Penal PDF"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Consulta Completa do Código Civil de Brava RP -->
+  <div id="modal-codigo-civil" class="modal modal-codigo-civil" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box modal-box-cc" role="dialog" aria-modal="true" aria-labelledby="modal-cc-title">
+      <!-- Cabeçalho do Modal -->
+      <div class="modal-head modal-head-cc">
+        <img class="modal-logo" src="arte.png" alt="" aria-hidden="true" />
+        <div class="modal-title-wrap">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="star-pill-lg">📜</span>
+            <h2 id="modal-cc-title">Código Civil da Cidade de Brava</h2>
+          </div>
+          <span class="muted">Minuta Institucional Nº CC-001/2026 · 106 Artigos, 10 Livros e 3 Anexos Oficiais</span>
+        </div>
+        <div class="modal-head-actions" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
+          <button type="button" class="btn-outline btn-alternar-codigos" data-switch-to="penal" title="Alternar para o Código Penal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right: 4px;">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+            <span>Código Penal</span>
+          </button>
+          <a href="Codigo_Civil_Brava_SDJ_2026_VERIFICADO.pdf" target="_blank" download="Codigo_Civil_Brava_SDJ_2026.pdf" class="btn-outline btn-cc-modal-dl" title="Baixar PDF Oficial do Código Civil">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" style="margin-right: 4px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>Baixar PDF</span>
+          </a>
+          <button class="modal-close" type="button" data-close aria-label="Fechar">×</button>
+        </div>
+      </div>
+
+      <!-- Barra de Ferramentas: Busca Rápida e Abas dos Livros -->
+      <div class="cc-toolbar">
+        <div class="cc-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="cc-search-ico" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input id="cc-search-input" type="text" placeholder="Pesquisar por número do artigo ou termo (ex.: Art. 66, veículo, casamento, dano moral, contrato, indenização)..." autocomplete="off" />
+          <span class="cc-search-counter" id="cc-search-counter">106 artigos</span>
+        </div>
+
+        <div class="cc-tabs-bar" id="cc-tabs" role="tablist" aria-label="Filtrar por Livro do Código Civil">
+          <!-- Gerado dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- Corpo de Leitura do Código Civil -->
+      <div class="modal-body cc-modal-body" id="cc-body">
+        <!-- Renderizado dinamicamente via JS -->
       </div>
     </div>
   </div>
@@ -1341,9 +1444,10 @@
 
   <script src="jspdf.umd.min.js"></script>
   <script src="qrcode.min.js"></script>
-  <script src="pdf-generator.js?v=20261017-social-webhook"></script>
-  <script src="data.js?v=20261017-social-webhook"></script>
-  <script src="app.js?v=20261017-social-webhook"></script>
+  <script src="pdf-generator.js?v=20261019-cc"></script>
+  <script src="codigo-civil-data.js?v=20261019-cc"></script>
+  <script src="data.js?v=20261019-v2"></script>
+  <script src="app.js?v=20261019-v2"></script>
 </body>
 
 </html>

@@ -452,15 +452,52 @@
     },
     {
       id: "alianca", title: "Venda de Aliança", icon: "💍", svg: "alianca", tag: "União civil",
-      desc: "Venda e registro de alianças e anéis (Namoro, Noivado e Anel de Ouro/Casamento).", webhook: "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2",
+      desc: "Venda e registro de alianças e anéis oficiais (Namoro, Noivado e Casamento com fotos ilustrativas).", webhook: "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2",
       fields: [
-        { id: "al_tipo", label: "💎 Tipo de Aliança", type: "options", options: ["Namoro", "Noivado", "Casamento"], isFull: true },
+        {
+          id: "al_tipo",
+          label: "💎 Escolha o Modelo de Aliança / Joia",
+          type: "alianca-cards",
+          isFull: true,
+          options: [
+            {
+              id: "namoro",
+              tipo: "Namoro",
+              nome: "Aliança Tradicional de Prata (Namoro)",
+              sub: "Prata 925 & Aço Cirúrgico Nobre Polido",
+              preco: "R$ 15.000",
+              retirada: "R$ 4.000",
+              img: "img/alianca_namoro.jpg",
+              desc: "Par clássico de alianças anatômicas de alto brilho para celebração de compromisso e fidelidade."
+            },
+            {
+              id: "noivado",
+              tipo: "Noivado",
+              nome: "Anel de Diamante Solitário (Noivado)",
+              sub: "Ouro Branco & Diamante Solitário Lapidado",
+              preco: "R$ 30.000",
+              retirada: "R$ 8.000",
+              img: "img/anel_noivado.jpg",
+              desc: "Solitário luxuoso com diamante brilhante lapidado e pavé lateral para pedido solene de noivado."
+            },
+            {
+              id: "casamento",
+              tipo: "Casamento",
+              nome: "Anel de Ouro Nobre Maciço (Casamento)",
+              sub: "Ouro Nobre 18k Maciço Abaulado",
+              preco: "R$ 45.000",
+              retirada: "R$ 12.000",
+              img: "img/anel_casamento.jpg",
+              desc: "Par clássico em ouro nobre 18k com acabamento abaulado espelhado para celebração matrimonial definitiva."
+            }
+          ]
+        },
         { id: "al_n1", label: "👤 Nome do(a) Parceiro(a) 1" },
         { id: "al_id1", label: "🪪 Passaporte 1" },
         { id: "al_n2", label: "👤 Nome do(a) Parceiro(a) 2" },
         { id: "al_id2", label: "🪪 Passaporte 2" },
         { id: "al_data", label: "📅 Data da Celebração" },
-        { id: "al_valor", label: "💰 Valor Cobrado", placeholder: "R$ 15.000 / R$ 30.000 / R$ 45.000" }
+        { id: "al_valor", label: "💰 Valor Cobrado", placeholder: "R$ 15.000", isFull: true }
       ]
     },
     {
@@ -586,6 +623,42 @@
         <label class="${f.isFull ? "full" : ""}">${label}
           <input id="${f.id}" type="text" value="Pistola PT 9mm" readonly style="background:var(--bg-card);font-weight:600;color:var(--text);cursor:not-allowed;" title="Armamento homologado exclusivo: 1 Pistola PT 9mm (R$ 80.000)" />
         </label>`;
+    }
+    if (f.type === "alianca-cards") {
+      return `
+        <div class="full aliancas-selector-block">
+          <label class="opt-label" style="font-size:12.5px;font-weight:600;color:var(--strong);display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="display:flex;align-items:center;gap:6px;">
+              <span>💎 Modelos de Alianças e Joias Oficiais</span>
+              <span class="badge-alianca-count">3 Opções Disponíveis</span>
+            </span>
+            <span class="muted" style="font-size:11.5px;font-weight:400;">Clique no modelo desejado</span>
+          </label>
+          <div class="aliancas-cards-grid" role="radiogroup" aria-label="Modelos de Aliança">
+            ${f.options.map((o, i) => `
+              <div class="alianca-visual-card ${i === 0 ? "active" : ""}" data-input="${f.id}" data-val="${o.tipo}" data-price="${o.preco}" role="radio" aria-checked="${i === 0}" tabindex="0">
+                <div class="alianca-card-img-wrap">
+                  <img src="${o.img}" alt="${o.nome}" class="alianca-card-img" loading="lazy" />
+                  <span class="alianca-card-price-pill">${o.preco}</span>
+                  <span class="alianca-card-check">✓</span>
+                </div>
+                <div class="alianca-card-body">
+                  <div class="alianca-card-title-row">
+                    <span class="alianca-radio-dot"></span>
+                    <strong class="alianca-card-title">${o.nome}</strong>
+                  </div>
+                  <span class="alianca-card-sub">${o.sub}</span>
+                  <p class="alianca-card-desc">${o.desc}</p>
+                  <div class="alianca-card-footer">
+                    <span class="alianca-meta-retirada">Retirada: <b>${o.retirada}</b></span>
+                    <span class="alianca-meta-venda">Venda: <b>${o.preco}</b></span>
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+          <input type="hidden" id="${f.id}" value="${f.options[0].tipo}" data-default="${f.options[0].tipo}" />
+        </div>`;
     }
     if (f.type === "options") {
       return `
@@ -736,6 +809,35 @@
   }
   $$(".opt-card").forEach((btn) => btn.addEventListener("click", () => selectOption(btn)));
 
+  // Cards visuais ilustrativos de Aliança
+  function selectAliancaCard(card) {
+    if (!card) return;
+    const inputId = card.dataset.input;
+    const tipoVal = card.dataset.val;
+    const priceVal = card.dataset.price;
+
+    $$(`.alianca-visual-card[data-input="${inputId}"]`).forEach((c) => {
+      const isThis = c === card;
+      c.classList.toggle("active", isThis);
+      c.setAttribute("aria-checked", isThis);
+    });
+
+    const hiddenInput = $("#" + inputId);
+    if (hiddenInput) hiddenInput.value = tipoVal;
+
+    const valInput = $("#al_valor");
+    if (valInput) valInput.value = priceVal;
+  }
+  $$(".alianca-visual-card").forEach((card) => {
+    card.addEventListener("click", () => selectAliancaCard(card));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectAliancaCard(card);
+      }
+    });
+  });
+
   function aplicarPrecosPadrao() {
     if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
     if ($("#cas_valor") && !$("#cas_valor").value) $("#cas_valor").value = "R$ 200.000";
@@ -770,6 +872,9 @@
     svc.fields.forEach((f) => {
       const el = $(`#${f.id}`);
       if (f.type === "options") selectOption($(`.opt-card[data-input="${f.id}"][data-val="${el.dataset.default}"]`));
+      else if (f.type === "alianca-cards") {
+        selectAliancaCard($(`.alianca-visual-card[data-input="${f.id}"][data-val="${el.dataset.default}"]`));
+      }
       else el.value = "";
     });
     $(`#${svc.id}_agente`).value = "";
@@ -1129,12 +1234,320 @@
     })
   );
 
+  /* ---------- Modal: Código Civil (SDJ) ---------- */
+  const modalCC = $("#modal-codigo-civil");
+  const btnCC = $("#btn-codigo-civil");
+  let activeCCLivroId = "all";
+
+  function normalizarCCBusca(str) {
+    return (str || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function renderCodigoCivil(filterText = "", livroId = activeCCLivroId) {
+    if (!modalCC || typeof CODIGO_CIVIL_BRAVA === "undefined") return;
+    const CC = CODIGO_CIVIL_BRAVA;
+    const ccBody = $("#cc-body");
+    const ccCounter = $("#cc-search-counter");
+    if (!ccBody) return;
+    const q = normalizarCCBusca(filterText);
+    let matchedCount = 0;
+    let html = "";
+
+    if (!q && (livroId === "all" || livroId === "livro-1")) {
+      html += `
+        <div class="cc-preambulo-card">
+          <div class="cc-preambulo-head">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="cc-preambulo-ico">📜</span>
+              <strong>Preâmbulo Oficial · Diretrizes do Roleplay</strong>
+            </div>
+            <span class="cc-tag-versao">Minuta CC-001/2026</span>
+          </div>
+          <p class="cc-preambulo-txt">${CC.preambulo}</p>
+          <div class="cc-preambulo-foot">
+            <span>${CC.presidencia}</span>
+            <span>•</span>
+            <em>"${CC.lema}"</em>
+          </div>
+        </div>
+      `;
+    }
+
+    CC.livros.forEach((l) => {
+      if (livroId !== "all" && livroId !== l.id) return;
+
+      const filteredArtigos = l.artigos.filter((a) => {
+        if (!q) return true;
+        const searchHaystack = normalizarCCBusca(`${a.rotulo} ${a.num} ${a.epigrafe} ${a.texto} ${l.titulo}`);
+        const cleanNum = q.replace(/^art\.?\s*/i, "");
+        if (cleanNum && String(a.num) === cleanNum) return true;
+        return searchHaystack.includes(q);
+      });
+
+      if (filteredArtigos.length > 0) {
+        matchedCount += filteredArtigos.length;
+        html += `
+          <div class="cc-livro-section" data-livro-section="${l.id}">
+            <div class="cc-livro-header">
+              <div class="cc-livro-title-wrap">
+                <span class="cc-livro-badge">${l.numero}</span>
+                <h3>${l.titulo}</h3>
+              </div>
+              <span class="cc-livro-count">${filteredArtigos.length} ${filteredArtigos.length === 1 ? "artigo" : "artigos"}</span>
+            </div>
+            <div class="cc-artigos-grid">
+              ${filteredArtigos.map((a) => {
+                const citationCurta = `${a.rotulo} do Código Civil (${a.epigrafe})`;
+                const citationCompleta = `${a.rotulo} — ${a.epigrafe}: "${a.texto}"`;
+                return `
+                  <div class="cc-article-card" id="cc-art-${a.num}">
+                    <div class="cc-art-head">
+                      <div class="cc-art-title-wrap">
+                        <span class="cc-art-num">${a.rotulo}</span>
+                        <span class="cc-art-sep">•</span>
+                        <span class="cc-art-epigrafe">${a.epigrafe}</span>
+                      </div>
+                      <span class="cc-livro-pill">${l.numero}</span>
+                    </div>
+                    <p class="cc-art-texto">${a.texto}</p>
+                    <div class="cc-art-foot">
+                      <button type="button" class="btn-outline btn-art-action btn-copy-art" data-art-citation="${citationCurta}" title="Copiar citação">
+                        <span>📋 Copiar Artigo</span>
+                      </button>
+                      <button type="button" class="btn-outline btn-art-action btn-copy-integra" data-art-full='${citationCompleta}' title="Copiar texto integral">
+                        <span>📜 Copiar Íntegra</span>
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    if ((livroId === "all" && !q) || livroId === "anexos") {
+      html += `
+        <div class="cc-livro-section" data-livro-section="anexos">
+          <div class="cc-livro-header">
+            <div class="cc-livro-title-wrap">
+              <span class="cc-livro-badge">ANEXOS</span>
+              <h3>Competências, Procedimentos e Modelos Oficiais</h3>
+            </div>
+            <span class="cc-livro-count">3 Anexos Oficiais</span>
+          </div>
+
+          <div class="cc-anexos-container">
+            <div class="cc-anexo-card">
+              <div class="cc-anexo-head">
+                <span class="cc-anexo-tag">ANEXO I</span>
+                <h4>Matriz de Competências Operacionais</h4>
+              </div>
+              <div class="cc-table-wrap">
+                <table class="cc-table">
+                  <thead>
+                    <tr>
+                      <th>Serviço ou Ato</th>
+                      <th>Setor Responsável</th>
+                      <th>Regra Essencial</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${CC.anexos[0].tabela.map((row) => `
+                      <tr>
+                        <td><strong>${row.servico}</strong></td>
+                        <td><span class="cc-setor-pill">${row.setor}</span></td>
+                        <td>${row.regra}</td>
+                      </tr>
+                    `).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="cc-anexo-card">
+              <div class="cc-anexo-head">
+                <span class="cc-anexo-tag">ANEXO II</span>
+                <h4>Procedimento Padrão de Atendimento</h4>
+              </div>
+              <ol class="cc-passos-list">
+                ${CC.anexos[1].passos.map((p, idx) => `
+                  <li>
+                    <span class="cc-passo-num">${idx + 1}</span>
+                    <span class="cc-passo-txt">${p}</span>
+                  </li>
+                `).join("")}
+              </ol>
+            </div>
+
+            <div class="cc-anexo-card">
+              <div class="cc-anexo-head">
+                <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="cc-anexo-tag">ANEXO III</span>
+                    <h4>Modelo Mínimo de Petição ou Requerimento Civil</h4>
+                  </div>
+                  <button type="button" class="btn-outline btn-copy-modelo-anexo" data-modelo-text="${encodeURIComponent(CC.anexos[2].modeloTexto)}" title="Copiar esqueleto do modelo">
+                    <span>📋 Copiar Modelo</span>
+                  </button>
+                </div>
+              </div>
+              <pre class="cc-modelo-pre"><code>${CC.anexos[2].modeloTexto}</code></pre>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (matchedCount === 0 && livroId !== "anexos") {
+      html = `
+        <div class="cc-empty-state">
+          <span class="cc-empty-ico">🔍</span>
+          <h4>Nenhum artigo encontrado</h4>
+          <p>Não encontramos artigos correspondentes à pesquisa "<strong>${filterText}</strong>". Tente buscar por número (ex.: <code>66</code>, <code>70</code>) ou temas como <code>veículo</code>, <code>dano</code>, <code>contrato</code>, <code>casamento</code>, <code>partilha</code>.</p>
+          <button type="button" class="btn-outline btn-cc-reset-search">Limpar Pesquisa</button>
+        </div>
+      `;
+    }
+
+    ccBody.innerHTML = html;
+    if (ccCounter) {
+      const totalArtigos = CC.livros.reduce((acc, l) => acc + l.artigos.length, 0);
+      ccCounter.textContent = q ? `${matchedCount} encontrados` : `${totalArtigos} artigos`;
+      ccCounter.classList.toggle("is-filtering", !!q);
+    }
+  }
+
+  function openModalCC(initialQuery = "") {
+    if (!modalCC) return;
+    modalCC.classList.add("open");
+    modalCC.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const ccSearch = $("#cc-search-input");
+    const ccTabs = $("#cc-tabs");
+    if (ccSearch) ccSearch.value = initialQuery || "";
+    activeCCLivroId = "all";
+    if (ccTabs) {
+      $$(".cc-tab-btn", ccTabs).forEach((b) => b.classList.toggle("active", b.dataset.ccLivro === "all"));
+    }
+    renderCodigoCivil(initialQuery, "all");
+    if (ccSearch) setTimeout(() => ccSearch.focus(), 80);
+  }
+
+  function closeModalCC() {
+    if (!modalCC) return;
+    modalCC.classList.remove("open");
+    modalCC.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function initCodigoCivilSDJ() {
+    if (!modalCC || typeof CODIGO_CIVIL_BRAVA === "undefined") return;
+    const CC = CODIGO_CIVIL_BRAVA;
+    const ccTabs = $("#cc-tabs");
+    const ccSearch = $("#cc-search-input");
+    const totalArtigos = CC.livros.reduce((acc, l) => acc + l.artigos.length, 0);
+
+    if (ccTabs) {
+      ccTabs.innerHTML = [
+        `<button type="button" class="cc-tab-btn active" data-cc-livro="all">Todos (${totalArtigos})</button>`,
+        ...CC.livros.map((l) => `<button type="button" class="cc-tab-btn" data-cc-livro="${l.id}">${l.numero} (${l.artigos.length})</button>`),
+        `<button type="button" class="cc-tab-btn" data-cc-livro="anexos">Anexos I a III</button>`
+      ].join("");
+
+      ccTabs.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-cc-livro]");
+        if (!btn) return;
+        $$(".cc-tab-btn", ccTabs).forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeCCLivroId = btn.dataset.ccLivro;
+        renderCodigoCivil(ccSearch ? ccSearch.value : "", activeCCLivroId);
+      });
+    }
+
+    if (ccSearch) {
+      ccSearch.addEventListener("input", (e) => {
+        renderCodigoCivil(e.target.value, activeCCLivroId);
+      });
+    }
+
+    if (btnCC) {
+      btnCC.addEventListener("click", (e) => {
+        e.preventDefault();
+        openModalCC();
+      });
+    }
+
+    modalCC.addEventListener("click", (e) => {
+      if (e.target.closest("[data-close]")) closeModalCC();
+    });
+  }
+
+  // Alternador entre Código Civil e Código Penal nos Modais e Ações de Cópia
+  document.addEventListener("click", (e) => {
+    const switchBtn = e.target.closest(".btn-alternar-codigos");
+    if (switchBtn) {
+      e.preventDefault();
+      const target = switchBtn.dataset.switchTo;
+      if (target === "civil") {
+        closeModal();
+        openModalCC();
+      } else if (target === "penal") {
+        closeModalCC();
+        openModal();
+      }
+      return;
+    }
+
+    const copyArt = e.target.closest(".btn-copy-art");
+    if (copyArt) {
+      e.preventDefault();
+      const cit = copyArt.dataset.artCitation;
+      navigator.clipboard.writeText(cit).then(() => toast(`✓ ${cit} copiado!`));
+      return;
+    }
+
+    const copyFull = e.target.closest(".btn-copy-integra");
+    if (copyFull) {
+      e.preventDefault();
+      const full = copyFull.dataset.artFull;
+      navigator.clipboard.writeText(full).then(() => toast(`✓ Texto integral copiado!`));
+      return;
+    }
+
+    const copyMod = e.target.closest(".btn-copy-modelo-anexo");
+    if (copyMod) {
+      e.preventDefault();
+      const text = decodeURIComponent(copyMod.dataset.modeloText || "");
+      navigator.clipboard.writeText(text).then(() => toast(`✓ Modelo do Anexo III copiado!`));
+      return;
+    }
+
+    if (e.target.closest(".btn-cc-reset-search")) {
+      const ccSearch = $("#cc-search-input");
+      if (ccSearch) ccSearch.value = "";
+      renderCodigoCivil("", activeCCLivroId);
+      return;
+    }
+  });
+
+  initCodigoCivilSDJ();
+
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    if (e.key === "Escape") {
+      if (modal.classList.contains("open")) closeModal();
+      if (modalCC && modalCC.classList.contains("open")) closeModalCC();
+    }
     if (e.key === "/" && document.activeElement.tagName !== "INPUT") {
       e.preventDefault();
       const view = document.body.dataset.view;
       (modal.classList.contains("open") ? $("#codigo-search")
+        : (modalCC && modalCC.classList.contains("open")) ? $("#cc-search-input")
         : view === "home" ? $("#home-search")
         : view === "tab-calculadora" ? $("#search-input") : null)?.focus();
     }

@@ -4,16 +4,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO Primário -->
   <title>Tribunal de Justiça | Brava RP</title>
+  <meta name="title" content="Tribunal de Justiça | Brava RP" />
   <meta name="description"
-    content="Portal oficial do Tribunal de Justiça de Brava RP. Protocolo de petições, mandados, autorizações judiciais, processos cíveis e criminais, decisões e intimações." />
+    content="Portal oficial do Tribunal de Justiça de Brava RP. Protocolo de petições, mandados, autorizações judiciais, processos cíveis e criminais, decisões, intimações e consulta interativa ao Código Civil 2026." />
+  <meta name="keywords"
+    content="tribunal de justica, brava rp, judiciario brava, codigo civil brava rp, peticoes, mandado judicial, alvara judicial, acao civel, habeas corpus, oab brava, processo judicial, jurisprudencia, direito civil" />
+  <meta name="author" content="Tribunal de Justiça do Estado de Brava - Brava RP" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="Portuguese" />
+
+  <!-- Cor de Tema & Mobile Web App (Discord embed highlight dourado) -->
+  <meta name="theme-color" content="#d4af37" />
+  <meta name="msapplication-TileColor" content="#0d0f14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Tribunal Brava RP" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Open Graph / Facebook / Discord Embeds -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Tribunal de Justiça | Brava RP" />
+  <meta property="og:title" content="Tribunal de Justiça | Brava RP - Protocolo & Código Civil" />
+  <meta property="og:description"
+    content="Portal oficial do Poder Judiciário de Brava RP. Protocolo de petições, mandados, despachos e consulta interativa aos 106 artigos do Código Civil 2026." />
+  <meta property="og:image" content="arte.png" />
+  <meta property="og:image:alt" content="Brasão Oficial do Poder Judiciário de Brava RP" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tribunal de Justiça | Brava RP" />
+  <meta name="twitter:description"
+    content="Portal oficial do Poder Judiciário de Brava RP: Protocolos judiciais, modelos oficiais de peças e Código Civil digital." />
+  <meta name="twitter:image" content="arte.png" />
+
+  <!-- Favicon & Touch Icons -->
   <link rel="icon" type="image/png" href="arte.png" />
+  <link rel="apple-touch-icon" href="arte.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20261019-footer-fix" />
+  <link rel="stylesheet" href="style.css?v=20261019-layout-filtro" />
   <script>
     // Aplica o tema salvo antes de renderizar
     (function () {
@@ -57,6 +92,31 @@
         </svg>
         <span>Departamento Jurídico</span>
       </a>
+
+      <!-- Botão Guia & Dúvidas do Advogado / Estagiário -->
+      <button id="btn-guia-geral" class="btn-outline btn-guia-topbar" type="button" title="Guia Jurídico e Dúvidas Frequentes (Advogados & Estagiários)">
+        <span class="star-pill">*</span>
+        <span>Guia &amp; Dúvidas</span>
+      </button>
+
+      <!-- Botão Consulta & Download do Código Civil Oficial de Brava RP -->
+      <button id="btn-codigo-civil" class="btn-outline btn-codigo-civil-topbar" type="button" title="Consultar na tela ou Baixar o Código Civil Oficial de Brava RP (106 Artigos)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <path d="M9 7h7M9 11h5"/>
+        </svg>
+        <span>Código Civil</span>
+      </button>
+
+      <!-- Botão Consulta & Download do Código Penal de Brava RP -->
+      <button id="btn-codigo-penal" class="btn-outline btn-codigo-penal-topbar" type="button" title="Consultar Código Penal de Brava RP (Tabela de Crimes, Penas, Multas e Fiança)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+        <span>Código Penal</span>
+      </button>
 
       <!-- Botão Quadro de Avisos -->
       <button id="btn-avisos" class="btn-outline" type="button" title="Publicar ou Gerenciar Quadro de Avisos do Discord">
@@ -102,18 +162,39 @@
         </div>
       </section>
 
-      <div class="section-head">
-        <div>
-          <h3>Serviços Judiciais</h3>
-          <p class="muted">Selecione o procedimento que deseja lavrar ou consultar.</p>
+      <!-- BARRA DE CONTROLE, FILTROS & DÚVIDAS DO TRIBUNAL -->
+      <div class="trib-filter-bar">
+        <div class="trib-filter-bar-main">
+          <!-- Campo de Busca Estilizado -->
+          <div class="trib-search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="trib-search-ico" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input id="home-search" type="text" placeholder="Filtrar por mandado, petição, decisão, audiência..." autocomplete="off" />
+            <span class="trib-search-counter" id="search-count-badge">9 serviços</span>
+          </div>
+
+          <!-- Filtros Rápidos por Categoria -->
+          <div class="trib-category-filters" role="tablist" aria-label="Filtrar por categoria">
+            <button type="button" class="category-pill active" data-filter-group="all">Todos (9)</button>
+            <button type="button" class="category-pill" data-filter-group="processos">⚖️ Processos</button>
+            <button type="button" class="category-pill" data-filter-group="mandados">📜 Mandados</button>
+            <button type="button" class="category-pill" data-filter-group="agenda">⏰ Agenda</button>
+          </div>
         </div>
-        <div class="search home-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" />
+
+        <!-- Botão Destaque do Guia Jurídico e Dúvidas -->
+        <button id="btn-guia-home" class="btn-guia-home-cta" type="button" title="Consultar diferenças práticas entre ações, mandados e sentenças">
+          <span class="star-pill-glow">*</span>
+          <div class="btn-guia-cta-text">
+            <strong>Dúvidas Jurídicas</strong>
+            <small>Guia de Diferenças Práticas</small>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-guia-cta-arrow" aria-hidden="true">
+            <path d="m9 18 6-6-6-6"/>
           </svg>
-          <input id="home-search" type="text" placeholder="Filtrar por mandado, petição, decisão..." autocomplete="off" />
-        </div>
+        </button>
       </div>
 
       <!-- Grupos e Cards gerados dinamicamente via tribunal.js -->
@@ -130,6 +211,10 @@
     <footer class="sdj-footer">
       <div class="sdj-footer-content">
         <span class="sdj-footer-brand">⚖️ Tribunal de Justiça de Brava RP</span>
+        <span class="sdj-footer-sep">•</span>
+        <a href="Codigo_Civil_Brava_SDJ_2026_VERIFICADO.pdf" target="_blank" download="Codigo_Civil_Brava_SDJ_2026.pdf" class="sdj-footer-link" title="Consultar ou Baixar o Código Civil Oficial de Brava RP (106 Artigos)">
+          📜 Código Civil Oficial de Brava (Minuta CC-001/2026)
+        </a>
         <span class="sdj-footer-sep">•</span>
         <span class="sdj-footer-copy">Criado e desenvolvido por</span>
         <a href="https://discord.com/users/717926510119354659" target="_blank" rel="noopener" class="sdj-discord-credit" title="Abrir perfil no Discord">
@@ -219,14 +304,163 @@
     </div>
   </div>
 
+  <!-- Modal: Guia Jurídico & Dúvidas do Advogado / Estagiário -->
+  <div id="modal-guia" class="modal modal-guia-juridico" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box modal-box-guia" role="dialog" aria-modal="true" aria-labelledby="modal-guia-title">
+      <div class="modal-head">
+        <img class="modal-logo" src="arte.png" alt="" aria-hidden="true" />
+        <div class="modal-title-wrap">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="star-pill-lg">*</span>
+            <h2 id="modal-guia-title">Guia Jurídico &amp; Dúvidas Frequentes</h2>
+          </div>
+          <span class="muted">Manual Prático para Advogados, Defensores e Estagiários · Tribunal de Justiça de Brava RP</span>
+        </div>
+        <div class="modal-head-actions" style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+          <a href="Codigo_Civil_Brava_SDJ_2026_VERIFICADO.pdf" target="_blank" download="Codigo_Civil_Brava_SDJ_2026.pdf" class="btn-outline btn-cc-modal" title="Baixar PDF Oficial do Código Civil de Brava (106 Artigos)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" style="margin-right:4px;">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <path d="M9 7h7M9 11h5"/>
+            </svg>
+            <span>Código Civil (PDF)</span>
+          </a>
+          <button class="modal-close" type="button" data-close aria-label="Fechar">×</button>
+        </div>
+      </div>
+
+      <!-- Barra de Ferramentas: Busca Rápida e Abas dos Serviços -->
+      <div class="guia-toolbar">
+        <div class="guia-search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input id="guia-search-input" type="text" placeholder="Pesquisar termo ou dúvida (ex.: habeas corpus, cível, despacho, custódia, prisão)..." autocomplete="off" />
+        </div>
+        <div class="guia-tabs-bar" id="guia-tabs" role="tablist" aria-label="Selecione o serviço judicial">
+          <!-- Gerado dinamicamente via tribunal.js -->
+        </div>
+      </div>
+
+      <!-- Conteúdo do Guia (atualizado dinamicamente) -->
+      <div class="modal-body guia-modal-body" id="guia-body">
+        <!-- Gerado dinamicamente via tribunal.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Consulta Completa do Código Civil de Brava RP -->
+  <div id="modal-codigo-civil" class="modal modal-codigo-civil" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box modal-box-cc" role="dialog" aria-modal="true" aria-labelledby="modal-cc-title">
+      <!-- Cabeçalho do Modal -->
+      <div class="modal-head modal-head-cc">
+        <img class="modal-logo" src="arte.png" alt="" aria-hidden="true" />
+        <div class="modal-title-wrap">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="star-pill-lg">📜</span>
+            <h2 id="modal-cc-title">Código Civil da Cidade de Brava</h2>
+          </div>
+          <span class="muted">Minuta Institucional Nº CC-001/2026 · 106 Artigos, 10 Livros e 3 Anexos Oficiais</span>
+        </div>
+        <div class="modal-head-actions" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
+          <button type="button" class="btn-outline btn-alternar-codigos" data-switch-to="penal" title="Alternar para o Código Penal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right: 4px;">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+            <span>Código Penal</span>
+          </button>
+          <a href="Codigo_Civil_Brava_SDJ_2026_VERIFICADO.pdf" target="_blank" download="Codigo_Civil_Brava_SDJ_2026.pdf" class="btn-outline btn-cc-modal-dl" title="Baixar PDF Oficial do Código Civil">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" style="margin-right: 4px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>Baixar PDF</span>
+          </a>
+          <button class="modal-close" type="button" data-close aria-label="Fechar">×</button>
+        </div>
+      </div>
+
+      <!-- Barra de Ferramentas: Busca Rápida e Abas dos Livros -->
+      <div class="cc-toolbar">
+        <div class="cc-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="cc-search-ico" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input id="cc-search-input" type="text" placeholder="Pesquisar por número do artigo ou termo (ex.: Art. 66, veículo, casamento, dano moral, contrato, indenização)..." autocomplete="off" />
+          <span class="cc-search-counter" id="cc-search-counter">106 artigos</span>
+        </div>
+
+        <div class="cc-tabs-bar" id="cc-tabs" role="tablist" aria-label="Filtrar por Livro do Código Civil">
+          <!-- Gerado dinamicamente via tribunal.js -->
+        </div>
+      </div>
+
+      <!-- Corpo de Leitura do Código Civil -->
+      <div class="modal-body cc-modal-body" id="cc-body">
+        <!-- Renderizado dinamicamente via tribunal.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Código Penal (Tribunal de Justiça) -->
+  <div id="modal-codigo" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-penal-title">
+      <div class="modal-head">
+        <img class="modal-logo" src="arte.png" alt="" aria-hidden="true" />
+        <div class="modal-title-wrap">
+          <h2 id="modal-penal-title">Código Penal Jurídico</h2>
+          <span class="muted">Brava RP · Tabela oficial de infrações 2026</span>
+        </div>
+        <div class="tabs" role="tablist">
+          <button id="tab-tabela" class="tab on" data-tab="tabela" type="button" role="tab">Tabela</button>
+          <button id="tab-pdf" class="tab" data-tab="pdf" type="button" role="tab">PDF oficial</button>
+        </div>
+        <button type="button" class="btn-outline btn-alternar-codigos" data-switch-to="civil" title="Alternar para o Código Civil" style="margin-left: auto; font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px;">
+          <span>📜</span><span>Código Civil</span>
+        </button>
+        <button class="modal-close" type="button" data-close aria-label="Fechar">×</button>
+      </div>
+
+      <div id="pane-tabela" class="modal-body pane">
+        <div class="rules" id="rules"></div>
+        <div class="search modal-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input id="codigo-search" type="text" placeholder="Filtrar crimes e artigos penais..." autocomplete="off" />
+        </div>
+        <div id="codigo-tabela"></div>
+        <p class="note">Em caso de atualização administrativa, prevalece sempre a versão oficial mais recente publicada pela cidade.</p>
+      </div>
+
+      <div id="pane-pdf" class="modal-body pane hidden">
+        <div class="pdf-bar">
+          <a id="pdf-open" class="btn-outline" target="_blank" rel="noopener">Abrir em nova aba</a>
+          <a id="pdf-download" class="btn-outline" download>Baixar PDF</a>
+        </div>
+        <iframe id="pdf-frame" title="Código Penal PDF"></iframe>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast">Ato registrado com sucesso!</div>
 
   <!-- Scripts -->
   <script src="jspdf.umd.min.js"></script>
   <script src="qrcode.min.js"></script>
-  <script src="pdf-generator.js?v=20261018-tribunal"></script>
-  <script src="tribunal-data.js?v=20261018-tribunal"></script>
-  <script src="tribunal.js?v=20261018-tribunal"></script>
+  <script src="pdf-generator.js?v=20261019-cc"></script>
+  <script src="data.js?v=20261019-penal"></script>
+  <script src="codigo-civil-data.js?v=20261019-cc"></script>
+  <script src="tribunal-data.js?v=20261019-cc"></script>
+  <script src="tribunal.js?v=20261019-cc"></script>
 </body>
 
 </html>
