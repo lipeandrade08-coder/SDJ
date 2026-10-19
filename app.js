@@ -25,6 +25,7 @@
     prova: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/>'),
     porte: svg('<path d="M4 11h11l2-3h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2l-2 5H9l1.5-4H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"/>'),
     credencial: svg('<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/>'),
+    limpeza: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -613,15 +614,116 @@
         },
         { id: "pa_valor", label: "💰 Valor Total Cobrado (1 Arma PT: 80k + Munições: R$ 400/un)", placeholder: "R$ 80.000", isFull: true }
       ]
+    },
+    {
+      id: "limpeza",
+      title: "Limpeza de Ficha",
+      icon: "🛡️",
+      svg: "limpeza",
+      tag: "Reabilitação",
+      desc: "Procedimento notarial de reabilitação e cancelamento de antecedentes (R$ 50.000 por cada prisão registrada).",
+      webhook: "https://discord.com/api/webhooks/1561881362045083740/WZ5hDcs3bflRZOtJz2B979ANu28vZjOxxskbGVbeCw3KRvKmIUgGBGLpOHxSfXLttWJo",
+      fields: [
+        { id: "lf_cidadao", label: "👤 Nome do Cidadão (Requerente)" },
+        { id: "lf_id", label: "🪪 Passaporte do Cidadão" },
+        { id: "lf_advogado", label: "⚖️ Advogado Constituído / Defensor", placeholder: "Ex.: Dr. Zaith Frost (OAB: 12)" },
+        { 
+          id: "lf_situacao", 
+          label: "⏱️ Situação da Pena / Cumprimento", 
+          type: "options", 
+          options: [
+            "Pena Integralmente Cumprida & Fiança Paga",
+            "Decurso do Prazo Legal de Reabilitação",
+            "Absolvição / Revisão Criminal Homologada"
+          ] 
+        },
+        { 
+          id: "lf_prisoes", 
+          label: "🔒 Quantidade de Prisões a Limpar (R$ 50.000 / prisão)", 
+          type: "prisoes-counter", 
+          isFull: true 
+        },
+        { 
+          id: "lf_artigos", 
+          label: "📋 Artigos Cometidos / Antecedentes a Limpar", 
+          placeholder: "Ex.: Art. 1.4 (Resistência à Prisão), Art. 2.1 (Porte Ilegal de Arma), Art. 3.2 (Receptação)...", 
+          isFull: true 
+        },
+        { 
+          id: "lf_motivo", 
+          label: "📝 Fundamentação / Parecer Notarial de Reabilitação", 
+          placeholder: "Ex.: O requerente comprovou extinção da punibilidade, bom comportamento social e adimplemento das custas processuais, fazendo jus ao cancelamento das anotações penais.", 
+          isFull: true 
+        },
+        { id: "lf_emissao", label: "📅 Data de Emissão / Homologação", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "lf_valor", label: "💰 Valor Total Cobrado (R$ 50.000 por prisão)", placeholder: "R$ 50.000", isFull: true }
+      ]
     }
   ];
 
   const renderField = (f) => {
     const label = cleanLabel(f.label);
+    if (f.id === "lf_prisoes" || f.type === "prisoes-counter") {
+      return `
+        <div class="full prisoes-counter-block">
+          <label class="opt-label" style="font-size:12.5px;font-weight:600;color:var(--strong);display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="display:flex;align-items:center;gap:6px;">
+              <span>🔒 Quantidade de Prisões a Limpar</span>
+              <span class="badge-prisao-rate" style="background:rgba(212,175,95,0.15);color:var(--gold-3);border:1px solid var(--accent);font-size:11px;padding:2px 8px;border-radius:12px;font-weight:700;">R$ 50.000 por prisão</span>
+            </span>
+            <span class="muted" style="font-size:11.5px;">Cálculo automático do valor</span>
+          </label>
+          <div class="prisoes-counter-control" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div class="prisoes-stepper" style="display:inline-flex;align-items:center;background:var(--panel-solid);border:1.5px solid var(--line);border-radius:10px;padding:3px;">
+              <button type="button" class="btn-stepper btn-prisao-dec" id="btn-prisao-dec" title="Diminuir quantidade" style="width:34px;height:34px;border:none;background:var(--panel-2);color:var(--text);border-radius:7px;font-size:18px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;">−</button>
+              <input id="${f.id}" type="number" min="1" max="100" value="1" style="width:60px;text-align:center;border:none;background:transparent;color:var(--strong);font-size:15px;font-weight:700;-moz-appearance:textfield;" />
+              <button type="button" class="btn-stepper btn-prisao-inc" id="btn-prisao-inc" title="Aumentar quantidade" style="width:34px;height:34px;border:none;background:var(--panel-2);color:var(--text);border-radius:7px;font-size:18px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;">+</button>
+            </div>
+            <div class="prisoes-quick-pills" style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button type="button" class="btn-prisao-pill active" data-qtd="1">1 prisão (50k)</button>
+              <button type="button" class="btn-prisao-pill" data-qtd="2">2 prisões (100k)</button>
+              <button type="button" class="btn-prisao-pill" data-qtd="3">3 prisões (150k)</button>
+              <button type="button" class="btn-prisao-pill" data-qtd="4">4 prisões (200k)</button>
+              <button type="button" class="btn-prisao-pill" data-qtd="5">5 prisões (250k)</button>
+              <button type="button" class="btn-prisao-pill" data-qtd="6">6 prisões (300k)</button>
+            </div>
+          </div>
+        </div>`;
+    }
     if (f.id === "pa_arma") {
       return `
         <label class="${f.isFull ? "full" : ""}">${label}
           <input id="${f.id}" type="text" value="Pistola PT 9mm" readonly style="background:var(--bg-card);font-weight:600;color:var(--text);cursor:not-allowed;" title="Armamento homologado exclusivo: 1 Pistola PT 9mm (R$ 80.000)" />
+        </label>`;
+    }
+    if (f.id === "lf_artigos") {
+      return `
+        <label class="full field-wrapper-artigos">
+          <div class="field-label-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-weight:600;color:var(--strong);font-size:12.5px;">${label}</span>
+            <button type="button" class="btn-consultar-cp-field" id="btn-consultar-cp-lf" title="Consultar o Código Penal e selecionar artigos para a limpeza" style="padding:4px 10px;font-size:11.5px;display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--accent);color:var(--gold-3);border-radius:6px;cursor:pointer;">
+              <span>📜 Consultar Código Penal</span>
+            </button>
+          </div>
+          <textarea id="${f.id}" rows="3" class="sdj-textarea" placeholder="${f.placeholder || "Ex.: Art. 1.4 (Resistência à Prisão), Art. 2.1 (Porte Ilegal)..."}" style="width:100%;border-radius:10px;padding:10px 12px;background:var(--panel-solid);border:1.5px solid var(--line);color:var(--text);font-family:inherit;font-size:13px;resize:vertical;"></textarea>
+          <div class="artigos-quick-chips" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            <span style="font-size:11px;color:var(--muted);font-weight:600;margin-right:2px;">Sugestões Rápidas:</span>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 1.4 · Resistência à Prisão">+ Art. 1.4 (Resistência)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 2.1 · Porte Ilegal de Arma">+ Art. 2.1 (Porte Ilegal)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 3.2 · Receptação">+ Art. 3.2 (Receptação)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 4.1 · Roubo">+ Art. 4.1 (Roubo)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 4.7 · Furto">+ Art. 4.7 (Furto)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 1.6 · Dano ao Patrimônio">+ Art. 1.6 (Dano)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 1.1 · Equipamento Balístico">+ Art. 1.1 (Eq. Balístico)</button>
+            <button type="button" class="btn-artigo-chip" data-artigo="Art. 2.4 · Tráfico de Armas">+ Art. 2.4 (Tráfico Armas)</button>
+          </div>
+        </label>`;
+    }
+    if (f.id === "lf_motivo") {
+      return `
+        <label class="full">
+          <span style="font-weight:600;color:var(--strong);font-size:12.5px;margin-bottom:6px;display:block;">${label}</span>
+          <textarea id="${f.id}" rows="3" class="sdj-textarea" placeholder="${f.placeholder || "Preencha a fundamentação..."}" style="width:100%;border-radius:10px;padding:10px 12px;background:var(--panel-solid);border:1.5px solid var(--line);color:var(--text);font-family:inherit;font-size:13px;resize:vertical;"></textarea>
         </label>`;
     }
     if (f.type === "alianca-cards") {
@@ -848,6 +950,8 @@
     if ($("#ca_valor") && !$("#ca_valor").value) $("#ca_valor").value = "R$ 150.000";
     if ($("#pa_arma") && !$("#pa_arma").value) $("#pa_arma").value = "Pistola PT 9mm";
     if ($("#pa_valor") && !$("#pa_valor").value) $("#pa_valor").value = "R$ 80.000";
+    if ($("#lf_prisoes") && !$("#lf_prisoes").value) $("#lf_prisoes").value = "1";
+    if ($("#lf_valor") && !$("#lf_valor").value) $("#lf_valor").value = "R$ 50.000";
   }
 
   // Gerador de CNPJ
@@ -868,6 +972,23 @@
     });
   });
 
+  // Controle de Quantidade e Valor de Prisões (Limpeza de Ficha: R$ 50.000 / prisão)
+  function atualizarPrecoPrisoes(qtd) {
+    const num = Math.max(1, parseInt(qtd, 10) || 1);
+    const inp = $("#lf_prisoes");
+    if (inp && document.activeElement !== inp) inp.value = num;
+
+    const total = num * 50000;
+    const valorInp = $("#lf_valor");
+    if (valorInp) {
+      valorInp.value = `R$ ${total.toLocaleString("pt-BR")}`;
+    }
+
+    $$(".btn-prisao-pill").forEach((b) => {
+      b.classList.toggle("active", Number(b.dataset.qtd) === num);
+    });
+  }
+
   function resetService(svc) {
     svc.fields.forEach((f) => {
       const el = $(`#${f.id}`);
@@ -879,12 +1000,73 @@
     });
     $(`#${svc.id}_agente`).value = "";
     $(`#${svc.id}_agente_id`).value = "";
+    if (svc.id === "limpeza") {
+      atualizarPrecoPrisoes(1);
+    }
     aplicarPrecosPadrao();
     initValidades();
   }
   $$(".btn-reset").forEach((btn) =>
     btn.addEventListener("click", () => resetService(servicesConfig.find((s) => s.id === btn.dataset.sid)))
   );
+
+  // Chips Rápidos de Artigos, Prisões e Consulta CP na Limpeza de Ficha
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#btn-prisao-dec")) {
+      e.preventDefault();
+      const inp = $("#lf_prisoes");
+      const cur = Math.max(1, (parseInt(inp?.value, 10) || 1) - 1);
+      if (inp) inp.value = cur;
+      atualizarPrecoPrisoes(cur);
+      return;
+    }
+
+    if (e.target.closest("#btn-prisao-inc")) {
+      e.preventDefault();
+      const inp = $("#lf_prisoes");
+      const cur = (parseInt(inp?.value, 10) || 1) + 1;
+      if (inp) inp.value = cur;
+      atualizarPrecoPrisoes(cur);
+      return;
+    }
+
+    const pill = e.target.closest(".btn-prisao-pill");
+    if (pill) {
+      e.preventDefault();
+      const qtd = parseInt(pill.dataset.qtd, 10);
+      atualizarPrecoPrisoes(qtd);
+      return;
+    }
+
+    const chip = e.target.closest(".btn-artigo-chip");
+    if (chip) {
+      e.preventDefault();
+      const art = chip.dataset.artigo;
+      const textarea = $("#lf_artigos");
+      if (textarea) {
+        const cur = textarea.value.trim();
+        if (!cur) {
+          textarea.value = art;
+        } else if (!cur.includes(art)) {
+          textarea.value = cur + ", " + art;
+        }
+        toast(`✓ Adicionado: ${art}`);
+      }
+      return;
+    }
+
+    if (e.target.closest("#btn-consultar-cp-lf")) {
+      e.preventDefault();
+      openModal();
+      return;
+    }
+  });
+
+  document.addEventListener("input", (e) => {
+    if (e.target.id === "lf_prisoes") {
+      atualizarPrecoPrisoes(e.target.value);
+    }
+  });
 
   /* ---------- Validade das Certidões (padrão 15 dias, editável) ---------- */
   const VALIDADE_PADRAO = 15;
@@ -1133,6 +1315,8 @@
         webhookUrl = "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2";
       } else if (sid === "porte") {
         webhookUrl = "https://discord.com/api/webhooks/1560687247869878294/WFpx_HfZFoNVsA-b8Fxx_hwVJidjHy2HNi2JD4-MsevtwQshLDcj8LJODGwyemWeu92A";
+      } else if (sid === "limpeza") {
+        webhookUrl = "https://discord.com/api/webhooks/1561881362045083740/WZ5hDcs3bflRZOtJz2B979ANu28vZjOxxskbGVbeCw3KRvKmIUgGBGLpOHxSfXLttWJo";
       }
 
       let payload = { embeds: [embed] };
@@ -1158,6 +1342,15 @@
           embed.color = 3066993; // Verde
           payload.content = `🔫 **[PORTE DE ARMA (PT) & MUNIÇÃO EMITIDO COM SUCESSO${tagSituacao}]**\nCidadão aprovado no teste psicotécnico hospitalar. Porte de pistola PT e munições liberados com fé pública.`;
         }
+      } else if (sid === "limpeza") {
+        const cidadao = $("#lf_cidadao")?.value || "Cidadão";
+        const idCidadao = $("#lf_id")?.value ? ` (ID: ${$("#lf_id").value})` : "";
+        const artigos = $("#lf_artigos")?.value || "Artigos conforme certidão";
+        const qtdPrisoes = $("#lf_prisoes")?.value || "1";
+        const valorTotal = $("#lf_valor")?.value || "R$ 50.000";
+        embed.title = "🛡️ CERTIDÃO NOTARIAL DE REABILITAÇÃO & LIMPEZA DE FICHA";
+        embed.color = 0x10b981; // Verde esmeralda (#10b981)
+        payload.content = `🛡️ **[REABILITAÇÃO CRIMINAL · LIMPEZA DE FICHA HOMOLOGADA]**\nO Departamento Jurídico certifica a extinção de punibilidade e o cancelamento dos antecedentes penais de **${cidadao}**${idCidadao}.\n🔒 **Prisões Registradas a Limpar:** **${qtdPrisoes} prisão(ões)** *(Taxa: R$ 50.000 por prisão)*\n💰 **Valor Total Homologado:** **${valorTotal}**\n📋 **Artigos Extintos/Limpos:** *${artigos}*\n📄 *Certidão oficial notarial com fé pública anexada em PDF.*`;
       }
 
       sendWebhook(btn, webhookUrl, payload, () => resetService(svc), pdfData);

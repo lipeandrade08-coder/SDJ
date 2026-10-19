@@ -238,6 +238,17 @@ const TABELA_PRECOS = [
     targetId: "alianca",
   },
   {
+    item: "Limpeza de Ficha",
+    icone: "🛡️",
+    retirada: null,
+    retiradaDisplay: "Homologação SDJ",
+    venda: 50000,
+    vendaDisplay: "R$ 50.000 por prisão",
+    categoria: "Reabilitação Criminal",
+    desc: "Procedimento notarial de reabilitação e cancelamento de antecedentes criminais (R$ 50.000 por cada prisão registrada na ficha).",
+    targetId: "limpeza",
+  },
+  {
     item: "Troca de Nome",
     icone: "📝",
     retirada: 30000,

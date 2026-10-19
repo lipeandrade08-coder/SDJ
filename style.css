@@ -7540,5 +7540,111 @@ body:not([data-view="tab-calculadora"]) .tab-content {
   }
 }
 
+/* ==========================================================
+   SERVIÇO: LIMPEZA DE FICHA & REABILITAÇÃO CRIMINAL (SDJ)
+   ========================================================== */
+.field-wrapper-artigos {
+  display: flex;
+  flex-direction: column;
+}
+
+.sdj-textarea {
+  width: 100%;
+  border-radius: 10px;
+  padding: 11px 13px;
+  background: var(--panel-solid);
+  border: 1.5px solid var(--line);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: all 0.2s var(--ease);
+}
+
+.sdj-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: var(--bg-card);
+}
+
+.artigos-quick-chips {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-artigo-chip {
+  background: var(--panel-solid);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-artigo-chip:hover {
+  border-color: var(--accent);
+  color: var(--gold-3);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-consultar-cp-field {
+  transition: all 0.2s var(--ease);
+}
+
+.btn-consultar-cp-field:hover {
+  background: var(--accent-soft) !important;
+  border-color: var(--gold-3) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+.btn-prisao-pill {
+  background: var(--panel-solid);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  font-family: inherit;
+}
+
+.btn-prisao-pill:hover {
+  border-color: var(--accent);
+  color: var(--gold-3);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.btn-prisao-pill.active {
+  border-color: var(--accent);
+  background: rgba(212, 175, 95, 0.15);
+  color: var(--gold-3);
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(212, 175, 95, 0.25);
+}
+
+.btn-stepper:hover {
+  background: var(--accent-soft) !important;
+  color: var(--gold-3) !important;
+}
+
+
 
 

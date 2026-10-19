@@ -612,7 +612,7 @@
 
     const dataHora = new Date().toLocaleString("pt-BR");
     const protocolo = gerarProtocolo();
-    const titulo = opts.service.title || "Certidão Oficial Notarial";
+    const titulo = opts.service.id === "limpeza" ? "Certidão de Limpeza de Ficha Criminal" : (opts.service.title || "Certidão Oficial Notarial");
     const cidade = opts.cidade || (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
 
     // 1. Cabeçalho, moldura e marca d'água oficial
@@ -623,11 +623,111 @@
     const fields = opts.fields || [];
 
     // Seção 1: Dados Oficiais Registrados
-    curY = desenharCabecalhoSecao(doc, curY, "1. Dados e Declarações do Assento Cartorário");
+    curY = desenharCabecalhoSecao(doc, curY, opts.service && opts.service.id === "limpeza" ? "1. Dados do Cidadão e Termo de Reabilitação" : "1. Dados e Declarações do Assento Cartorário");
 
-    // Layout responsivo: 2 colunas se tiver 8 ou mais campos (ex: Porte de Arma), 1 coluna para os demais
+    // Layout responsivo: layout dedicado para Limpeza de Ficha, 2 colunas se tiver 8 ou mais campos (ex: Porte de Arma), 1 coluna para os demais
     const nFields = fields.length;
-    if (nFields >= 8) {
+    if (opts.service && opts.service.id === "limpeza") {
+      const getVal = (pattern) => {
+        const found = fields.find(f => pattern.test(f.label));
+        return found && found.value && found.value !== "—" ? String(found.value) : "NÃO INFORMADO";
+      };
+
+      const cidadao = getVal(/cidad[ãa]o|requerente/i);
+      const passaporte = getVal(/passaporte/i);
+      const advogado = getVal(/advogado|defensor/i);
+      const situacao = getVal(/situa[çc][ãa]o/i);
+      const prisoes = getVal(/pris[õo]es/i);
+      const emissao = getVal(/emiss[ãa]o/i);
+      const valor = getVal(/valor/i);
+      const artigos = getVal(/artigo|antecedente/i);
+      const motivo = getVal(/motivo|fundamenta[çc][ãa]o|parecer/i);
+
+      const gridPairs = [
+        [{ label: "CIDADÃO (REQUERENTE)", val: cidadao }, { label: "PASSAPORTE / ID", val: passaporte }],
+        [{ label: "ADVOGADO CONSTITUÍDO", val: advogado }, { label: "SITUAÇÃO DA PENA", val: situacao }],
+        [{ label: "PRISÕES LIMPAS (R$ 50.000 / UN)", val: `${prisoes} registro(s) de prisão` }, { label: "VALOR TOTAL COBRADO", val: valor }],
+        [{ label: "DATA DE EMISSÃO / HOMOLOGAÇÃO", val: emissao }, { label: "PRAZO DE VALIDADE", val: "Sem Prazo de Validade (Permanente)" }]
+      ];
+
+      const colW = (boxW - 3) / 2;
+      const rowH = 8.2;
+      const rowGap = 0.9;
+
+      gridPairs.forEach((pair, rIdx) => {
+        pair.forEach((item, cIdx) => {
+          const x = cIdx === 0 ? 14 : 14 + colW + 3;
+          const isEven = rIdx % 2 === 0;
+          doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+          doc.setDrawColor(220, 226, 238);
+          doc.setLineWidth(0.25);
+          doc.roundedRect(x, curY, colW, rowH, 0.8, 0.8, "FD");
+          doc.setFillColor(...ORO);
+          doc.rect(x, curY, 1.8, rowH, "F");
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(5.5);
+          doc.setTextColor(110, 118, 134);
+          doc.text(item.label, x + 4, curY + 3.0, { maxWidth: colW - 7 });
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.setTextColor(18, 24, 38);
+          doc.text(item.val, x + 4, curY + 6.8, { maxWidth: colW - 7 });
+        });
+        curY += rowH + rowGap;
+      });
+
+      // Bloco de destaque para os Artigos Cometidos / Antecedentes Extintos
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.2);
+      const artigosSplit = doc.splitTextToSize(artigos, boxW - 8);
+      const artBoxH = Math.max(12, 6.5 + (artigosSplit.length * 3.4));
+
+      doc.setFillColor(255, 253, 245);
+      doc.setDrawColor(...ORO);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(14, curY, boxW, artBoxH, 0.8, 0.8, "FD");
+      doc.setFillColor(...ORO);
+      doc.rect(14, curY, 2.2, artBoxH, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.8);
+      doc.setTextColor(...ORO_ESCURO);
+      doc.text("ARTIGOS PENAIS ANOTADOS / ANTECEDENTES EXTINTOS PELA REABILITAÇÃO:", 18, curY + 3.8);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.2);
+      doc.setTextColor(18, 24, 38);
+      doc.text(artigosSplit, 18, curY + 7.5, { maxWidth: boxW - 8, lineHeightFactor: 1.18 });
+
+      curY += artBoxH + rowGap;
+
+      // Bloco do Parecer e Fundamentação Notarial
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.8);
+      const motivoSplit = doc.splitTextToSize(motivo, boxW - 8);
+      const motBoxH = Math.max(10, 6.0 + (motivoSplit.length * 3.2));
+
+      doc.setFillColor(250, 252, 255);
+      doc.setDrawColor(220, 226, 238);
+      doc.setLineWidth(0.25);
+      doc.roundedRect(14, curY, boxW, motBoxH, 0.8, 0.8, "FD");
+      doc.setFillColor(...ORO);
+      doc.rect(14, curY, 1.8, motBoxH, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(110, 118, 134);
+      doc.text("FUNDAMENTAÇÃO E PARECER DO CARTÓRIO NOTARIAL:", 18, curY + 3.6);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.8);
+      doc.setTextColor(45, 52, 68);
+      doc.text(motivoSplit, 18, curY + 7.2, { maxWidth: boxW - 8, lineHeightFactor: 1.15 });
+
+      curY += motBoxH + rowGap;
+    } else if (nFields >= 8) {
       const colW = (boxW - 3) / 2;
       const rowH = 8.6;
       const rowGap = 1.0;
@@ -738,14 +838,23 @@
 
       termoCompleto =
         `O DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob homologação da Presidência do Judiciário e em conformidade com as diretrizes de Segurança Pública, CERTIFICA a ${sitTxt} exclusiva para 1 Pistola PT 9mm (R$ 80.000) e fornecimento de munições (R$ 400 por unidade), condicionado estritamente à apresentação do Laudo Psicotécnico emitido pelo Hospital Municipal com parecer 'Apto'. O presente registro possui fé pública e validade oficial perante todas as forças policiais do Estado de Brava.`;
+    } else if (opts.service && opts.service.id === "limpeza") {
+      const cidadaoField = (opts.fields || []).find(f => f.label.toLowerCase().includes("cidadão") || f.label.toLowerCase().includes("requerente"));
+      const cidNome = cidadaoField ? cidadaoField.value : "requerente qualificado";
+      const prisoesField = (opts.fields || []).find(f => f.label.toLowerCase().includes("prisões") || f.label.toLowerCase().includes("prisoes"));
+      const nPrisoes = prisoesField ? prisoesField.value : "1";
+      termoCompleto =
+        `O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob a autoridade da Presidência do Judiciário e nos termos das normas de Reabilitação Penal e Registro Notarial, CERTIFICA que foram devidamente quitadas e extintas todas as anotações e registros criminais pretéritos de ${cidNome}, concernentes a ${nPrisoes} registro(s) de prisão (taxa oficial de R$ 50.000 por prisão). Atesta-se o cancelamento definitivo das infrações anotadas e o restabelecimento da primariedade e da idoneidade civil perante os registros públicos e forças de segurança do Estado, possuindo eficácia permanente e imediata a partir de sua emissão, sem prazo de validade ou expiração.`;
     }
 
-    // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário)
-    const validadeField = fields.find((f) => /validade/i.test(f.label));
-    const emissaoField = fields.find((f) => /emiss[ãa]o/i.test(f.label));
-    if (validadeField && validadeField.value && validadeField.value !== "Não informado") {
-      const emTxt = emissaoField && emissaoField.value && emissaoField.value !== "Não informado" ? `, emitida em ${emissaoField.value}` : "";
-      termoCompleto += ` A presente certidão${emTxt}, tem validade até ${validadeField.value}, devendo ser renovada após esta data.`;
+    // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário - não aplicável a Limpeza de Ficha)
+    if (opts.service && opts.service.id !== "limpeza") {
+      const validadeField = fields.find((f) => /validade/i.test(f.label));
+      const emissaoField = fields.find((f) => /emiss[ãa]o/i.test(f.label));
+      if (validadeField && validadeField.value && validadeField.value !== "Não informado") {
+        const emTxt = emissaoField && emissaoField.value && emissaoField.value !== "Não informado" ? `, emitida em ${emissaoField.value}` : "";
+        termoCompleto += ` A presente certidão${emTxt}, tem validade até ${validadeField.value}, devendo ser renovada após esta data.`;
+      }
     }
 
     doc.setFont("helvetica", "normal");
@@ -784,9 +893,10 @@
     doc.line(18, divY, 14 + boxW - 4, divY);
 
     const isPorte = opts.service && opts.service.id === "porte";
-    const natText = isPorte ? "Porte de Arma Legal" : "Assento Notarial Oficial";
-    const eficText = isPorte ? "Autorização Notarial" : "Oponibilidade 'Erga Omnes'";
-    const segText = isPorte ? "Laudo Médico Hospitalar" : "Criptografia Digital SHA-256";
+    const isLimpeza = opts.service && opts.service.id === "limpeza";
+    const natText = isPorte ? "Porte de Arma Legal" : isLimpeza ? "Reabilitação Criminal" : "Assento Notarial Oficial";
+    const eficText = isPorte ? "Autorização Notarial" : isLimpeza ? "Cancelamento Definitivo (Permanente)" : "Oponibilidade 'Erga Omnes'";
+    const segText = isPorte ? "Laudo Médico Hospitalar" : isLimpeza ? "Homologação Notarial SDJ" : "Criptografia Digital SHA-256";
 
     // Barra de atributos dentro da certidão
     doc.setFont("helvetica", "bold");
