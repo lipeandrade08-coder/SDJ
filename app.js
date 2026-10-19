@@ -473,6 +473,8 @@
         { id: "cas_id2", label: "🪪 Passaporte 2" },
         { id: "cas_regime", label: "📜 Regime de Bens", placeholder: "Ex.: Comunhão Parcial de Bens" },
         { id: "cas_data", label: "📅 Data do Casamento" },
+        { id: "cas_emissao", label: "📅 Data de Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "cas_validade", label: "⏳ Validade da Certidão", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "cas_emissao" },
         { id: "cas_valor", label: "💰 Valor Cobrado", placeholder: "R$ 200.000", isFull: true }
       ]
     },
@@ -487,7 +489,9 @@
         { id: "cn_resp2", label: "👤 Nome do(a) Responsável 2" },
         { id: "cn_id_resp2", label: "🪪 Passaporte do(a) Responsável 2" },
         { id: "cn_data", label: "📅 Data de Nascimento" },
-        { id: "cn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000" }
+        { id: "cn_emissao", label: "📅 Data de Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "cn_validade", label: "⏳ Validade da Certidão", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "cn_emissao" },
+        { id: "cn_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
       ]
     },
     {
@@ -500,6 +504,8 @@
         { id: "ca_id_resp1", label: "🪪 Passaporte do(a) Responsável 1" },
         { id: "ca_resp2", label: "👤 Nome do(a) Responsável 2 (Opcional)" },
         { id: "ca_id_resp2", label: "🪪 Passaporte do(a) Responsável 2 (Opcional)" },
+        { id: "ca_emissao", label: "📅 Data de Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "ca_validade", label: "⏳ Validade da Certidão", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "ca_emissao" },
         { id: "ca_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
       ]
     },
@@ -610,6 +616,30 @@
             <input id="${f.id}" type="text" placeholder="Clique em “Gerar Registro”" />
             <button type="button" class="btn-outline btn-gerar-serie" data-input="${f.id}">${ICONS.dado} Gerar Registro</button>
           </span>
+        </label>`;
+    }
+    if (f.type === "emissao") {
+      return `
+        <label class="${f.isFull ? "full" : ""}">
+          <span>${label}</span>
+          <input id="${f.id}" type="text" class="input-emissao" placeholder="${f.placeholder || "DD/MM/AAAA"}" />
+        </label>`;
+    }
+    if (f.type === "validade") {
+      return `
+        <label class="${f.isFull ? "full" : ""}">
+          <div class="validade-label-bar">
+            <span>${label}</span>
+            <span class="validade-badge" id="${f.id}_badge">Prazo: 15 dias (padrão)</span>
+          </div>
+          <div class="validade-input-group">
+            <input id="${f.id}" type="text" class="input-validade" data-emissao="${f.emissaoId || ""}" placeholder="${f.placeholder || "DD/MM/AAAA"}" />
+            <div class="validade-btn-group">
+              <button type="button" class="btn-val-quick active" data-target="${f.id}" data-days="15" title="Definir prazo padrão (15 dias)">15d</button>
+              <button type="button" class="btn-val-quick" data-target="${f.id}" data-days="30" title="Definir prazo de 30 dias">30d</button>
+              <button type="button" class="btn-val-quick" data-target="${f.id}" data-days="custom" title="Ajustar prazo livremente (mais ou menos dias)">± dias</button>
+            </div>
+          </div>
         </label>`;
     }
     return `
@@ -745,9 +775,95 @@
     $(`#${svc.id}_agente`).value = "";
     $(`#${svc.id}_agente_id`).value = "";
     aplicarPrecosPadrao();
+    initValidades();
   }
   $$(".btn-reset").forEach((btn) =>
     btn.addEventListener("click", () => resetService(servicesConfig.find((s) => s.id === btn.dataset.sid)))
+  );
+
+  /* ---------- Validade das Certidões (padrão 15 dias, editável) ---------- */
+  const VALIDADE_PADRAO = 15;
+  const parseDataBR = (s) => {
+    const m = String(s || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = new Date(+m[3], +m[2] - 1, +m[1]);
+    return d.getDate() === +m[1] && d.getMonth() === +m[2] - 1 ? d : null;
+  };
+  const fmtDataBR = (d) => d.toLocaleDateString("pt-BR");
+  const somarDias = (d, n) => { const r = new Date(d); r.setDate(r.getDate() + n); return r; };
+  const diffDias = (a, b) => Math.round((b - a) / 86400000);
+
+  function atualizarBadgeValidade(inp) {
+    const badge = $(`#${inp.id}_badge`);
+    if (!badge) return;
+    const em = parseDataBR($(`#${inp.dataset.emissao}`)?.value);
+    const val = parseDataBR(inp.value);
+    const btns = $$(`.btn-val-quick[data-target="${inp.id}"]`);
+    if (!em || !val) {
+      badge.textContent = "Data inválida (DD/MM/AAAA)";
+      badge.classList.add("invalid");
+      btns.forEach((b) => b.classList.remove("active"));
+      return;
+    }
+    const dias = diffDias(em, val);
+    badge.classList.toggle("invalid", dias < 1);
+    badge.textContent = dias < 1
+      ? "Validade deve ser após a emissão"
+      : `Prazo: ${dias} dia${dias === 1 ? "" : "s"}${dias === VALIDADE_PADRAO ? " (padrão)" : ""}`;
+    btns.forEach((b) => {
+      const d = b.dataset.days;
+      b.classList.toggle("active", d === "custom" ? dias >= 1 && dias !== 15 && dias !== 30 : Number(d) === dias);
+    });
+  }
+
+  function aplicarPrazo(inp, dias) {
+    const emInp = $(`#${inp.dataset.emissao}`);
+    let em = parseDataBR(emInp?.value);
+    if (!em) { em = new Date(); if (emInp) emInp.value = fmtDataBR(em); }
+    inp.dataset.dias = dias;
+    inp.value = fmtDataBR(somarDias(em, dias));
+    atualizarBadgeValidade(inp);
+  }
+
+  function initValidades() {
+    $$(".input-validade").forEach((inp) => {
+      const emInp = $(`#${inp.dataset.emissao}`);
+      if (emInp && !emInp.value) emInp.value = fmtDataBR(new Date());
+      aplicarPrazo(inp, VALIDADE_PADRAO);
+    });
+  }
+
+  $$(".input-validade").forEach((inp) => {
+    // Edição manual da data de validade (mais ou menos que 15 dias)
+    inp.addEventListener("input", () => {
+      const em = parseDataBR($(`#${inp.dataset.emissao}`)?.value);
+      const val = parseDataBR(inp.value);
+      if (em && val) inp.dataset.dias = diffDias(em, val);
+      atualizarBadgeValidade(inp);
+    });
+    // Alterou a emissão -> recalcula mantendo o prazo escolhido
+    const emInp = $(`#${inp.dataset.emissao}`);
+    if (emInp) emInp.addEventListener("input", () => {
+      if (parseDataBR(emInp.value)) aplicarPrazo(inp, Number(inp.dataset.dias) || VALIDADE_PADRAO);
+      else atualizarBadgeValidade(inp);
+    });
+  });
+
+  $$(".btn-val-quick").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const inp = $(`#${btn.dataset.target}`);
+      if (btn.dataset.days === "custom") {
+        const r = prompt("Prazo de validade em dias (a contar da emissão):", inp.dataset.dias || VALIDADE_PADRAO);
+        if (r === null) return;
+        const n = parseInt(r, 10);
+        if (isNaN(n) || n < 1) { toast("Informe um número de dias válido (mínimo 1).", true); return; }
+        aplicarPrazo(inp, n);
+      } else {
+        aplicarPrazo(inp, Number(btn.dataset.days));
+      }
+      toast(`✓ Validade ajustada para ${inp.dataset.dias} dias`);
+    })
   );
 
   /* ---------- Card: Tabela de Preços ---------- */
@@ -2497,5 +2613,6 @@ Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatiz
   initCarterinha();
   initAvisosModal();
   aplicarPrecosPadrao();
+  initValidades();
   update();
 })();

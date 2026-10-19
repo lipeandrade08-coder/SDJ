@@ -740,6 +740,14 @@
         `O DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob homologação da Presidência do Judiciário e em conformidade com as diretrizes de Segurança Pública, CERTIFICA a ${sitTxt} exclusiva para 1 Pistola PT 9mm (R$ 80.000) e fornecimento de munições (R$ 400 por unidade), condicionado estritamente à apresentação do Laudo Psicotécnico emitido pelo Hospital Municipal com parecer 'Apto'. O presente registro possui fé pública e validade oficial perante todas as forças policiais do Estado de Brava.`;
     }
 
+    // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário)
+    const validadeField = fields.find((f) => /validade/i.test(f.label));
+    const emissaoField = fields.find((f) => /emiss[ãa]o/i.test(f.label));
+    if (validadeField && validadeField.value && validadeField.value !== "Não informado") {
+      const emTxt = emissaoField && emissaoField.value && emissaoField.value !== "Não informado" ? `, emitida em ${emissaoField.value}` : "";
+      termoCompleto += ` A presente certidão${emTxt}, tem validade até ${validadeField.value}, devendo ser renovada após esta data.`;
+    }
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(5.8);
     const termoLines = doc.splitTextToSize(termoCompleto, boxW - 8);
