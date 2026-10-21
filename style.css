@@ -7645,6 +7645,341 @@ body:not([data-view="tab-calculadora"]) .tab-content {
   color: var(--gold-3) !important;
 }
 
+/* ==========================================================
+   ANEXOS & FOTOS DE SERVIÇOS (NASCIMENTO & ADOÇÃO)
+   ========================================================== */
+.service-attachments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
 
+.attachment-card {
+  background: rgba(18, 22, 34, 0.55);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.25s var(--ease);
+}
+
+.attachment-card:hover {
+  border-color: rgba(212, 175, 95, 0.35);
+}
+
+.attachment-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attachment-card-header .attachment-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(212, 175, 95, 0.1);
+  border: 1px solid rgba(212, 175, 95, 0.25);
+  flex-shrink: 0;
+}
+
+.attachment-card-header strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+}
+
+.attachment-card-header p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 2px 0 0;
+}
+
+.attachment-dropzone {
+  position: relative;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 10px;
+  background: rgba(12, 15, 23, 0.6);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s var(--ease);
+  overflow: hidden;
+}
+
+.attachment-dropzone:hover,
+.attachment-dropzone.dragover {
+  border-color: var(--gold);
+  background: rgba(212, 175, 95, 0.08);
+  box-shadow: 0 0 16px rgba(212, 175, 95, 0.12);
+}
+
+.attachment-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.attachment-dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.attachment-svg-icon {
+  width: 28px;
+  height: 28px;
+  stroke: var(--gold);
+  opacity: 0.85;
+}
+
+.attachment-dropzone-content span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.attachment-dropzone-content small {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.attachment-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  z-index: 3;
+  position: relative;
+}
+
+.attachment-preview.hidden,
+.attachment-dropzone-content.hidden {
+  display: none !important;
+}
+
+.attachment-thumb {
+  width: 52px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.attachment-doc-icon {
+  width: 48px;
+  height: 58px;
+  border-radius: 6px;
+  background: rgba(212, 175, 95, 0.12);
+  border: 1.5px solid rgba(212, 175, 95, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.attachment-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  overflow: hidden;
+  text-align: left;
+  flex: 1;
+}
+
+.attachment-meta .attachment-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+.attachment-meta .attachment-size {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.btn-remove-attachment {
+  margin-top: 4px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-remove-attachment:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #fff;
+}
+
+/* ==========================================================
+   ALERTA DE JOVEM APRENDIZ NO CNPJ (CONSELHO TUTELAR & VISTORIA)
+   ========================================================== */
+.jovem-aprendiz-alert {
+  margin-top: 14px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(26, 29, 37, 0.95));
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12), 0 2px 6px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  animation: jovemSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.25s ease;
+}
+
+.jovem-aprendiz-alert::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #f59e0b, #d97706);
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.jovem-aprendiz-alert.hidden {
+  display: none !important;
+}
+
+.jovem-alert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.jovem-alert-icon {
+  font-size: 13px;
+}
+
+.jovem-alert-title {
+  margin: 0 0 8px 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #fef3c7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jovem-alert-text {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #f1f5f9;
+}
+
+.jovem-alert-text strong {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.jovem-alert-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.jovem-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  color: #e2e8f0;
+  line-height: 1.4;
+}
+
+.jovem-check-item strong {
+  color: #fbbf24;
+}
+
+.jovem-check-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.25);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+}
+
+.jovem-alert-note {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(245, 158, 11, 0.3);
+  font-size: 11.5px;
+  color: #fde68a;
+  line-height: 1.4;
+}
+
+.jovem-alert-note em {
+  font-style: normal;
+  color: #fde68a;
+}
+
+@keyframes jovemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 

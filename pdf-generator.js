@@ -847,21 +847,49 @@
 
       curY += partBoxH + rowGap;
     } else if (nFields >= 8) {
-      const colW = (boxW - 3) / 2;
+      const temFoto = !!opts.fotoDataUrl;
+      const photoW = 26;
+      const photoH = 34;
+      const photoX = 14 + boxW - photoW;
+      const photoY = curY;
+
+      if (temFoto) {
+        // Moldura oficial dourada para fotografia oficial 3x4
+        doc.setFillColor(248, 250, 254);
+        doc.setDrawColor(...ORO);
+        doc.setLineWidth(0.4);
+        doc.roundedRect(photoX, photoY, photoW, photoH, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(photoX, photoY, photoW, 1.4, "F");
+
+        try {
+          doc.addImage(opts.fotoDataUrl, "PNG", photoX + 1, photoY + 1.8, photoW - 2, photoH - 5.5);
+        } catch (imgErr) {
+          console.warn("Não foi possível renderizar imagem no PDF:", imgErr);
+        }
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(4.6);
+        doc.setTextColor(...ORO_ESCURO);
+        doc.text("FOTOGRAFIA OFICIAL", photoX + (photoW / 2), photoY + photoH - 1.2, { align: "center" });
+      }
+
       const rowH = 8.6;
       const rowGap = 1.0;
 
       for (let i = 0; i < nFields; i += 2) {
         const f1 = fields[i];
         const f2 = fields[i + 1];
+        const estaNaFaixaFoto = temFoto && (curY + rowH <= photoY + photoH + 1);
+        const colW = estaNaFaixaFoto ? ((boxW - photoW - 3) / 2) : ((boxW - 3) / 2);
+        const isEven = (i / 2) % 2 === 0;
 
         // Coluna 1
         const x1 = 14;
-        const isEven = (i / 2) % 2 === 0;
         doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
         doc.setDrawColor(220, 226, 238);
         doc.setLineWidth(0.25);
-        const w1 = f2 ? colW : boxW;
+        const w1 = f2 ? colW : (estaNaFaixaFoto ? (boxW - photoW - 3) : boxW);
         doc.roundedRect(x1, curY, w1, rowH, 0.8, 0.8, "FD");
         doc.setFillColor(...ORO);
         doc.rect(x1, curY, 1.8, rowH, "F");
@@ -900,6 +928,33 @@
         }
 
         curY += rowH + rowGap;
+      }
+
+      if (temFoto && curY < photoY + photoH) {
+        curY = photoY + photoH + rowGap;
+      }
+
+      // Se houver anexo comprobatório
+      if (opts.anexoDocName) {
+        const anexoH = 7.5;
+        doc.setFillColor(252, 253, 255);
+        doc.setDrawColor(215, 225, 242);
+        doc.setLineWidth(0.25);
+        doc.roundedRect(14, curY, boxW, anexoH, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(14, curY, 1.8, anexoH, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.2);
+        doc.setTextColor(...ORO_ESCURO);
+        doc.text("DOCUMENTO COMPROBATÓRIO ARQUIVADO EM ANEXO:", 18, curY + 2.8);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.0);
+        doc.setTextColor(...AZUL_NOITE);
+        doc.text(`[ARQUIVO DIGITAL] ${opts.anexoDocName}  ·  Conferido e rubricado pelo oficial notarial`, 18, curY + 5.8, { maxWidth: boxW - 8 });
+
+        curY += anexoH + rowGap;
       }
     } else {
       let rowH = 10;
@@ -976,6 +1031,19 @@
 
       termoCompleto =
         `O CARTÓRIO DO REGISTRO CIVIL E DEPARTAMENTO NOTARIAL DA COMARCA DE ${cidade.toUpperCase()}, sob a autoridade da Presidência do Judiciário e com respaldo nas normas civis vigentes, CERTIFICA que em virtude dos termos e manifestações formais pertinentes à modalidade ${mod}, foi DECRETADA A DISSOLUÇÃO DEFINITIVA DO CASAMENTO entre ${conj1} e ${conj2}. Determina-se a averbação competente junto ao assento matrimonial originário (${termo}), operando-se a cessação dos deveres conjugais, a extinção definitiva da sociedade matrimonial, a eficácia do termo de partilha patrimonial e o direito ao uso dos patronímicos declarados, com fé pública, validade erga omnes e eficácia jurídica definitiva e irretratável.`;
+    } else if (opts.service && opts.service.id === "cnpj") {
+      const empresaField = (opts.fields || []).find(f => /empresa/i.test(f.label));
+      const empNome = empresaField ? empresaField.value : "empresa qualificada";
+      const jovemField = (opts.fields || []).find(f => /jovem|aprendiz/i.test(f.label));
+      const isJovem = jovemField && String(jovemField.value).toLowerCase().includes("sim");
+
+      let jovemObs = "";
+      if (isJovem) {
+        jovemObs = " Fica expressamente anotada a declaração de adesão ao Programa Jovem Aprendiz, ficando o exercício das atividades dos menores condicionado à realização de vistoria prévia conjunta pelo Corpo de Bombeiros e Vigilância Sanitária e ao envio dos dados cadastrais ao Conselho Tutelar.";
+      }
+
+      termoCompleto =
+        `O CARTÓRIO DO REGISTRO EMPRESARIAL DO DEPARTAMENTO JURÍDICO DA COMARCA DE ${cidade.toUpperCase()}, sob a autoridade da Presidência do Judiciário e nos termos da legislação civil, CERTIFICA a abertura, registro e homologação cadastral da pessoa jurídica ${empNome}. O presente registro mercantil goza de fé pública e eficácia legal para o exercício das atividades autorizadas.${jovemObs}`;
     }
 
     // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário - não aplicável a Limpeza de Ficha nem Divórcio)

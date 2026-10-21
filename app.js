@@ -60,11 +60,14 @@
     try {
       let body;
       let headers = {};
-      if (fileAttachment && fileAttachment.blob) {
+      const fileList = Array.isArray(fileAttachment) ? fileAttachment.filter(Boolean) : (fileAttachment && fileAttachment.blob ? [fileAttachment] : []);
+      if (fileList.length > 0) {
         const formData = new FormData();
         const payload = typeof content === "string" ? { content } : content;
         formData.append("payload_json", JSON.stringify(payload));
-        formData.append("files[0]", fileAttachment.blob, fileAttachment.filename || "documento.pdf");
+        fileList.forEach((f, idx) => {
+          formData.append(`files[${idx}]`, f.blob || f, f.filename || f.name || `anexo_${idx}.pdf`);
+        });
         body = formData;
       } else {
         headers["Content-Type"] = "application/json";
@@ -522,7 +525,7 @@
     {
       id: "divorcio", title: "Certidão de Divórcio", icon: "💔", svg: "divorcio", tag: "Matrimonial",
       desc: "Dissolução formal de casamento com partilha de bens e averbação.",
-      webhook: "https://discord.com/api/webhooks/1560000830436806716/6MdSLFAUlYGzR5UxAMYNnSRfuonjv44niLAwQ-1GUgbyaCfljWI6LZl2GlV1vuGl2UEp",
+      webhook: "https://discord.com/api/webhooks/1562528999182303255/139cQN1FKlB0fsRUL9qEuL58H5Yu64IxGz2a70F0MXMGf9gicglTqRctLT7g12sIXgU1",
       fields: [
         {
           id: "div_tipo", label: "⚖️ Modalidade do Divórcio", type: "options",
@@ -558,6 +561,7 @@
     {
       id: "nascimento", title: "Certidão de Nascimento", icon: "🚼", svg: "nascimento", tag: "Certidão",
       desc: "Emissão da certidão com filiação e data de nascimento.", webhook: "https://discord.com/api/webhooks/1557909976167751800/qr6tK9efmUb71JK1XTFfcSdd2v2zoYFbiFPtEvBITR08sYr9_BS7vj1PLk_oLdBFdP7u",
+      hasAttachments: true,
       fields: [
         { id: "cn_crianca", label: "👶 Nome da Criança" },
         { id: "cn_id", label: "🪪 Passaporte da Criança" },
@@ -565,6 +569,8 @@
         { id: "cn_id_resp1", label: "🪪 Passaporte do(a) Responsável 1" },
         { id: "cn_resp2", label: "👤 Nome do(a) Responsável 2" },
         { id: "cn_id_resp2", label: "🪪 Passaporte do(a) Responsável 2" },
+        { id: "cn_tel_resp", label: "📞 Contato do(a) Responsável 1", placeholder: "Ex.: 555-0123 ou (11) 98765-4321" },
+        { id: "cn_tel_resp2", label: "📞 Contato do(a) Responsável 2", placeholder: "Ex.: 555-0456 ou (11) 91234-5678" },
         { id: "cn_data", label: "📅 Data de Nascimento" },
         { id: "cn_emissao", label: "📅 Data de Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
         { id: "cn_validade", label: "⏳ Validade da Certidão", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "cn_emissao" },
@@ -574,6 +580,7 @@
     {
       id: "adocao", title: "Certidão de Adoção", icon: "📝", svg: "adocao", tag: "Certidão",
       desc: "Formalização da adoção com filiação e responsáveis adotantes.", webhook: "https://discord.com/api/webhooks/1557910119419871333/hbKX69nBb5VT4JQsKWpcp5JRrAXa-_jglzxtOEi6nrpn7g3mWiTar4ILjb7LA8ev9rNd",
+      hasAttachments: true,
       fields: [
         { id: "ca_adotado", label: "👤 Nome do Adotado" },
         { id: "ca_id_adotado", label: "🪪 Passaporte do Adotado" },
@@ -581,6 +588,8 @@
         { id: "ca_id_resp1", label: "🪪 Passaporte do(a) Responsável 1" },
         { id: "ca_resp2", label: "👤 Nome do(a) Responsável 2 (Opcional)" },
         { id: "ca_id_resp2", label: "🪪 Passaporte do(a) Responsável 2 (Opcional)" },
+        { id: "ca_tel_resp", label: "📞 Contato do(a) Responsável 1", placeholder: "Ex.: 555-0123 ou (11) 98765-4321" },
+        { id: "ca_tel_resp2", label: "📞 Contato do(a) Responsável 2 (Opcional)", placeholder: "Ex.: 555-0456 ou (11) 91234-5678" },
         { id: "ca_emissao", label: "📅 Data de Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
         { id: "ca_validade", label: "⏳ Validade da Certidão", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "ca_emissao" },
         { id: "ca_valor", label: "💰 Valor Cobrado", placeholder: "R$ 150.000", isFull: true }
@@ -607,6 +616,13 @@
         { id: "cp_id", label: "🪪 Passaporte do Proprietário" },
         { id: "cp_telefone", label: "📞 Telefone de Contato", placeholder: "Ex.: 555-0192 ou (11) 98765-4321", isFull: true },
         { id: "cp_cnpj", label: "🔢 CNPJ da Empresa", type: "cnpj-generator", isFull: true },
+        { 
+          id: "cp_jovem_aprendiz", 
+          label: "👶 A Empresa Trabalha / Trabalhará com Jovem Aprendiz?", 
+          type: "options", 
+          options: ["Não", "Sim"], 
+          isFull: true 
+        },
         { id: "cp_valor", label: "💰 Valor Cobrado", placeholder: "R$ 250.000 (ou R$ 50.000 semanal)", isFull: true }
       ]
     },
@@ -803,6 +819,41 @@
         </div>`;
     }
     if (f.type === "options") {
+      const extraHtml = f.id === "cp_jovem_aprendiz" ? `
+        <div id="cnpj_jovem_aprendiz_alert" class="jovem-aprendiz-alert hidden" role="alert">
+          <div class="jovem-alert-badge">
+            <span class="jovem-alert-icon">⚠️</span>
+            <span>PROCEDIMENTO OBRIGATÓRIO · PROGRAMA JOVEM APRENDIZ</span>
+          </div>
+          <div class="jovem-alert-body">
+            <h4 class="jovem-alert-title">📋 Abertura de Ticket, Conselho Tutelar &amp; Vistorias Técnicas</h4>
+            <p class="jovem-alert-text">
+              Como a empresa declarou contratação de menores pelo programa <strong>Jovem Aprendiz</strong>, é obrigatório <strong>abrir um ticket e marcar com o Conselho Tutelar</strong>, para que possamos agendar a <strong>vistoria</strong> (junto ao <strong>Corpo de Bombeiros</strong> e à <strong>Vigilância Sanitária</strong>), e também para que sejam repassadas as <strong>informações das crianças/jovens que ali irão trabalhar</strong>.
+            </p>
+            <div class="jovem-alert-checklist">
+              <div class="jovem-check-item">
+                <span class="jovem-check-dot">1</span>
+                <span><strong>Abrir Ticket Oficial:</strong> Abra um chamado para solicitação de protocolo especial de aprendizagem.</span>
+              </div>
+              <div class="jovem-check-item">
+                <span class="jovem-check-dot">2</span>
+                <span><strong>Conselho Tutelar:</strong> Agendamento e alinhamento com conselheiros tutelares da comarca.</span>
+              </div>
+              <div class="jovem-check-item">
+                <span class="jovem-check-dot">3</span>
+                <span><strong>Vistoria Conjunta:</strong> Inspeção técnica no local com Corpo de Bombeiros e Vigilância Sanitária.</span>
+              </div>
+              <div class="jovem-check-item">
+                <span class="jovem-check-dot">4</span>
+                <span><strong>Dados dos Menores:</strong> Apresentar qualificação, idade, documentos e comprovante escolar dos jovens.</span>
+              </div>
+            </div>
+            <div class="jovem-alert-note">
+              <span>📌 <em>A empresa não poderá iniciar as atividades com menores até a conclusão da vistoria e homologação final do Conselho Tutelar.</em></span>
+            </div>
+          </div>
+        </div>` : "";
+
       return `
         <div class="full">
           <label class="opt-label" style="font-size:12px;font-weight:500;color:var(--muted);display:block;margin-bottom:6px;">${label}</label>
@@ -813,6 +864,7 @@
               </button>`).join("")}
           </div>
           <input type="hidden" id="${f.id}" value="${f.options[0]}" data-default="${f.options[0]}" />
+          ${extraHtml}
         </div>`;
     }
     if (f.type === "cnpj-generator") {
@@ -863,6 +915,76 @@
       </label>`;
   };
 
+  const renderAttachmentsSection = (svc) => {
+    const isAdocao = svc.id === "adocao";
+    const fotoTitulo = isAdocao ? "Foto da Criança / Adotado" : "Foto da Criança";
+    const fotoSub = isAdocao ? "Fotografia oficial do adotado (PNG, JPG, WEBP)" : "Fotografia oficial da criança / recém-nascido (PNG, JPG, WEBP)";
+    const docTitulo = isAdocao ? "Documentos do Adotado / Termo de Adoção" : "Documentos Comprobatórios / Anexos";
+    const docSub = isAdocao ? "Certidão originária, termo judicial, RG ou laudo (PDF ou imagem)" : "Cópia de RG, certidão anterior, DNV ou laudo hospitalar (PDF ou imagem)";
+    return `
+      <div class="form-section">📸 ${fotoTitulo} &amp; 📁 ${docTitulo}</div>
+      <div class="service-attachments-grid">
+        <div class="attachment-card">
+          <div class="attachment-card-header">
+            <span class="attachment-icon">📸</span>
+            <div>
+              <strong>${fotoTitulo}</strong>
+              <p>${fotoSub}</p>
+            </div>
+          </div>
+          <div class="attachment-dropzone" id="${svc.id}_photo_dropzone" data-sid="${svc.id}" data-type="photo">
+            <input type="file" id="${svc.id}_photo_input" accept="image/*" class="attachment-file-input" />
+            <div class="attachment-dropzone-content" id="${svc.id}_photo_empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="attachment-svg-icon">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Clique ou arraste a foto da criança aqui</span>
+              <small>Vinculada à certidão oficial e anexada no Discord</small>
+            </div>
+            <div class="attachment-preview hidden" id="${svc.id}_photo_preview">
+              <img id="${svc.id}_photo_img" src="" alt="${fotoTitulo}" class="attachment-thumb" />
+              <div class="attachment-meta">
+                <span id="${svc.id}_photo_name" class="attachment-name">foto.png</span>
+                <button type="button" class="btn-remove-attachment" data-remove-photo="${svc.id}">✕ Remover foto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="attachment-card">
+          <div class="attachment-card-header">
+            <span class="attachment-icon">📎</span>
+            <div>
+              <strong>${docTitulo}</strong>
+              <p>${docSub}</p>
+            </div>
+          </div>
+          <div class="attachment-dropzone" id="${svc.id}_doc_dropzone" data-sid="${svc.id}" data-type="doc">
+            <input type="file" id="${svc.id}_doc_input" accept="application/pdf,image/*,.doc,.docx" class="attachment-file-input" />
+            <div class="attachment-dropzone-content" id="${svc.id}_doc_empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="attachment-svg-icon">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <span>Clique ou arraste os documentos comprobatórios aqui</span>
+              <small>Enviado como anexo digital ao canal oficial do Discord</small>
+            </div>
+            <div class="attachment-preview hidden" id="${svc.id}_doc_preview">
+              <div class="attachment-doc-icon">📄</div>
+              <div class="attachment-meta">
+                <strong id="${svc.id}_doc_name" class="attachment-name">documento.pdf</strong>
+                <span id="${svc.id}_doc_size" class="attachment-size">0 KB</span>
+                <button type="button" class="btn-remove-attachment" data-remove-doc="${svc.id}">✕ Remover anexo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  };
+
   const dynContainer = $("#dynamic-services");
   dynContainer.innerHTML = servicesConfig.map((svc) => `
     <div id="tab-${svc.id}" class="tab-content">
@@ -878,6 +1000,8 @@
           <div class="form-body">
             <div class="form-section">Dados do registro</div>
             <div class="form-grid fields">${svc.fields.map(renderField).join("")}</div>
+
+            ${svc.hasAttachments ? renderAttachmentsSection(svc) : ""}
 
             <div class="form-section">Responsável pelo registro</div>
             <div class="form-grid fields">
@@ -945,6 +1069,21 @@
           valInput.value = "R$ 160.000";
         } else if (valText.includes("250")) {
           valInput.value = "R$ 180.000";
+        }
+      }
+    }
+
+    // Se for Jovem Aprendiz no CNPJ, mostra/oculta o aviso obrigatório do Conselho Tutelar
+    if (inputId === "cp_jovem_aprendiz") {
+      const alertBox = $("#cnpj_jovem_aprendiz_alert");
+      if (alertBox) {
+        const isSim = btn.dataset.val === "Sim";
+        if (isSim) {
+          alertBox.classList.remove("hidden");
+          alertBox.classList.add("visible");
+        } else {
+          alertBox.classList.add("hidden");
+          alertBox.classList.remove("visible");
         }
       }
     }
@@ -1030,6 +1169,192 @@
     });
   }
 
+  /* ---------- Anexos & Fotos de Serviços (Nascimento & Adoção) ---------- */
+  const serviceAttachments = {
+    nascimento: { photo: null, doc: null },
+    adocao: { photo: null, doc: null }
+  };
+
+  function formatBytes(bytes) {
+    if (!bytes || bytes === 0) return "0 KB";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  }
+
+  function handlePhotoUpload(sid, file) {
+    if (!file || !file.type.startsWith("image/")) {
+      toast("Selecione um arquivo de imagem válido (PNG, JPG, WEBP).", true);
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast("A foto é muito grande. Escolha uma imagem de até 8 MB.", true);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Converte para PNG via canvas garantindo total compatibilidade com jsPDF
+      const rawData = e.target.result;
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width;
+        let h = img.height;
+        const maxDim = 800;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        const pngDataUrl = canvas.toDataURL("image/png");
+
+        if (!serviceAttachments[sid]) serviceAttachments[sid] = { photo: null, doc: null };
+        serviceAttachments[sid].photo = { file, dataUrl: pngDataUrl, name: file.name };
+
+        const previewImg = $(`#${sid}_photo_img`);
+        const previewName = $(`#${sid}_photo_name`);
+        const previewWrap = $(`#${sid}_photo_preview`);
+        const emptyWrap = $(`#${sid}_photo_empty`);
+
+        if (previewImg) previewImg.src = pngDataUrl;
+        if (previewName) previewName.textContent = file.name;
+        if (previewWrap) previewWrap.classList.remove("hidden");
+        if (emptyWrap) emptyWrap.classList.add("hidden");
+
+        toast("✓ Fotografia oficial vinculada com sucesso!");
+      };
+      img.onerror = () => toast("Erro ao processar imagem.", true);
+      img.src = rawData;
+    };
+    reader.onerror = () => toast("Erro ao ler foto.", true);
+    reader.readAsDataURL(file);
+  }
+
+  function clearPhotoUpload(sid) {
+    if (serviceAttachments[sid]) serviceAttachments[sid].photo = null;
+    const input = $(`#${sid}_photo_input`);
+    if (input) input.value = "";
+    const previewImg = $(`#${sid}_photo_img`);
+    if (previewImg) previewImg.src = "";
+    const previewWrap = $(`#${sid}_photo_preview`);
+    const emptyWrap = $(`#${sid}_photo_empty`);
+    if (previewWrap) previewWrap.classList.add("hidden");
+    if (emptyWrap) emptyWrap.classList.remove("hidden");
+  }
+
+  function handleDocUpload(sid, file) {
+    if (file.size > 15 * 1024 * 1024) {
+      toast("O documento é muito grande. Limite máximo: 15 MB.", true);
+      return;
+    }
+    if (!serviceAttachments[sid]) serviceAttachments[sid] = { photo: null, doc: null };
+    serviceAttachments[sid].doc = { file, name: file.name, size: formatBytes(file.size) };
+
+    const nameEl = $(`#${sid}_doc_name`);
+    const sizeEl = $(`#${sid}_doc_size`);
+    const previewWrap = $(`#${sid}_doc_preview`);
+    const emptyWrap = $(`#${sid}_doc_empty`);
+
+    if (nameEl) nameEl.textContent = file.name;
+    if (sizeEl) sizeEl.textContent = formatBytes(file.size);
+    if (previewWrap) previewWrap.classList.remove("hidden");
+    if (emptyWrap) emptyWrap.classList.add("hidden");
+
+    toast("✓ Documento extra anexado com sucesso!");
+  }
+
+  function clearDocUpload(sid) {
+    if (serviceAttachments[sid]) serviceAttachments[sid].doc = null;
+    const input = $(`#${sid}_doc_input`);
+    if (input) input.value = "";
+    const previewWrap = $(`#${sid}_doc_preview`);
+    const emptyWrap = $(`#${sid}_doc_empty`);
+    if (previewWrap) previewWrap.classList.add("hidden");
+    if (emptyWrap) emptyWrap.classList.remove("hidden");
+  }
+
+  function initServiceAttachments() {
+    ["nascimento", "adocao"].forEach((sid) => {
+      const photoInput = $(`#${sid}_photo_input`);
+      const photoDrop = $(`#${sid}_photo_dropzone`);
+      const docInput = $(`#${sid}_doc_input`);
+      const docDrop = $(`#${sid}_doc_dropzone`);
+
+      if (photoInput) {
+        photoInput.addEventListener("change", (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handlePhotoUpload(sid, e.target.files[0]);
+          }
+        });
+      }
+
+      if (docInput) {
+        docInput.addEventListener("change", (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleDocUpload(sid, e.target.files[0]);
+          }
+        });
+      }
+
+      [photoDrop, docDrop].forEach((drop) => {
+        if (!drop) return;
+        ["dragenter", "dragover"].forEach((evt) => {
+          drop.addEventListener(evt, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            drop.classList.add("dragover");
+          });
+        });
+        ["dragleave", "drop"].forEach((evt) => {
+          drop.addEventListener(evt, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            drop.classList.remove("dragover");
+          });
+        });
+        drop.addEventListener("drop", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          drop.classList.remove("dragover");
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            if (drop.dataset.type === "photo") {
+              handlePhotoUpload(sid, file);
+            } else {
+              handleDocUpload(sid, file);
+            }
+          }
+        });
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      const removePhotoBtn = e.target.closest("[data-remove-photo]");
+      if (removePhotoBtn) {
+        const sid = removePhotoBtn.dataset.removePhoto;
+        clearPhotoUpload(sid);
+        toast("Foto removida.");
+        return;
+      }
+      const removeDocBtn = e.target.closest("[data-remove-doc]");
+      if (removeDocBtn) {
+        const sid = removeDocBtn.dataset.removeDoc;
+        clearDocUpload(sid);
+        toast("Documento extra removido.");
+        return;
+      }
+    });
+  }
+
   function resetService(svc) {
     svc.fields.forEach((f) => {
       const el = $(`#${f.id}`);
@@ -1043,6 +1368,10 @@
     $(`#${svc.id}_agente_id`).value = "";
     if (svc.id === "limpeza") {
       atualizarPrecoPrisoes(1);
+    }
+    if (serviceAttachments[svc.id]) {
+      clearPhotoUpload(svc.id);
+      clearDocUpload(svc.id);
     }
     aplicarPrecosPadrao();
     initValidades();
@@ -1313,6 +1642,16 @@
   $("#btn-back").addEventListener("click", () => goTo("home"));
   $("#crumb-home").addEventListener("click", (e) => { e.preventDefault(); goTo("home"); });
 
+  // Suporte a link direto por parâmetro (?service=nascimento ou ?tab=nascimento)
+  const urlParams = new URLSearchParams(window.location.search);
+  const svcParam = urlParams.get("service") || urlParams.get("tab");
+  if (svcParam) {
+    const card = $(`#card-${svcParam}`);
+    if (card) {
+      goTo(card.dataset.target || `tab-${svcParam}`, card.dataset.title || "Serviço");
+    }
+  }
+
   async function getServicePDFData(svc) {
     const sid = svc.id;
     const agente = $(`#${sid}_agente`).value || "—";
@@ -1327,12 +1666,17 @@
       };
     });
 
+    const fotoDataUrl = serviceAttachments[sid]?.photo?.dataUrl || null;
+    const anexoDocName = serviceAttachments[sid]?.doc?.name || null;
+
     return await window.SDJ_PDF.generateServicePDF({
       service: svc,
       fields,
       agente,
       agenteId,
-      cidade: CONFIG.cidade
+      cidade: CONFIG.cidade,
+      fotoDataUrl,
+      anexoDocName
     });
   }
 
@@ -1372,8 +1716,10 @@
       }
 
       let webhookUrl = (svc && svc.webhook) || "";
-      if (sid === "casamento" || sid === "divorcio") {
+      if (sid === "casamento") {
         webhookUrl = "https://discord.com/api/webhooks/1560000830436806716/6MdSLFAUlYGzR5UxAMYNnSRfuonjv44niLAwQ-1GUgbyaCfljWI6LZl2GlV1vuGl2UEp";
+      } else if (sid === "divorcio") {
+        webhookUrl = "https://discord.com/api/webhooks/1562528999182303255/139cQN1FKlB0fsRUL9qEuL58H5Yu64IxGz2a70F0MXMGf9gicglTqRctLT7g12sIXgU1";
       } else if (sid === "alianca") {
         webhookUrl = "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2";
       } else if (sid === "porte") {
@@ -1424,9 +1770,71 @@
         embed.title = "💔 CERTIDÃO NOTARIAL DE DIVÓRCIO & DISSOLUÇÃO MATRIMONIAL";
         embed.color = 0x991b1b; // Vermelho escuro nobre
         payload.content = `💔 **[DISSOLUÇÃO CONJUGAL · HOMOLOGAÇÃO DE DIVÓRCIO]**\nO Departamento Notarial e Judiciário certifica a dissolução definitiva do casamento entre **${conj1}**${id1} e **${conj2}**${id2}.\n⚖️ **Modalidade:** **${tipo}**\n💰 **Valor Homologado:** **${valorTotal}**\n📜 *Averbação formal expedida ao Livro B de Casamentos com fé pública irretratável. Certidão completa anexada em PDF.*`;
+      } else if (sid === "nascimento") {
+        const crianca = $("#cn_crianca")?.value || "Criança";
+        const idCrianca = $("#cn_id")?.value ? ` (ID: ${$("#cn_id").value})` : "";
+        const r1 = $("#cn_resp1")?.value || "Responsável 1";
+        const r2 = $("#cn_resp2")?.value ? ` e ${$("#cn_resp2").value}` : "";
+        const telResp1 = $("#cn_tel_resp")?.value ? `\n📞 **Contato Resp. 1:** ${$("#cn_tel_resp").value}` : "";
+        const telResp2 = $("#cn_tel_resp2")?.value ? `\n📞 **Contato Resp. 2:** ${$("#cn_tel_resp2").value}` : "";
+        const dataNasc = $("#cn_data")?.value ? `\n📅 **Nascimento:** ${$("#cn_data").value}` : "";
+        const valorTotal = $("#cn_valor")?.value || "R$ 150.000";
+        embed.title = "🚼 CERTIDÃO NOTARIAL DE NASCIMENTO & REGISTRO CIVIL";
+        embed.color = 0x0284c7; // Azul celeste notarial
+        payload.content = `🚼 **[REGISTRO CIVIL · CERTIDÃO DE NASCIMENTO EXPEDIDA]**\nO Cartório Notarial e Judiciário certifica o assento oficial de nascimento de **${crianca}**${idCrianca}.\n👥 **Filiação / Responsáveis:** ${r1}${r2}${telResp1}${telResp2}${dataNasc}\n💰 **Taxa Notarial:** **${valorTotal}**\n📜 *Assento lavrado com fé pública no Livro A de Registros. Certidão oficial anexada em PDF.*`;
+      } else if (sid === "adocao") {
+        const adotado = $("#ca_adotado")?.value || "Adotado";
+        const idAdotado = $("#ca_id_adotado")?.value ? ` (ID: ${$("#ca_id_adotado").value})` : "";
+        const r1 = $("#ca_resp1")?.value || "Responsável 1";
+        const r2 = $("#ca_resp2")?.value ? ` e ${$("#ca_resp2").value}` : "";
+        const telResp1 = $("#ca_tel_resp")?.value ? `\n📞 **Contato Resp. 1:** ${$("#ca_tel_resp").value}` : "";
+        const telResp2 = $("#ca_tel_resp2")?.value ? `\n📞 **Contato Resp. 2:** ${$("#ca_tel_resp2").value}` : "";
+        const valorTotal = $("#ca_valor")?.value || "R$ 150.000";
+        embed.title = "📝 CERTIDÃO NOTARIAL DE ADOÇÃO & FILIAÇÃO CIVIL";
+        embed.color = 0x8b5cf6; // Roxo nobre
+        payload.content = `📝 **[FILIAÇÃO CIVIL · HOMOLOGAÇÃO DE ADOÇÃO]**\nO Cartório Notarial e Judiciário certifica a formalização definitiva do vínculo de adoção de **${adotado}**${idAdotado}.\n👨‍👩‍👧 **Pais / Responsáveis Adotantes:** ${r1}${r2}${telResp1}${telResp2}\n💰 **Taxa Notarial:** **${valorTotal}**\n📜 *Homologado nos termos da legislação notarial com fé pública. Certidão oficial anexada em PDF.*`;
+      } else if (sid === "cnpj") {
+        const empresa = $("#cp_empresa")?.value || "Empresa";
+        const cnpjNum = $("#cp_cnpj")?.value || "—";
+        const prop = $("#cp_prop")?.value || "—";
+        const propId = $("#cp_id")?.value ? ` (ID: ${$("#cp_id").value})` : "";
+        const tel = $("#cp_telefone")?.value ? `\n📞 **Contato:** ${$("#cp_telefone").value}` : "";
+        const ramo = $("#cp_ramo")?.value ? `\n🏷️ **Ramo de Atividade:** ${$("#cp_ramo").value}` : "";
+        const valorTotal = $("#cp_valor")?.value || "R$ 250.000";
+        const isJovemAprendiz = ($("#cp_jovem_aprendiz")?.value || "").toLowerCase().includes("sim");
+
+        embed.title = "🏢 CERTIDÃO DE REGISTRO EMPRESARIAL · CNPJ OFICIAL";
+        embed.color = isJovemAprendiz ? 0xf59e0b : 0x2563eb; // Âmbar se tiver jovem aprendiz, azul corporativo se padrão
+
+        let jovemText = "";
+        if (isJovemAprendiz) {
+          jovemText = `\n\n⚠️ **[PROGRAMA JOVEM APRENDIZ DECLARADO · ATENÇÃO CONSELHO TUTELAR]**\n📌 **Ação Obrigatória:** A empresa declarou contratação de menores aprendizes. É obrigatório **abrir um ticket e marcar com o Conselho Tutelar**, para agendar a **vistoria prévia** (junto ao Corpo de Bombeiros e à Vigilância Sanitária), e também repassar as **informações e documentos das crianças/jovens** que irão trabalhar no local.`;
+        }
+
+        payload.content = `🏢 **[ABERTURA DE EMPRESA · CNPJ HOMOLOGADO]**\nO Cartório Notarial e de Registro Empresarial certifica a constituição e registro oficial da empresa **${empresa}**.\n🔢 **CNPJ:** \`${cnpjNum}\`\n👤 **Proprietário:** **${prop}**${propId}${tel}${ramo}\n👶 **Trabalha com Jovem Aprendiz:** **${isJovemAprendiz ? "SIM (Ação Obrigatória com Conselho Tutelar)" : "NÃO"}**\n💰 **Taxa de Registro:** **${valorTotal}**${jovemText}\n📜 *Registro mercantil averbado no Livro de Pessoas Jurídicas com fé pública. Certidão oficial anexada em PDF.*`;
       }
 
-      sendWebhook(btn, webhookUrl, payload, () => resetService(svc), pdfData);
+      const filesToSend = [];
+      if (pdfData && pdfData.blob) {
+        filesToSend.push({ blob: pdfData.blob, filename: pdfData.filename });
+      }
+
+      if (serviceAttachments[sid]?.photo) {
+        const pObj = serviceAttachments[sid].photo;
+        const photoExt = (pObj.name.split('.').pop() || "png").toLowerCase();
+        const photoFilename = `foto_${sid}_${Date.now()}.${photoExt}`;
+        filesToSend.push({ blob: pObj.file, filename: photoFilename });
+        embed.thumbnail = { url: `attachment://${photoFilename}` };
+        payload.content = (payload.content || "") + `\n📸 **Fotografia Oficial:** Anexada ao registro (${pObj.name})`;
+      }
+
+      if (serviceAttachments[sid]?.doc) {
+        const dObj = serviceAttachments[sid].doc;
+        filesToSend.push({ blob: dObj.file, filename: dObj.name });
+        payload.content = (payload.content || "") + `\n📁 **Documento Comprobatório Anexo:** \`${dObj.name}\` (${dObj.size})`;
+      }
+
+      sendWebhook(btn, webhookUrl, payload, () => resetService(svc), filesToSend);
     });
   });
 
@@ -3292,6 +3700,7 @@ Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatiz
   renderProvaOral();
   initProvaOralCampos();
   initCarterinha();
+  initServiceAttachments();
   initAvisosModal();
   aplicarPrecosPadrao();
   initValidades();

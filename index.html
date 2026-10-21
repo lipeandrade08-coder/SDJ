@@ -98,6 +98,13 @@
       var validating = false;
       var done = false;
 
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("service") || urlParams.get("tab") || urlParams.get("skipIntro")) {
+        if (intro) intro.remove();
+        document.body.classList.remove("intro-active");
+        done = true;
+      }
+
       function finish() {
         if (done) return;
         done = true;

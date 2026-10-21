@@ -677,7 +677,7 @@ const TRIBUNAL_CONFIG = {
     {
       id: "oficio", grupo: "notificacoes", title: "Ofício de Fiscalização", svg: "oficio", emoji: "📜", tag: "Ministério Público",
       desc: "Expedição de ofício para notificação e requisição de realização de diligência fiscalizatória institucional.",
-      webhook: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
+      webhook: "https://discord.com/api/webhooks/1562540639336407251/ABIYnCGnEexXqjt4VIBpXssWr75_5PKBCbEFHaMnIA5reOzuVNF6P1UPulylL6oRmi4x",
       cor: 13938487, cargoPadrao: "Promotor de Justiça",
       natureza: "Ofício Institucional", eficacia: "Diligência Fiscalizatória",
       termo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP, no regular exercício de suas atribuições constitucionais e institucionais de fiscalização, fiscalização da ordem econômica e defesa do interesse coletivo, EXPEDE o presente OFÍCIO para notificação e requisição de cooperação na diligência fiscalizatória institucional designada, sob as penas da lei.",
@@ -731,7 +731,7 @@ const TRIBUNAL_CONFIG = {
     {
       id: "notificacao", grupo: "notificacoes", title: "Notificação Extrajudicial", svg: "notificacao", emoji: "⚠️", tag: "Extrajudicial",
       desc: "Notificação formal com advertências legais, fundamentos jurídicos e prazo para manifestações ou regularização.",
-      webhook: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
+      webhook: "https://discord.com/api/webhooks/1562539281669554186/5F4X79ZZPvXeuzhvcALuPsTr3zPMk8U-YcWXS2Thlpiwjd3j408HIRnV8rYuF-47vEeX",
       cor: 15105570, cargoPadrao: "Promotor de Justiça",
       natureza: "Notificação Extrajudicial", eficacia: "Constituição em Mora & Advertência",
       termo: "A AUTORIDADE NOTIFICANTE FORMALIZA a presente NOTIFICAÇÃO EXTRAJUDICIAL, conferindo ciência inequívoca ao notificado sobre os fatos apurados, obrigações jurídicas e advertências legais sob as cominações cabíveis.",
