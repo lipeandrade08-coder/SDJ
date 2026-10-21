@@ -26,6 +26,9 @@
     porte: svg('<path d="M4 11h11l2-3h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2l-2 5H9l1.5-4H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"/>'),
     credencial: svg('<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/>'),
     limpeza: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>'),
+    oficio: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>'),
+    notificacao: svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+    divorcio: svg('<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 4l-2 5 4 4-2 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -517,6 +520,42 @@
       ]
     },
     {
+      id: "divorcio", title: "Certidão de Divórcio", icon: "💔", svg: "divorcio", tag: "Matrimonial",
+      desc: "Dissolução formal de casamento com partilha de bens e averbação.",
+      webhook: "https://discord.com/api/webhooks/1560000830436806716/6MdSLFAUlYGzR5UxAMYNnSRfuonjv44niLAwQ-1GUgbyaCfljWI6LZl2GlV1vuGl2UEp",
+      fields: [
+        {
+          id: "div_tipo", label: "⚖️ Modalidade do Divórcio", type: "options",
+          options: ["Consensual (Cartório / Extrajudicial)", "Litigioso (Audiência Judicial)"], isFull: true
+        },
+        { id: "div_conjuge1", label: "👤 Cônjuge 1 (Nome Completo)" },
+        { id: "div_id1", label: "🪪 Passaporte Cônjuge 1" },
+        { id: "div_nome1", label: "📝 Nome Cônjuge 1 Pós-Divórcio", placeholder: "Ex.: Retoma nome de solteiro(a) / Mantém" },
+        { id: "div_conjuge2", label: "👤 Cônjuge 2 (Nome Completo)" },
+        { id: "div_id2", label: "🪪 Passaporte Cônjuge 2" },
+        { id: "div_nome2", label: "📝 Nome Cônjuge 2 Pós-Divórcio", placeholder: "Ex.: Retoma nome de solteiro(a) / Mantém" },
+        {
+          id: "div_regime", label: "📜 Regime de Bens do Casamento", type: "options",
+          options: [
+            "Comunhão Parcial de Bens",
+            "Comunhão Universal de Bens",
+            "Separação Total de Bens",
+            "Participação Final nos Aquestos"
+          ], isFull: true
+        },
+        { id: "div_data_casamento", label: "📅 Data do Casamento Originário", placeholder: "DD/MM/AAAA" },
+        { id: "div_termo_origem", label: "📖 Livro / Termo do Casamento", placeholder: "Ex.: Livro B-04, Fls. 12, Termo 341" },
+        { id: "div_filhos", label: "👶 Filhos Menores / Guarda", placeholder: "Ex.: Sem filhos menores (ou: Guarda Compartilhada)" },
+        { id: "div_pensao", label: "🪙 Pensão Alimentícia", placeholder: "Ex.: Dispensada mutuamente (ou valor acordado)" },
+        { id: "div_emissao", label: "📅 Data da Homologação", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "div_valor", label: "💰 Taxa Notarial Cobrada", placeholder: "R$ 250.000" },
+        {
+          id: "div_partilha", label: "🏛️ Partilha e Destinação de Bens Patrimoniais", type: "textarea", rows: 4, isFull: true,
+          placeholder: "Discrimine os bens e sua destinação:\nEx.: Veículo Pfister Comet fica exclusivamente com Cônjuge 1; Residência nº 142 em Vinewood para Cônjuge 2; Demais contas e pertences partilhados consensualmente."
+        }
+      ]
+    },
+    {
       id: "nascimento", title: "Certidão de Nascimento", icon: "🚼", svg: "nascimento", tag: "Certidão",
       desc: "Emissão da certidão com filiação e data de nascimento.", webhook: "https://discord.com/api/webhooks/1557909976167751800/qr6tK9efmUb71JK1XTFfcSdd2v2zoYFbiFPtEvBITR08sYr9_BS7vj1PLk_oLdBFdP7u",
       fields: [
@@ -566,6 +605,7 @@
         { id: "cp_ramo", label: "🏷️ Ramo de Atividade" },
         { id: "cp_prop", label: "👤 Nome do Proprietário" },
         { id: "cp_id", label: "🪪 Passaporte do Proprietário" },
+        { id: "cp_telefone", label: "📞 Telefone de Contato", placeholder: "Ex.: 555-0192 ou (11) 98765-4321", isFull: true },
         { id: "cp_cnpj", label: "🔢 CNPJ da Empresa", type: "cnpj-generator", isFull: true },
         { id: "cp_valor", label: "💰 Valor Cobrado", placeholder: "R$ 250.000 (ou R$ 50.000 semanal)", isFull: true }
       ]
@@ -719,11 +759,11 @@
           </div>
         </label>`;
     }
-    if (f.id === "lf_motivo") {
+    if (f.type === "textarea" || f.id === "lf_motivo") {
       return `
-        <label class="full">
+        <label class="${f.isFull !== false ? "full" : ""}">
           <span style="font-weight:600;color:var(--strong);font-size:12.5px;margin-bottom:6px;display:block;">${label}</span>
-          <textarea id="${f.id}" rows="3" class="sdj-textarea" placeholder="${f.placeholder || "Preencha a fundamentação..."}" style="width:100%;border-radius:10px;padding:10px 12px;background:var(--panel-solid);border:1.5px solid var(--line);color:var(--text);font-family:inherit;font-size:13px;resize:vertical;"></textarea>
+          <textarea id="${f.id}" rows="${f.rows || 3}" class="sdj-textarea" placeholder="${f.placeholder || "Preencha..."}" style="width:100%;border-radius:10px;padding:10px 12px;background:var(--panel-solid);border:1.5px solid var(--line);color:var(--text);font-family:inherit;font-size:13px;resize:vertical;">${f.defaultValue || ""}</textarea>
         </label>`;
     }
     if (f.type === "alianca-cards") {
@@ -943,6 +983,7 @@
   function aplicarPrecosPadrao() {
     if ($("#al_valor") && !$("#al_valor").value) $("#al_valor").value = "R$ 15.000";
     if ($("#cas_valor") && !$("#cas_valor").value) $("#cas_valor").value = "R$ 200.000";
+    if ($("#div_valor") && !$("#div_valor").value) $("#div_valor").value = "R$ 250.000";
     if ($("#tn_valor") && !$("#tn_valor").value) $("#tn_valor").value = "R$ 150.000";
     if ($("#rf_valor") && !$("#rf_valor").value) $("#rf_valor").value = "R$ 250.000";
     if ($("#cp_valor") && !$("#cp_valor").value) $("#cp_valor").value = "R$ 250.000";
@@ -1190,8 +1231,30 @@
     url: "tribunal.html"
   };
 
+  /* ---------- Card: Ofício de Fiscalização ---------- */
+  const oficioCard = {
+    id: "oficio",
+    title: "Ofício de Fiscalização",
+    svg: "oficio",
+    tag: "Ministério Público",
+    featured: false,
+    desc: "Notificação oficial e requisição para diligência fiscalizatória institucional em empresas e comércios.",
+    url: "tribunal.html?service=oficio"
+  };
+
+  /* ---------- Card: Notificação Extrajudicial ---------- */
+  const notificacaoCard = {
+    id: "notificacao",
+    title: "Notificação Extrajudicial",
+    svg: "notificacao",
+    tag: "Extrajudicial",
+    featured: false,
+    desc: "Expedição de notificação extrajudicial com fundamentos, advertências legais e prazo para manifestações.",
+    url: "tribunal.html?service=notificacao"
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, tribunalCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
+  const allCards = [calculadoraCard, tribunalCard, oficioCard, notificacaoCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
     <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" ${c.url ? `data-url="${c.url}"` : ""} style="animation-delay:${0.05 * i}s">
@@ -1309,7 +1372,7 @@
       }
 
       let webhookUrl = (svc && svc.webhook) || "";
-      if (sid === "casamento") {
+      if (sid === "casamento" || sid === "divorcio") {
         webhookUrl = "https://discord.com/api/webhooks/1560000830436806716/6MdSLFAUlYGzR5UxAMYNnSRfuonjv44niLAwQ-1GUgbyaCfljWI6LZl2GlV1vuGl2UEp";
       } else if (sid === "alianca") {
         webhookUrl = "https://discord.com/api/webhooks/1557909803957747783/HFhg6mZJkwnbFtgbKgQ3DgAThaa6RB32O7Y6T8r2ZRWhq1kRe7KwwkmPBMCwxX2Iqws2";
@@ -1351,6 +1414,16 @@
         embed.title = "🛡️ CERTIDÃO NOTARIAL DE REABILITAÇÃO & LIMPEZA DE FICHA";
         embed.color = 0x10b981; // Verde esmeralda (#10b981)
         payload.content = `🛡️ **[REABILITAÇÃO CRIMINAL · LIMPEZA DE FICHA HOMOLOGADA]**\nO Departamento Jurídico certifica a extinção de punibilidade e o cancelamento dos antecedentes penais de **${cidadao}**${idCidadao}.\n🔒 **Prisões Registradas a Limpar:** **${qtdPrisoes} prisão(ões)** *(Taxa: R$ 50.000 por prisão)*\n💰 **Valor Total Homologado:** **${valorTotal}**\n📋 **Artigos Extintos/Limpos:** *${artigos}*\n📄 *Certidão oficial notarial com fé pública anexada em PDF.*`;
+      } else if (sid === "divorcio") {
+        const conj1 = $("#div_conjuge1")?.value || "Cônjuge 1";
+        const id1 = $("#div_id1")?.value ? ` (ID: ${$("#div_id1").value})` : "";
+        const conj2 = $("#div_conjuge2")?.value || "Cônjuge 2";
+        const id2 = $("#div_id2")?.value ? ` (ID: ${$("#div_id2").value})` : "";
+        const tipo = $("#div_tipo")?.value || "Consensual";
+        const valorTotal = $("#div_valor")?.value || "R$ 250.000";
+        embed.title = "💔 CERTIDÃO NOTARIAL DE DIVÓRCIO & DISSOLUÇÃO MATRIMONIAL";
+        embed.color = 0x991b1b; // Vermelho escuro nobre
+        payload.content = `💔 **[DISSOLUÇÃO CONJUGAL · HOMOLOGAÇÃO DE DIVÓRCIO]**\nO Departamento Notarial e Judiciário certifica a dissolução definitiva do casamento entre **${conj1}**${id1} e **${conj2}**${id2}.\n⚖️ **Modalidade:** **${tipo}**\n💰 **Valor Homologado:** **${valorTotal}**\n📜 *Averbação formal expedida ao Livro B de Casamentos com fé pública irretratável. Certidão completa anexada em PDF.*`;
       }
 
       sendWebhook(btn, webhookUrl, payload, () => resetService(svc), pdfData);
@@ -1839,6 +1912,8 @@
           if ($("#al_valor")) $("#al_valor").value = "R$ 45.000";
         } else if (target === "tab-casamento" || title.includes("Casamento")) {
           if ($("#cas_valor")) $("#cas_valor").value = "R$ 200.000";
+        } else if (target === "tab-divorcio" || title.includes("Divórcio")) {
+          if ($("#div_valor")) $("#div_valor").value = "R$ 250.000";
         } else if (target === "tab-trocanome") {
           if ($("#tn_valor")) $("#tn_valor").value = "R$ 150.000";
         } else if (target === "tab-nascimento") {

@@ -34,6 +34,7 @@ const TRIBUNAL_CONFIG = {
     { id: "processos", titulo: "Processos & Petições", desc: "Protocolo de petições, andamento de processos e decisões judiciais." },
     { id: "mandados", titulo: "Mandados & Autorizações", desc: "Expedição, cumprimento de mandados e autorizações judiciais." },
     { id: "agenda", titulo: "Comunicações & Agenda", desc: "Intimações das partes e agendamento de audiências." },
+    { id: "notificacoes", titulo: "Ofícios & Notificações", desc: "Expedição de ofícios ministeriais, diligências fiscalizatórias e notificações extrajudiciais." },
   ],
 
   servicos: [
@@ -669,6 +670,114 @@ const TRIBUNAL_CONFIG = {
         { id: "ag_hora", label: "Horário", type: "time", req: true, dica: "Horário previsto para o pregão oficial e abertura da sala." },
         { id: "ag_local", label: "Local", value: "Fórum de Brava — Sala 1", isFull: true, dica: "Local físico ou sala de julgamento no Fórum de Brava designada." },
         { id: "ag_obs", label: "Observações", type: "textarea", placeholder: "Informações adicionais para as partes...", dica: "Orientações práticas para os envolvidos, se haverá réu preso escoltado e documentos necessários.", modelo: "PAUTA DE AUDIÊNCIA DESIGNADA: As partes e testemunhas deverão comparecer munidas de seus documentos de identificação com antecedência mínima de 10 minutos. O defensor/advogado deverá acompanhar o acusado. Eventual impossibilidade de comparecimento por motivo de força maior deverá ser justificada documentalmente até 2 horas antes da sessão." },
+      ],
+    },
+
+    /* ---------------- OFÍCIOS & NOTIFICAÇÕES ---------------- */
+    {
+      id: "oficio", grupo: "notificacoes", title: "Ofício de Fiscalização", svg: "oficio", emoji: "📜", tag: "Ministério Público",
+      desc: "Expedição de ofício para notificação e requisição de realização de diligência fiscalizatória institucional.",
+      webhook: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
+      cor: 13938487, cargoPadrao: "Promotor de Justiça",
+      natureza: "Ofício Institucional", eficacia: "Diligência Fiscalizatória",
+      termo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP, no regular exercício de suas atribuições constitucionais e institucionais de fiscalização, fiscalização da ordem econômica e defesa do interesse coletivo, EXPEDE o presente OFÍCIO para notificação e requisição de cooperação na diligência fiscalizatória institucional designada, sob as penas da lei.",
+      guia: {
+        destaque: "Diligência Fiscalizatória Institucional em Estabelecimentos Comerciais",
+        resumo: "Instrumento oficial expedido pelo Ministério Público / Departamento Jurídico para dar ciência formal ao proprietário ou representante legal da data, horário e escopo da diligência de fiscalização.",
+        quandoUsar: "Para conferência de regularidade comercial, sanitária, tributária e cumprimento de normas de funcionamento de empresas registradas ou em atividade na cidade.",
+        diferencas: [
+          {
+            nome: "Ofício de Fiscalização",
+            tag: "Aviso Prévio Institucional",
+            cor: "blue",
+            desc: "Notifica o proprietário sobre a vistoria programada, requisitando livre acesso e apresentação de alvarás e licenças.",
+            quando: "Antes da ida da equipe fiscalizadora ao endereço comercial.",
+            exemplo: "Fiscalização documental de alvarás de funcionamento, vigilância sanitária e registros fiscais em oficina mecânica ou boate.",
+            resultado: "Obriga o proprietário ou preposto a franquear livre acesso às autoridades sob pena de crime de desobediência e interdição."
+          },
+          {
+            nome: "Notificação Extrajudicial",
+            tag: "Constituição em Mora & Advertência",
+            cor: "amber",
+            desc: "Comunicação formal com prazo peremptório para regularizar inconformidades ou prestar manifestação antes de Ação Civil Pública.",
+            quando: "Quando irregularidades já foram constatadas ou quando a empresa descumpre prazos e requisitos legais.",
+            exemplo: "Prazo de 48h para comprovar quitação de alvará ou sanar risco à segurança, sob pena de interdição cautelar imediata.",
+            resultado: "Constitui prova pré-constituída de ciência prévia para ajuizamento de medidas judiciais cautelares."
+          }
+        ],
+        dicasEstagiario: [
+          "Verifique o nome completo e passaporte do proprietário ou preposto para que a notificação tenha plena validade.",
+          "O horário estimado e a data da fiscalização devem ser expressamente informados.",
+          "A recusa injustificada de acesso configura ato de obstrução à justiça e crime de desobediência (CP), ensejando interdição cautelar do local.",
+          "Indique sempre a equipe responsável ou o Promotor de Justiça titular que subscreve o ato."
+        ],
+        baseLegal: "Código Civil de Brava RP (Arts. 37 a 43 - CNPJ e Empresas; Art. 93 - Competências Operacionais e Fiscalização) · CF/Brava e Legislação Institucional do Ministério Público."
+      },
+      fields: [
+        { id: "of_numero", label: "Nº do Ofício", type: "numero", prefixo: "OF", dica: "Numeração oficial automática do Ofício." },
+        { id: "of_setor", label: "Sigla do Setor / Órgão Expedidor", value: "MP / SDJ", dica: "Sigla ou departamento expedidor (ex.: MP, SDJ, GAECO)." },
+        { id: "of_assunto", label: "Assunto", value: "Notificação de realização de diligência fiscalizatória institucional", isFull: true, dica: "Objeto central do ofício requisitório." },
+        { id: "of_proprietario", label: "Nome do Proprietário / Representante", req: true, dica: "Nome do proprietário ou representante legal do estabelecimento." },
+        { id: "of_passaporte", label: "Passaporte / Registro / ID", dica: "Nº do ID, passaporte ou documento de identificação do proprietário." },
+        { id: "of_empresa", label: "🏢 Estabelecimento (Nome Comercial / Razão Social)", req: true, dica: "Nome comercial ou razão social do estabelecimento sob fiscalização." },
+        { id: "of_endereco", label: "📍 Endereço do Estabelecimento", placeholder: "Ex.: Rua Central, nº 100 - Bairro Centro", dica: "Localização precisa do imóvel onde será realizada a diligência." },
+        { id: "of_data_fiscalizacao", label: "📅 Data da Fiscalização", type: "date", req: true, dica: "Data oficial em que a equipe comparecerá ao local." },
+        { id: "of_hora_fiscalizacao", label: "⏰ Horário Estimado", type: "time", req: true, dica: "Horário a partir do qual a fiscalização terá início." },
+        { id: "of_promotor", label: "Equipe Responsável / Nome do Promotor", placeholder: "Ex.: Promotor de Justiça Titular / Inspetoria SDJ", isFull: true, dica: "Nome do Promotor de Justiça ou autoridade responsável pela equipe." },
+        { id: "of_objetivo", label: "Objetivo da Diligência", type: "textarea", isFull: true, req: true, dica: "Conferência de regularidades comerciais, documentais e fiscais.", modelo: "A diligência tem como objetivo a conferência de regularidade das atividades comerciais, incluindo, mas não se limitando a:\n\nI – Regularidade documental (alvarás de funcionamento, licenças sanitárias e registros cabíveis);\nII – Cumprimento das normas de segurança, saúde pública e direitos do consumidor;\nIII – Regularidade fiscal e conformidade com a legislação local em vigor." },
+        { id: "of_requisicao", label: "Requisição e Advertências Legais", type: "textarea", isFull: true, req: true, dica: "Requisição de presença e advertências sobre obstrução ou desobediência.", modelo: "Diante disso, REQUISITA-SE que, na data e horário designados, Vossa Senhoria ou preposto devidamente habilitado esteja presente no local munido da documentação pertinente do estabelecimento, franqueando o livre acesso das autoridades às dependências do imóvel para a devida inspeção.\n\nRegistra-se que a recusa injustificada de acesso, a ausência de cooperação ou qualquer tentativa de embaraço à atuação das autoridades poderá configurar ato de obstrução à justiça ou crime de desobediência, sem prejuízo da aplicação de sanções administrativas e interdição cautelar do estabelecimento.\n\nCertos de vossa colaboração para com a ordem pública e a legalidade, renovamos protestos de estima e consideração." },
+      ],
+    },
+    {
+      id: "notificacao", grupo: "notificacoes", title: "Notificação Extrajudicial", svg: "notificacao", emoji: "⚠️", tag: "Extrajudicial",
+      desc: "Notificação formal com advertências legais, fundamentos jurídicos e prazo para manifestações ou regularização.",
+      webhook: "https://discord.com/api/webhooks/1561400508319535234/tLi4jgnvw950Dlvk5rYzif6Vpf4kWWeDq4wEooHTr26H2NECDVpUJqC7RXOtrnksqQFj",
+      cor: 15105570, cargoPadrao: "Promotor de Justiça",
+      natureza: "Notificação Extrajudicial", eficacia: "Constituição em Mora & Advertência",
+      termo: "A AUTORIDADE NOTIFICANTE FORMALIZA a presente NOTIFICAÇÃO EXTRAJUDICIAL, conferindo ciência inequívoca ao notificado sobre os fatos apurados, obrigações jurídicas e advertências legais sob as cominações cabíveis.",
+      guia: {
+        destaque: "Notificação Extrajudicial, Advertências & Prazos Peremptórios",
+        resumo: "Ato extrajudicial formal pelo qual o Ministério Público ou o Departamento Jurídico adverte expressamente o notificado sobre irregularidades e impõe prazo para manifestação ou adequação.",
+        quandoUsar: "Para prevenir litígios, constituir devedor ou infrator em mora, advertir contra criação de embaraços à fiscalização e exigir regularização imediata sob pena de interdição cautelar e ação civil pública.",
+        diferencas: [
+          {
+            nome: "Notificação Extrajudicial",
+            tag: "Fase Pré-Processual / Fiscalizatória",
+            cor: "amber",
+            desc: "Formalização documental direta sem intervenção imediata do Magistrado, fixando prazo razoável para resposta ou cumprimento voluntário.",
+            quando: "Antes do ajuizamento de Ação Civil Pública ou requerimento de interdição coercitiva em juízo.",
+            exemplo: "Notificação à administração de boate clandestina para apresentação de alvarás de bombeiros em até 48 horas.",
+            resultado: "Se atendida, resolve o impasse; se descumprida, instrui o ajuizamento de ação civil com pedido liminar de fechamento."
+          },
+          {
+            nome: "Intimação Judicial",
+            tag: "Ordem do Juízo",
+            cor: "red",
+            desc: "Determinação expressa emitida por ordem do Juiz no curso de processo judicial ativo.",
+            quando: "Durante tramitação de processo para cumprimento de decisão ou audiência.",
+            exemplo: "Mandado de intimação para o réu cumprir liminar de desocupação ou cessação de atividade comercial.",
+            resultado: "Desobediência gera medidas de força policial imediata e multa diária."
+          }
+        ],
+        dicasEstagiario: [
+          "O prazo para manifestação deve ser explícito (ex.: 24h, 48h ou 5 dias úteis conforme a gravidade).",
+          "Descreva as advertências expressas das alíneas (a) e (b) com precisão técnica.",
+          "A notificação extrajudicial afasta alegação de desconhecimento ou boa-fé por parte do infrator.",
+          "Verifique com rigor os dados de qualificação da Razão Social, sócio e localização do imóvel."
+        ],
+        baseLegal: "Código Civil de Brava RP (Art. 61 - Mora e Notificação Prévia; Art. 83 - Composição Extrajudicial; Art. 93 - Competências do SDJ) · Art. 726 do Código de Processo Civil."
+      },
+      fields: [
+        { id: "ne_numero", label: "Nº da Notificação", type: "numero", prefixo: "NOT", dica: "Numeração oficial automática da Notificação Extrajudicial." },
+        { id: "ne_notificante", label: "Notificante (Órgão / Autoridade)", value: "Ministério Público de Brava RP / SDJ", req: true, dica: "Identificação da autoridade ou órgão expedidor da notificação." },
+        { id: "ne_empresa", label: "🏢 Razão Social / Nome Fantasia (Notificado)", req: true, dica: "Nome comercial ou razão social da empresa notificada." },
+        { id: "ne_proprietario", label: "👤 Representante Legal / Proprietário(a)", req: true, dica: "Nome do sócio, proprietário ou responsável que recebe a notificação." },
+        { id: "ne_passaporte", label: "🪪 Passaporte / ID / Documento", dica: "Passaporte ou documento oficial do notificado." },
+        { id: "ne_endereco", label: "📍 Endereço do Estabelecimento", req: true, placeholder: "Ex.: Rua dos Comerciantes, nº 45 - Bairro Centro", dica: "Endereço ou localização do imóvel sob notificação." },
+        { id: "ne_prazo", label: "⏳ Prazo para Manifestações", value: "48 (quarenta e oito) horas a contar do recebimento", isFull: true, dica: "Prazo fixado para resposta formal ou apresentação de documentos." },
+        { id: "ne_fatos", label: "2. Dos Fatos e Fundamentos Jurídicos", type: "textarea", isFull: true, req: true, dica: "Narrativa dos fatos apurados e enquadramento legal.", modelo: "Constatou-se, no âmbito das atividades institucionais de fiscalização e monitoramento da ordem econômica desta Comarca, que o estabelecimento supracitado opera sob indícios de desconformidade com as normas regulamentares vigentes, especialmente no tocante a alvarás de funcionamento, licenças e recolhimento de tributos obrigatórios previstos no Código Civil de Brava (Arts. 37 a 43 e Art. 93), demandando imediata regularização e cooperação com as autoridades." },
+        { id: "ne_objeto", label: "3. Do Objeto da Notificação", type: "textarea", isFull: true, req: true, dica: "Objetivo central e determinações impostas ao notificado.", modelo: "Constitui objeto da presente notificação dar CIÊNCIA FORMAL ao Notificado sobre a iminente realização de diligência fiscalizatória e exigir o pleno fornecimento de toda a documentação comprobatória da regularidade comercial, sanitária e fiscal da empresa, assegurando-se o livre e irrestrito acesso dos agentes fiscalizadores ao recinto do imóvel nas datas e horários aprazados." },
+        { id: "ne_advertencias", label: "4. Das Advertências Legais", type: "textarea", isFull: true, req: true, dica: "Advertências legais imperativas e cominações legais.", modelo: "Adverte-se expressamente que:\n\n• a) A recusa imotivada de acesso, a criação de embaraços, o fechamento proposital do imóvel no momento da diligência ou a negativa de fornecimento dos documentos solicitados ensejará a imediata lavratura de auto de infração por desobediência e obstrução à fiscalização;\n\n• b) A constatação de irregularidades sem possibilidade de saneamento imediato poderá resultar no ajuizamento de Ação Civil Pública, com pedidos de interdição cautelar imediata do local, aplicação de multa diária e comunicação à autoridade policial para apuração de eventuais delitos penais." },
       ],
     },
   ],

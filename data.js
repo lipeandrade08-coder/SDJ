@@ -293,6 +293,17 @@ const TABELA_PRECOS = [
     targetId: "casamento",
   },
   {
+    item: "Divórcio",
+    icone: "💔",
+    retirada: 37500,
+    retiradaDisplay: "15% (R$ 37.500)",
+    venda: 250000,
+    vendaDisplay: "R$ 250.000",
+    categoria: "União Civil",
+    desc: "Homologação notarial de dissolução matrimonial, partilha de bens e averbação.",
+    targetId: "divorcio",
+  },
+  {
     item: "CNPJ",
     icone: "🏢",
     retirada: 62500,

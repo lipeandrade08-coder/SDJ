@@ -612,7 +612,11 @@
 
     const dataHora = new Date().toLocaleString("pt-BR");
     const protocolo = gerarProtocolo();
-    const titulo = opts.service.id === "limpeza" ? "Certidão de Limpeza de Ficha Criminal" : (opts.service.title || "Certidão Oficial Notarial");
+    const titulo = opts.service && opts.service.id === "limpeza"
+      ? "Certidão de Limpeza de Ficha Criminal"
+      : opts.service && opts.service.id === "divorcio"
+      ? "Certidão Notarial de Divórcio & Dissolução Matrimonial"
+      : (opts.service.title || "Certidão Oficial Notarial");
     const cidade = opts.cidade || (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
 
     // 1. Cabeçalho, moldura e marca d'água oficial
@@ -623,7 +627,15 @@
     const fields = opts.fields || [];
 
     // Seção 1: Dados Oficiais Registrados
-    curY = desenharCabecalhoSecao(doc, curY, opts.service && opts.service.id === "limpeza" ? "1. Dados do Cidadão e Termo de Reabilitação" : "1. Dados e Declarações do Assento Cartorário");
+    curY = desenharCabecalhoSecao(
+      doc,
+      curY,
+      opts.service && opts.service.id === "limpeza"
+        ? "1. Dados do Cidadão e Termo de Reabilitação"
+        : opts.service && opts.service.id === "divorcio"
+        ? "1. Qualificação dos Cônjuges e Assento de Dissolução"
+        : "1. Dados e Declarações do Assento Cartorário"
+    );
 
     // Layout responsivo: layout dedicado para Limpeza de Ficha, 2 colunas se tiver 8 ou mais campos (ex: Porte de Arma), 1 coluna para os demais
     const nFields = fields.length;
@@ -727,6 +739,113 @@
       doc.text(motivoSplit, 18, curY + 7.2, { maxWidth: boxW - 8, lineHeightFactor: 1.15 });
 
       curY += motBoxH + rowGap;
+    } else if (opts.service && opts.service.id === "divorcio") {
+      const getVal = (pattern) => {
+        const found = fields.find(f => pattern.test(f.label));
+        return found && found.value && found.value !== "—" ? String(found.value) : "NÃO INFORMADO";
+      };
+
+      const modalidade = getVal(/modalidade/i);
+      const conjuge1 = getVal(/c[ôo]njuge 1 \(nome/i);
+      const id1 = getVal(/passaporte.*1/i);
+      const nomePos1 = getVal(/nome.*c[ôo]njuge 1/i);
+
+      const conjuge2 = getVal(/c[ôo]njuge 2 \(nome/i);
+      const id2 = getVal(/passaporte.*2/i);
+      const nomePos2 = getVal(/nome.*c[ôo]njuge 2/i);
+
+      const regime = getVal(/regime/i);
+      const dataCasamento = getVal(/casamento origin[áa]rio/i);
+      const termoOrigem = getVal(/livro.*termo/i);
+      const filhos = getVal(/filhos/i);
+      const pensao = getVal(/pens[ãa]o/i);
+      const emissao = getVal(/homologa[çc][ãa]o|emiss[ãa]o/i);
+      const valor = getVal(/taxa|valor/i);
+      const partilha = getVal(/partilha/i);
+
+      const gridPairs = [
+        [{ label: "MODALIDADE DA DISSOLUÇÃO MATRIMONIAL", val: modalidade, full: true }],
+        [{ label: "CÔNJUGE 1 (QUALIFICAÇÃO)", val: `${conjuge1} · ID: ${id1}` }, { label: "NOME DO CÔNJUGE 1 PÓS-DIVÓRCIO", val: nomePos1 }],
+        [{ label: "CÔNJUGE 2 (QUALIFICAÇÃO)", val: `${conjuge2} · ID: ${id2}` }, { label: "NOME DO CÔNJUGE 2 PÓS-DIVÓRCIO", val: nomePos2 }],
+        [{ label: "REGIME DE BENS ANTERIOR", val: regime }, { label: "DATA DO CASAMENTO ORIGINÁRIO", val: dataCasamento }],
+        [{ label: "LIVRO / TERMO DO ASSENTO DE ORIGEM", val: termoOrigem }, { label: "FILHOS MENORES & GUARDA", val: filhos }],
+        [{ label: "PENSÃO ALIMENTÍCIA / ALIMENTOS", val: pensao }, { label: "DATA HOMOLOGAÇÃO / TAXA NOTARIAL", val: `${emissao} · ${valor}` }]
+      ];
+
+      const colW = (boxW - 3) / 2;
+      const rowH = 7.4;
+      const rowGap = 0.8;
+
+      gridPairs.forEach((pair, rIdx) => {
+        const isFull = pair.length === 1 && pair[0].full;
+        const isEven = rIdx % 2 === 0;
+
+        if (isFull) {
+          const item = pair[0];
+          doc.setFillColor(isEven ? 255 : 250, isEven ? 255 : 251, isEven ? 255 : 254);
+          doc.setDrawColor(220, 226, 238);
+          doc.setLineWidth(0.25);
+          doc.roundedRect(14, curY, boxW, rowH, 0.8, 0.8, "FD");
+          doc.setFillColor(...ORO);
+          doc.rect(14, curY, 1.8, rowH, "F");
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(5.2);
+          doc.setTextColor(110, 118, 134);
+          doc.text(item.label, 18, curY + (rowH * 0.35));
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.2);
+          doc.setTextColor(...AZUL_NOITE);
+          doc.text(item.val, 18, curY + (rowH * 0.78), { maxWidth: boxW - 8 });
+        } else {
+          pair.forEach((item, cIdx) => {
+            const x = cIdx === 0 ? 14 : 14 + colW + 3;
+            doc.setFillColor(isEven ? 255 : 250, isEven ? 255 : 251, isEven ? 255 : 254);
+            doc.setDrawColor(220, 226, 238);
+            doc.setLineWidth(0.25);
+            doc.roundedRect(x, curY, colW, rowH, 0.8, 0.8, "FD");
+            doc.setFillColor(...ORO);
+            doc.rect(x, curY, 1.8, rowH, "F");
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(5.2);
+            doc.setTextColor(110, 118, 134);
+            doc.text(item.label, x + 4, curY + (rowH * 0.35), { maxWidth: colW - 7 });
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(7.2);
+            doc.setTextColor(18, 24, 38);
+            doc.text(item.val, x + 4, curY + (rowH * 0.78), { maxWidth: colW - 7 });
+          });
+        }
+        curY += rowH + rowGap;
+      });
+
+      // Bloco do Termo Notarial de Partilha de Bens
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.5);
+      const partilhaSplit = doc.splitTextToSize(partilha, boxW - 8);
+      const partBoxH = Math.max(11, 5.8 + (partilhaSplit.length * 2.9));
+
+      doc.setFillColor(252, 250, 246);
+      doc.setDrawColor(...ORO);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(14, curY, boxW, partBoxH, 0.8, 0.8, "FD");
+      doc.setFillColor(...ORO);
+      doc.rect(14, curY, 2.0, partBoxH, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.5);
+      doc.setTextColor(...ORO_ESCURO);
+      doc.text("TERMO NOTARIAL DE PARTILHA E DESTINAÇÃO DE BENS PATRIMONIAIS:", 18, curY + 3.6);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.5);
+      doc.setTextColor(30, 36, 50);
+      doc.text(partilhaSplit, 18, curY + 7.2, { maxWidth: boxW - 8, lineHeightFactor: 1.15 });
+
+      curY += partBoxH + rowGap;
     } else if (nFields >= 8) {
       const colW = (boxW - 3) / 2;
       const rowH = 8.6;
@@ -845,10 +964,22 @@
       const nPrisoes = prisoesField ? prisoesField.value : "1";
       termoCompleto =
         `O CARTÓRIO DO DEPARTAMENTO JURÍDICO DA COMARCA DE BRAVA RP, sob a autoridade da Presidência do Judiciário e nos termos das normas de Reabilitação Penal e Registro Notarial, CERTIFICA que foram devidamente quitadas e extintas todas as anotações e registros criminais pretéritos de ${cidNome}, concernentes a ${nPrisoes} registro(s) de prisão (taxa oficial de R$ 50.000 por prisão). Atesta-se o cancelamento definitivo das infrações anotadas e o restabelecimento da primariedade e da idoneidade civil perante os registros públicos e forças de segurança do Estado, possuindo eficácia permanente e imediata a partir de sua emissão, sem prazo de validade ou expiração.`;
+    } else if (opts.service && opts.service.id === "divorcio") {
+      const getVal = (pattern) => {
+        const found = (opts.fields || []).find(f => pattern.test(f.label));
+        return found && found.value && found.value !== "—" ? String(found.value) : "requerente qualificado";
+      };
+      const conj1 = getVal(/c[ôo]njuge 1 \(nome/i);
+      const conj2 = getVal(/c[ôo]njuge 2 \(nome/i);
+      const mod = getVal(/modalidade/i);
+      const termo = getVal(/livro.*termo/i);
+
+      termoCompleto =
+        `O CARTÓRIO DO REGISTRO CIVIL E DEPARTAMENTO NOTARIAL DA COMARCA DE ${cidade.toUpperCase()}, sob a autoridade da Presidência do Judiciário e com respaldo nas normas civis vigentes, CERTIFICA que em virtude dos termos e manifestações formais pertinentes à modalidade ${mod}, foi DECRETADA A DISSOLUÇÃO DEFINITIVA DO CASAMENTO entre ${conj1} e ${conj2}. Determina-se a averbação competente junto ao assento matrimonial originário (${termo}), operando-se a cessação dos deveres conjugais, a extinção definitiva da sociedade matrimonial, a eficácia do termo de partilha patrimonial e o direito ao uso dos patronímicos declarados, com fé pública, validade erga omnes e eficácia jurídica definitiva e irretratável.`;
     }
 
-    // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário - não aplicável a Limpeza de Ficha)
-    if (opts.service && opts.service.id !== "limpeza") {
+    // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário - não aplicável a Limpeza de Ficha nem Divórcio)
+    if (opts.service && opts.service.id !== "limpeza" && opts.service.id !== "divorcio") {
       const validadeField = fields.find((f) => /validade/i.test(f.label));
       const emissaoField = fields.find((f) => /emiss[ãa]o/i.test(f.label));
       if (validadeField && validadeField.value && validadeField.value !== "Não informado") {
@@ -894,9 +1025,10 @@
 
     const isPorte = opts.service && opts.service.id === "porte";
     const isLimpeza = opts.service && opts.service.id === "limpeza";
-    const natText = isPorte ? "Porte de Arma Legal" : isLimpeza ? "Reabilitação Criminal" : "Assento Notarial Oficial";
-    const eficText = isPorte ? "Autorização Notarial" : isLimpeza ? "Cancelamento Definitivo (Permanente)" : "Oponibilidade 'Erga Omnes'";
-    const segText = isPorte ? "Laudo Médico Hospitalar" : isLimpeza ? "Homologação Notarial SDJ" : "Criptografia Digital SHA-256";
+    const isDivorcio = opts.service && opts.service.id === "divorcio";
+    const natText = isPorte ? "Porte de Arma Legal" : isLimpeza ? "Reabilitação Criminal" : isDivorcio ? "Dissolução Matrimonial" : "Assento Notarial Oficial";
+    const eficText = isPorte ? "Autorização Notarial" : isLimpeza ? "Cancelamento Definitivo (Permanente)" : isDivorcio ? "Averbação no Livro B (Permanente)" : "Oponibilidade 'Erga Omnes'";
+    const segText = isPorte ? "Laudo Médico Hospitalar" : isLimpeza ? "Homologação Notarial SDJ" : isDivorcio ? "Homologação Notarial & Judicial" : "Criptografia Digital SHA-256";
 
     // Barra de atributos dentro da certidão
     doc.setFont("helvetica", "bold");
@@ -968,7 +1100,8 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8.0);
     doc.setTextColor(...AZUL_NOITE);
-    doc.text(`LIVRO A-${livroNum}  ·  FOLHAS ${folhaNum}`, colRightX + 4, curY + 8.2);
+    const prefixoLivro = isDivorcio || (opts.service && opts.service.id === "casamento") ? "B" : "A";
+    doc.text(`LIVRO ${prefixoLivro}-${livroNum}  ·  FOLHAS ${folhaNum}`, colRightX + 4, curY + 8.2);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
@@ -990,10 +1123,438 @@
   }
 
   /* ==========================================================
+     GERAÇÃO DEDICADA: OFÍCIO DE FISCALIZAÇÃO INSTITUCIONAL
+     Padronização Ministério Público / Tribunal de Justiça
+     ========================================================== */
+  async function renderOficioPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade) {
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+    const fields = opts.fields || [];
+
+    const getVal = (idPattern, lblPattern, fallback = "") => {
+      const f = fields.find(x => (x.id && idPattern.test(x.id)) || (x.label && lblPattern.test(x.label)));
+      return f && f.value && f.value !== "—" && f.value !== "Não informado" ? String(f.value).trim() : fallback;
+    };
+
+    const numOficio = getVal(/of_numero/i, /n[ºo].*of[ií]cio/i, protocolo);
+    const setor = getVal(/of_setor/i, /setor|sigla/i, "MP / SDJ");
+    const assunto = getVal(/of_assunto/i, /assunto/i, "Notificação de realização de diligência fiscalizatória institucional");
+    const proprietario = getVal(/of_proprietario/i, /propriet[aá]rio|representante/i, "Nome do Proprietário / Representante");
+    const passaporte = getVal(/of_passaporte/i, /passaporte|registro|id/i, "Não informado");
+    const empresa = getVal(/of_empresa/i, /estabelecimento|raz[aã]o social|empresa/i, "Estabelecimento Comercial");
+    const endereco = getVal(/of_endereco/i, /endere[çc]o|local/i, "");
+    const dataFisc = getVal(/of_data_fiscalizacao/i, /data.*fiscaliza/i, "A definir");
+    const horaFisc = getVal(/of_hora_fiscalizacao/i, /hor[aá]rio.*estimado/i, "A definir");
+    const promotor = getVal(/of_promotor/i, /promotor|equipe/i, opts.agente || "Promotor de Justiça Titular");
+    const objetivo = getVal(/of_objetivo/i, /objetivo/i, "A diligência tem como objetivo a conferência de regularidade das atividades comerciais, incluindo, mas não se limitando a:\nI – Regularidade documental (alvarás de funcionamento, licenças sanitárias e registros cabíveis);\nII – Cumprimento das normas de segurança, saúde pública e direitos do consumidor;\nIII – Regularidade fiscal e conformidade com a legislação local em vigor.");
+    const requisicao = getVal(/of_requisicao/i, /requisi[çc][aã]o|advert[êe]ncia/i, "Diante disso, REQUISITA-SE que, na data e horário designados, Vossa Senhoria ou preposto devidamente habilitado esteja presente no local munido da documentação pertinente do estabelecimento, franqueando o livre acesso das autoridades às dependências do imóvel para a devida inspeção.\n\nRegistra-se que a recusa injustificada de acesso, a ausência de cooperação ou qualquer tentativa de embaraço à atuação das autoridades poderá configurar ato de obstrução à justiça ou crime de desobediência, sem prejuízo da aplicação de sanções administrativas e interdição cautelar do estabelecimento.\n\nCertos de vossa colaboração para com a ordem pública e a legalidade, renovamos protestos de estima e consideração.");
+
+    const d = new Date();
+    const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    const dataExtenso = `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+
+    let curY = desenharEstruturaBase(doc, logo, watermark, "OFÍCIO DE FISCALIZAÇÃO INSTITUCIONAL", protocolo, dataHora, cidade);
+
+    // 1. Número do Ofício e Local/Data
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`OFÍCIO Nº ${numOficio} – ${setor.toUpperCase()}`, 14, curY + 2.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text(`Local e Data: ${cidade}, ${dataExtenso}`, pageWidth - 14, curY + 2.5, { align: "right" });
+
+    // Assunto
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("Assunto:", 14, curY + 6.8);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(25, 30, 45);
+    doc.text(assunto, 27, curY + 6.8);
+
+    curY += 10.5;
+
+    // 2. Quadro do Notificado / Destinatário
+    const destH = endereco ? 22 : 18;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.28);
+    doc.roundedRect(14, curY, boxW, destH, 1, 1, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, destH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.8);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("A(O) ILUSTRÍSSIMO(A) SENHOR(A)", 18, curY + 4.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Nome do Proprietário:", 18, curY + 8.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(proprietario, 48, curY + 8.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Estabelecimento:", 18, curY + 12.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...AZUL_MEDIO);
+    doc.text(empresa, 48, curY + 12.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Passaporte / Registro:", 18, curY + 16.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(passaporte, 48, curY + 16.0);
+
+    if (endereco) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(6.2);
+      doc.setTextColor(...TEXTO_MUTED);
+      doc.text("Endereço / Local:", 18, curY + 19.8);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.0);
+      doc.setTextColor(...TEXTO_ESCURO);
+      doc.text(endereco, 48, curY + 19.8);
+    }
+
+    curY += destH + 3.5;
+
+    // 3. Saudação & Parágrafo Inicial
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text("Senhor(a) Proprietário(a) / Representante Legal,", 14, curY + 2.5);
+
+    const introText = "Cumprimentando-o(a) cordialmente, serve o presente para NOTIFICAR Vossa Senhoria de que o Ministério Público, no regular exercício de suas atribuições constitucionais e institucionais de fiscalização, fiscalização da ordem econômica e defesa do interesse coletivo, realizará diligência fiscalizatória no estabelecimento sob vossa responsabilidade.";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.8);
+    doc.setTextColor(30, 36, 50);
+    const introLines = doc.splitTextToSize(introText, boxW);
+    doc.text(introLines, 14, curY + 6.8, { align: "justify", maxWidth: boxW, lineHeightFactor: 1.25 });
+
+    curY += 7.0 + (introLines.length * 3.1) + 2.0;
+
+    // 4. Box de Data, Horário e Equipe da Fiscalização
+    const fiscBoxH = 13;
+    doc.setFillColor(255, 253, 245);
+    doc.setDrawColor(...ORO);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(14, curY, boxW, fiscBoxH, 1, 1, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, fiscBoxH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("A referida ação fiscalizatória ocorrerá na seguinte data e horário:", 18, curY + 4.0);
+
+    const col1 = 18;
+    const col2 = 72;
+    const col3 = 130;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("DATA AGENDADA:", col1, curY + 8.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(dataFisc, col1, curY + 11.4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("HORÁRIO ESTIMADO:", col2, curY + 8.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`a partir das ${horaFisc}h`, col2, curY + 11.4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("EQUIPE / PROMOTOR RESPONSÁVEL:", col3, curY + 8.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(promotor.length > 28 ? promotor.substring(0, 27) + "..." : promotor, col3, curY + 11.4);
+
+    curY += fiscBoxH + 3.0;
+
+    // 5. Box de Objetivo da Diligência
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.4);
+    const objSplit = doc.splitTextToSize(objetivo, boxW - 8);
+    const objH = Math.max(16, 6.0 + (objSplit.length * 3.0));
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, objH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, objH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(110, 118, 134);
+    doc.text("OBJETIVO DA DILIGÊNCIA FISCALIZATÓRIA:", 18, curY + 3.8);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.4);
+    doc.setTextColor(20, 26, 38);
+    doc.text(objSplit, 18, curY + 7.4, { maxWidth: boxW - 8, lineHeightFactor: 1.18 });
+
+    curY += objH + 2.5;
+
+    // 6. Requisição e Advertências Legais
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    const reqSplit = doc.splitTextToSize(requisicao, boxW - 8);
+    const reqH = Math.max(18, 6.0 + (reqSplit.length * 2.85));
+
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, reqH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, reqH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("DETERMINAÇÃO LEGAL & ADVERTÊNCIAS:", 18, curY + 3.8);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    doc.setTextColor(25, 30, 42);
+    doc.text(reqSplit, 18, curY + 7.4, { maxWidth: boxW - 8, lineHeightFactor: 1.16 });
+
+    curY += reqH + 2.5;
+
+    // 7. Bloco de Assinaturas e Chancela
+    const sigStartY = Math.min(Math.max(curY, 226), 231);
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, promotor, opts.agenteId, opts.cargo || "Promotor de Justiça Titular", protocolo);
+
+    const safeNome = empresa.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `Oficio_Fiscalizacao_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
+  /* ==========================================================
+     GERAÇÃO DEDICADA: NOTIFICAÇÃO EXTRAJUDICIAL
+     Padronização Notarial e Ministério Público
+     ========================================================== */
+  async function renderNotificacaoPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade) {
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+    const fields = opts.fields || [];
+
+    const getVal = (idPattern, lblPattern, fallback = "") => {
+      const f = fields.find(x => (x.id && idPattern.test(x.id)) || (x.label && lblPattern.test(x.label)));
+      return f && f.value && f.value !== "—" && f.value !== "Não informado" ? String(f.value).trim() : fallback;
+    };
+
+    const numNotificacao = getVal(/ne_numero/i, /n[ºo].*notifica/i, protocolo);
+    const notificante = getVal(/ne_notificante/i, /notificante/i, "Ministério Público de Brava RP / SDJ");
+    const empresa = getVal(/ne_empresa/i, /raz[aã]o social|fantasia|empresa/i, "Estabelecimento / Empresa");
+    const proprietario = getVal(/ne_proprietario/i, /propriet[aá]rio|representante/i, "Representante Legal / Proprietário");
+    const passaporte = getVal(/ne_passaporte/i, /passaporte|id|documento/i, "Não informado");
+    const endereco = getVal(/ne_endereco/i, /endere[çc]o/i, "Endereço comercial em Brava RP");
+    const prazo = getVal(/ne_prazo/i, /prazo/i, "48 (quarenta e oito) horas a contar do recebimento");
+    const fatos = getVal(/ne_fatos/i, /fatos|fundamento/i, "Constatou-se, no âmbito das atividades de fiscalização da Comarca, indícios de inconformidade regulamentar e documental no estabelecimento.");
+    const objeto = getVal(/ne_objeto/i, /objeto/i, "Dar ciência formal ao Notificado sobre a diligência fiscalizatória e exigir o livre fornecimento de toda a documentação comprobatória.");
+    const advertencias = getVal(/ne_advertencias/i, /advert[êe]ncia/i, "Adverte-se expressamente que a recusa imotivada de acesso ensejará lavratura de auto de infração por desobediência e ajuizamento de Ação Civil Pública com pedido de interdição cautelar imediata do local.");
+
+    const d = new Date();
+    const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    const dataExtenso = `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+
+    let curY = desenharEstruturaBase(doc, logo, watermark, "NOTIFICAÇÃO EXTRAJUDICIAL", protocolo, dataHora, cidade);
+
+    // 1. Título & Número
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.2);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`NOTIFICAÇÃO EXTRAJUDICIAL Nº ${numNotificacao}`, 14, curY + 2.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text(`Expedição: ${cidade}, ${dataExtenso}`, pageWidth - 14, curY + 2.5, { align: "right" });
+
+    curY += 7.0;
+
+    // 2. Seção 1: DAS PARTES
+    curY = desenharCabecalhoSecao(doc, curY, "1. Das Partes Envolvidas");
+
+    const partesH = 21;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, partesH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, partesH, "F");
+
+    // Coluna 1: Notificante
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("• NOTIFICANTE:", 18, curY + 4.2);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(notificante, 18, curY + 8.2, { maxWidth: (boxW / 2) - 8 });
+
+    // Coluna 2: Notificado
+    const colNotifX = 14 + (boxW / 2) + 2;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("• NOTIFICADO(A):", colNotifX, curY + 4.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Razão Social / Nome Fantasia:", colNotifX, curY + 8.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...AZUL_MEDIO);
+    doc.text(empresa, colNotifX + 38, curY + 8.0, { maxWidth: (boxW / 2) - 42 });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Representante / Proprietário:", colNotifX, curY + 12.0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.0);
+    doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(`${proprietario} (ID: ${passaporte})`, colNotifX + 38, curY + 12.0, { maxWidth: (boxW / 2) - 42 });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Endereço do Notificado:", colNotifX, curY + 16.0);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.8);
+    doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(endereco, colNotifX + 38, curY + 16.0, { maxWidth: (boxW / 2) - 42 });
+
+    curY += partesH + 2.5;
+
+    // 3. Seção 2: DOS FATOS E FUNDAMENTOS JURÍDICOS
+    curY = desenharCabecalhoSecao(doc, curY, "2. Dos Fatos e Fundamentos Jurídicos");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.4);
+    const fatosSplit = doc.splitTextToSize(fatos, boxW - 8);
+    const fatosH = Math.max(12, 5.5 + (fatosSplit.length * 2.9));
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, fatosH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, fatosH, "F");
+
+    doc.setTextColor(30, 36, 50);
+    doc.text(fatosSplit, 18, curY + 4.8, { maxWidth: boxW - 8, lineHeightFactor: 1.18 });
+
+    curY += fatosH + 2.0;
+
+    // 4. Seção 3: DO OBJETO DA NOTIFICAÇÃO
+    curY = desenharCabecalhoSecao(doc, curY, "3. Do Objeto da Notificação");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.4);
+    const objSplit = doc.splitTextToSize(objeto, boxW - 8);
+    const objH = Math.max(11, 5.5 + (objSplit.length * 2.9));
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, objH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, objH, "F");
+
+    doc.setTextColor(30, 36, 50);
+    doc.text(objSplit, 18, curY + 4.8, { maxWidth: boxW - 8, lineHeightFactor: 1.18 });
+
+    curY += objH + 2.0;
+
+    // 5. Seção 4: DAS ADVERTÊNCIAS LEGAIS
+    curY = desenharCabecalhoSecao(doc, curY, "4. Das Advertências Legais");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    const advSplit = doc.splitTextToSize(advertencias, boxW - 8);
+    const advH = Math.max(15, 5.5 + (advSplit.length * 2.8));
+
+    doc.setFillColor(255, 253, 245);
+    doc.setDrawColor(...ORO);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(14, curY, boxW, advH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, advH, "F");
+
+    doc.setTextColor(25, 30, 45);
+    doc.text(advSplit, 18, curY + 4.8, { maxWidth: boxW - 8, lineHeightFactor: 1.16 });
+
+    curY += advH + 2.0;
+
+    // 6. Seção 5: DO PRAZO PARA EVENTUAIS MANIFESTAÇÕES
+    curY = desenharCabecalhoSecao(doc, curY, "5. Do Prazo para Eventuais Manifestações");
+    const prazoBoxH = 11;
+    doc.setFillColor(251, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, prazoBoxH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, prazoBoxH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("PRAZO LEGAL ASSINALADO:", 18, curY + 4.2);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.4);
+    doc.setTextColor(190, 40, 40); // Destaque em tom de urgência
+    doc.text(prazo, 18, curY + 8.2);
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(6.5);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text(`${cidade}, ${dataExtenso}.`, pageWidth - 18, curY + 8.2, { align: "right" });
+
+    curY += prazoBoxH + 2.5;
+
+    // 7. Bloco de Assinaturas e Chancela
+    const sigStartY = Math.min(Math.max(curY, 226), 231);
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, opts.agente || notificante, opts.agenteId, opts.cargo || "Promotor de Justiça / Notificante", protocolo);
+
+    const safeNome = empresa.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `Notificacao_Extrajudicial_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
+  /* ==========================================================
      1-B. GERAÇÃO DE PDF PARA OS ATOS DO TRIBUNAL
-          (Petições, Mandados, Intimações, Processos, Decisões...)
+          (Petições, Mandados, Intimações, Processos, Decisões, Ofícios, Notificações...)
           opts = { titulo, fields:[{label,value,long}], agente, agenteId,
-                   cargo, termo, natureza, eficacia, cidade, secaoDados, secaoTexto }
+                   cargo, termo, natureza, eficacia, cidade, secaoDados, secaoTexto, serviceId }
      ========================================================== */
   async function generateTribunalPDF(opts) {
     const jsPDF = getJsPDF();
@@ -1005,6 +1566,14 @@
     const protocolo = gerarProtocolo();
     const titulo = opts.titulo || "Ato Oficial do Tribunal";
     const cidade = opts.cidade || "Brava RP";
+
+    // Roteamento inteligente para layouts dedicados de Ofício e Notificação Extrajudicial
+    if (opts.serviceId === "oficio" || (titulo && titulo.toLowerCase().includes("ofício"))) {
+      return await renderOficioPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade);
+    }
+    if (opts.serviceId === "notificacao" || (titulo && titulo.toLowerCase().includes("notificação"))) {
+      return await renderNotificacaoPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade);
+    }
 
     let curY = desenharEstruturaBase(doc, logo, watermark, titulo, protocolo, dataHora, cidade);
 
@@ -2489,6 +3058,8 @@
   window.SDJ_PDF = {
     generateServicePDF,
     generateTribunalPDF,
+    generateOficioPDF: (opts) => generateTribunalPDF({ ...opts, serviceId: "oficio" }),
+    generateNotificacaoPDF: (opts) => generateTribunalPDF({ ...opts, serviceId: "notificacao" }),
     generatePenalPDF,
     generateProvaOralPDF,
     generateCarterinhaPDF,
