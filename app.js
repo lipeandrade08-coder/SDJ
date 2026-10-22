@@ -30,6 +30,8 @@
     notificacao: svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
     divorcio: svg('<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 4l-2 5 4 4-2 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
     gabinete: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'),
+    administrativo: svg('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+    recibo: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2 3-2 3 2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -628,6 +630,63 @@
       ]
     },
     {
+      id: "recibo_cnpj", title: "Recibo de Impostos do CNPJ", icon: "🧾", svg: "recibo", tag: "Tributário",
+      desc: "Comprovante oficial de recolhimento de impostos, taxa de manutenção semanal e quitação fiscal do CNPJ.",
+      webhook: "https://discord.com/api/webhooks/1562906330295959662/MkiagZjdSmN6LVdIu7GRgkjapDjA3EJxLTRrDweLAAJcdiscYQS4tVhIDMMGQ9mL1Llr",
+      fields: [
+        { id: "rc_empresa", label: "🏢 Razão Social / Nome da Empresa", placeholder: "Ex.: Los Santos Customs / Mecânica Central" },
+        { id: "rc_cnpj", label: "🔢 CNPJ da Empresa", placeholder: "Ex.: 44.890.123/0001-05" },
+        { id: "rc_prop", label: "👤 Nome do Responsável / Proprietário", placeholder: "Ex.: João Silva" },
+        { id: "rc_id", label: "🪪 Passaporte do Responsável", placeholder: "Ex.: 1042" },
+        { id: "rc_telefone", label: "📞 Telefone de Contato da Empresa", placeholder: "Ex.: 555-0192 ou (11) 98765-4321", isFull: true },
+        { 
+          id: "rc_tributo", 
+          label: "📋 Tributo / Taxa Municipal Recolhida", 
+          type: "options", 
+          options: [
+            "Taxa Semanal de Manutenção do CNPJ",
+            "Alvará de Funcionamento e Localização",
+            "Taxa Mensal / Periódica de Manutenção",
+            "Imposto sobre Atividades Econômicas & Serviços",
+            "Taxa de Reativação de CNPJ Suspenso",
+            "Outro Tributo / Taxa Fazendária"
+          ],
+          isFull: true
+        },
+        { id: "rc_competencia", label: "📅 Competência / Período Fiscal Quitado", placeholder: "Ex.: Semana Vigente / Mês Atual" },
+        { id: "rc_valor", label: "💰 Valor Pago / Recolhido (Personalizável)", placeholder: "Digite o valor cobrado (Ex.: R$ 50.000, R$ 75.000, R$ 100.000...)", isFull: true },
+        { 
+          id: "rc_forma_pagamento", 
+          label: "💳 Forma de Pagamento", 
+          type: "options", 
+          options: [
+            "Transferência Bancária Oficial",
+            "Pagamento em Dinheiro na Tesouraria",
+            "Depósito em Conta do Tesouro / Cartório",
+            "Compensação Institucional"
+          ] 
+        },
+        { 
+          id: "rc_status_fiscal", 
+          label: "⚖️ Situação Fiscal da Empresa após Pagamento", 
+          type: "options", 
+          options: [
+            "REGULAR · Quitação Plena do Período",
+            "EM REGULARIZAÇÃO · Parcela Paga",
+            "ALVARÁ ATIVO · Em Dias com a Fazenda"
+          ] 
+        },
+        { id: "rc_emissao", label: "📅 Data do Recolhimento / Emissão", placeholder: "DD/MM/AAAA", type: "emissao" },
+        { id: "rc_validade", label: "⏳ Validade da Quitação Fiscal", placeholder: "DD/MM/AAAA", type: "validade", emissaoId: "rc_emissao" },
+        { 
+          id: "rc_autenticacao", 
+          label: "📝 Certidão de Quitação e Autenticação Mecânica", 
+          placeholder: "Certifico e dou fé que a quantia discriminada foi regularmente recolhida aos cofres públicos, gozando a empresa de plena regularidade cadastral.", 
+          isFull: true 
+        }
+      ]
+    },
+    {
       id: "porte", title: "Porte de Arma (PT) & Munições", icon: "🔫", svg: "porte", tag: "Armamento",
       desc: "Porte e Registro exclusivo para 1 Pistola PT 9mm (R$ 80.000) e Munições (R$ 400 por unidade). Laudo psicotécnico hospitalar obrigatório.",
       webhook: "https://discord.com/api/webhooks/1560687247869878294/WFpx_HfZFoNVsA-b8Fxx_hwVJidjHy2HNi2JD4-MsevtwQshLDcj8LJODGwyemWeu92A",
@@ -773,6 +832,26 @@
             <button type="button" class="btn-artigo-chip" data-artigo="Art. 1.6 · Dano ao Patrimônio">+ Art. 1.6 (Dano)</button>
             <button type="button" class="btn-artigo-chip" data-artigo="Art. 1.1 · Equipamento Balístico">+ Art. 1.1 (Eq. Balístico)</button>
             <button type="button" class="btn-artigo-chip" data-artigo="Art. 2.4 · Tráfico de Armas">+ Art. 2.4 (Tráfico Armas)</button>
+          </div>
+        </label>`;
+    }
+    if (f.id === "rc_valor") {
+      return `
+        <label class="full field-wrapper-valor">
+          <div class="field-label-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-weight:600;color:var(--strong);font-size:12.5px;">${label}</span>
+            <span class="muted" style="font-size:11.5px;color:var(--gold-3);font-weight:600;">💰 Digite o valor que desejar ou use um atalho</span>
+          </div>
+          <input id="${f.id}" type="text" placeholder="${f.placeholder || "Digite o valor atual (Ex.: R$ 50.000, R$ 75.000, R$ 100.000...)"}" style="width:100%;border-radius:10px;padding:11px 14px;background:var(--panel-solid);border:1.5px solid var(--line);color:var(--strong);font-weight:700;font-size:14px;" />
+          <div class="valor-quick-chips" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            <span style="font-size:11px;color:var(--muted);font-weight:600;margin-right:2px;">Atalhos Rápidos:</span>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 30.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 30.000</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 50.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--accent);border-radius:6px;color:var(--gold-3);cursor:pointer;font-weight:700;">R$ 50.000 (Padrão)</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 75.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 75.000</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 100.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 100.000</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 150.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 150.000</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 200.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 200.000</button>
+            <button type="button" class="btn-valor-chip" data-target="rc_valor" data-val="R$ 250.000" style="padding:4px 10px;font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer;font-weight:600;">R$ 250.000</button>
           </div>
         </label>`;
     }
@@ -1426,6 +1505,19 @@
       return;
     }
 
+    const valorChip = e.target.closest(".btn-valor-chip");
+    if (valorChip) {
+      e.preventDefault();
+      const targetId = valorChip.dataset.target || "rc_valor";
+      const targetInput = $("#" + targetId);
+      if (targetInput) {
+        targetInput.value = valorChip.dataset.val;
+        targetInput.focus();
+        toast(`✓ Valor selecionado: ${valorChip.dataset.val}`);
+      }
+      return;
+    }
+
     if (e.target.closest("#btn-consultar-cp-lf")) {
       e.preventDefault();
       openModal();
@@ -1594,8 +1686,19 @@
     url: "gabinete.html"
   };
 
+  /* ---------- Card: Painel Administrativo ---------- */
+  const administrativoCard = {
+    id: "administrativo",
+    title: "Painel Administrativo",
+    svg: "administrativo",
+    tag: "Diretoria · PIN",
+    featured: true,
+    desc: "Gestão e controle institucional do SDJ: exonerações, desligamentos de membros, cadastro de blacklist e advertências disciplinares.",
+    url: "administrativo.html"
+  };
+
   /* ---------- Home: cards de serviço ---------- */
-  const allCards = [calculadoraCard, tribunalCard, gabineteCard, oficioCard, notificacaoCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
+  const allCards = [calculadoraCard, tribunalCard, gabineteCard, administrativoCard, oficioCard, notificacaoCard, carterinhaCard, provaOralCard, precosCard, ...servicesConfig];
   $("#calc-icon").innerHTML = ICONS.balanca;
   $("#home-grid").innerHTML = allCards.map((c, i) => `
     <button class="nav-card ${c.featured ? "featured" : ""}" type="button" id="card-${c.id}" data-target="tab-${c.id}" data-title="${c.title}" ${c.url ? `data-url="${c.url}"` : ""} style="animation-delay:${0.05 * i}s">
@@ -1824,6 +1927,22 @@
         }
 
         payload.content = `🏢 **[ABERTURA DE EMPRESA · CNPJ HOMOLOGADO]**\nO Cartório Notarial e de Registro Empresarial certifica a constituição e registro oficial da empresa **${empresa}**.\n🔢 **CNPJ:** \`${cnpjNum}\`\n👤 **Proprietário:** **${prop}**${propId}${tel}${ramo}\n👶 **Trabalha com Jovem Aprendiz:** **${isJovemAprendiz ? "SIM (Ação Obrigatória com Conselho Tutelar)" : "NÃO"}**\n💰 **Taxa de Registro:** **${valorTotal}**${jovemText}\n📜 *Registro mercantil averbado no Livro de Pessoas Jurídicas com fé pública. Certidão oficial anexada em PDF.*`;
+      } else if (sid === "recibo_cnpj") {
+        const empresa = $("#rc_empresa")?.value || "Empresa";
+        const cnpjNum = $("#rc_cnpj")?.value || "—";
+        const prop = $("#rc_prop")?.value || "—";
+        const propId = $("#rc_id")?.value ? ` (ID: ${$("#rc_id").value})` : "";
+        const tel = $("#rc_telefone")?.value ? `\n📞 **Contato:** ${$("#rc_telefone").value}` : "";
+        const tributo = $("#rc_tributo")?.value || "Taxa de Manutenção";
+        const comp = $("#rc_competencia")?.value || "Semana Vigente";
+        const valorPago = $("#rc_valor")?.value || "R$ 50.000";
+        const forma = $("#rc_forma_pagamento")?.value || "Transferência Bancária";
+        const statusFiscal = $("#rc_status_fiscal")?.value || "REGULAR";
+
+        embed.title = "🧾 RECIBO DE PAGAMENTO DE TRIBUTOS · CNPJ QUITAÇÃO";
+        embed.color = 0x10b981; // Verde esmeralda de regularidade e quitação fiscal
+
+        payload.content = `🧾 **[COMPROVANTE DE PAGAMENTO DE IMPOSTOS · CNPJ]**\nO Cartório Notarial e de Registro Empresarial CERTIFICA o recolhimento e a quitação tributária da empresa **${empresa}**.\n🔢 **CNPJ:** \`${cnpjNum}\`\n👤 **Responsável:** **${prop}**${propId}${tel}\n📋 **Tributo / Taxa:** **${tributo}**\n📅 **Competência:** **${comp}**\n💰 **Valor Pago:** **${valorPago}** (${forma})\n⚖️ **Situação Cadastral:** **${statusFiscal}**\n📜 *Averbação fiscal registrada com fé pública notarial. Comprovante e Certidão de Quitação oficial anexados em PDF.*`;
       }
 
       const filesToSend = [];
@@ -3707,6 +3826,99 @@ Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatiz
     }
   }
 
+  /* ==========================================================
+     MENU DE HAMBÚRGUER GERAL DE FUNÇÕES DO TOPO
+     ========================================================== */
+  function initHamburgerDrawer() {
+    const btnOpen = $("#btn-hamburger");
+    const drawerBackdrop = $("#drawer-backdrop");
+    const btnClose = $("#btn-close-drawer");
+    if (!btnOpen || !drawerBackdrop) return;
+
+    function openDrawer() {
+      drawerBackdrop.classList.add("open");
+      drawerBackdrop.setAttribute("aria-hidden", "false");
+    }
+
+    function closeDrawer() {
+      drawerBackdrop.classList.remove("open");
+      drawerBackdrop.setAttribute("aria-hidden", "true");
+    }
+
+    btnOpen.addEventListener("click", openDrawer);
+    if (btnClose) btnClose.addEventListener("click", closeDrawer);
+
+    drawerBackdrop.addEventListener("click", (e) => {
+      if (e.target === drawerBackdrop) closeDrawer();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && drawerBackdrop.classList.contains("open")) {
+        closeDrawer();
+      }
+    });
+
+    // Mapeamento dos botões internos do drawer para suas respectivas ações
+    const itemPrecos = $("#drawer-item-precos");
+    if (itemPrecos) {
+      itemPrecos.addEventListener("click", () => {
+        closeDrawer();
+        goTo("tab-precos", "Tabela de Preços");
+      });
+    }
+
+    const itemCodigo = $("#drawer-item-codigo");
+    if (itemCodigo) {
+      itemCodigo.addEventListener("click", () => {
+        closeDrawer();
+        const btn = $("#btn-codigo");
+        if (btn) btn.click();
+      });
+    }
+
+    const itemCodigoCivil = $("#drawer-item-codigo-civil");
+    if (itemCodigoCivil) {
+      itemCodigoCivil.addEventListener("click", () => {
+        closeDrawer();
+        const btn = $("#btn-codigo-civil");
+        if (btn) btn.click();
+      });
+    }
+
+    const itemCarterinha = $("#drawer-item-carterinha");
+    if (itemCarterinha) {
+      itemCarterinha.addEventListener("click", () => {
+        closeDrawer();
+        goTo("tab-carterinha", "Carteira Funcional");
+      });
+    }
+
+    const itemProvaOral = $("#drawer-item-provaoral");
+    if (itemProvaOral) {
+      itemProvaOral.addEventListener("click", () => {
+        closeDrawer();
+        goTo("tab-provaoral", "Prova Oral do Recrutador");
+      });
+    }
+
+    const itemAvisos = $("#drawer-item-avisos");
+    if (itemAvisos) {
+      itemAvisos.addEventListener("click", () => {
+        closeDrawer();
+        const btn = $("#btn-avisos");
+        if (btn) btn.click();
+      });
+    }
+
+    const itemTema = $("#drawer-btn-tema-toggle");
+    if (itemTema) {
+      itemTema.addEventListener("click", () => {
+        const btn = $("#btn-tema");
+        if (btn) btn.click();
+      });
+    }
+  }
+
   renderList();
   renderTabelaPrecos();
   renderProvaOral();
@@ -3714,6 +3926,7 @@ Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatiz
   initCarterinha();
   initServiceAttachments();
   initAvisosModal();
+  initHamburgerDrawer();
   aplicarPrecosPadrao();
   initValidades();
   update();

@@ -31,7 +31,8 @@ const TRIBUNAL_CONFIG = {
   ],
 
   grupos: [
-    { id: "processos", titulo: "Processos & Petições", desc: "Protocolo de petições, andamento de processos e decisões judiciais." },
+    { id: "processos", titulo: "Processos & Petições", desc: "Protocolo de petições, andamento de processos cíveis, criminais e decisões judiciais." },
+    { id: "administrativo", titulo: "Processo Administrativo (PAD)", desc: "Requisição de instauração de PAD externo, apuração correcional e aplicação de sanções administrativas." },
     { id: "mandados", titulo: "Mandados & Autorizações", desc: "Expedição, cumprimento de mandados e autorizações judiciais." },
     { id: "agenda", titulo: "Comunicações & Agenda", desc: "Intimações das partes e agendamento de audiências." },
     { id: "notificacoes", titulo: "Ofícios & Notificações", desc: "Expedição de ofícios ministeriais, diligências fiscalizatórias e notificações extrajudiciais." },
@@ -321,6 +322,432 @@ const TRIBUNAL_CONFIG = {
         { id: "de_pena", label: "Pena / Condenação", placeholder: "Ex.: 30 meses + multa de R$ 40.000 (se penal) ou Indenização de R$ 50.000 (se cível)", isFull: true, dica: "Se penal: tempo de pena privativa de liberdade e valor da multa. Se cível: montante indenizatório." },
         { id: "de_fundamentacao", label: "Fundamentação", type: "textarea", req: true, placeholder: "Razões de fato e de direito da decisão...", dica: "Analise as provas materiais, depoimentos e teses de defesa para motivar a decisão.", modelo: "VISTOS, ETC.\nTrata-se de procedimento judicial instaurado para apuração de [Fatos / Pretensão]. A autoria e a materialidade / nexo causal restaram devidamente comprovados nos autos pelo conjunto probatório. Nos termos do Código Civil de Brava (Art. 66 c/c Art. 88) / Código Penal, impõe-se a aplicação da medida de direito cabível, ante a ausência de excludentes de ilicitude ou escusas legítimas." },
         { id: "de_dispositivo", label: "Dispositivo", type: "textarea", req: true, placeholder: "O que fica decidido. Ex.: Julgo procedente o pedido para...", dica: "A ordem final imperativa do Magistrado: 'Ante o exposto, JULGO... Cumpra-se.'", modelo: "DISPOSITIVO:\nAnte todo o exposto e pelo que mais dos autos consta, JULGO [PROCEDENTE / CONDENATÓRIA] a presente demanda para o fim de:\n1) CONDENAR a parte vencida ao pagamento da indenização / cumprimento da obrigação no valor de R$ [Valor] / aplicação da pena penal de [X] meses;\n2) Fixar o prazo de [X] horas para cumprimento voluntário, sob pena de execução (CC, Art. 91);\nPublique-se no Diário Oficial. Registre-se. Intimem-se as partes e cumpra-se na forma da lei." },
+      ],
+    },
+    {
+      id: "pad_externo",
+      grupo: "administrativo",
+      title: "Processo Administrativo · Instauração de PAD",
+      svg: "pad",
+      emoji: "⚖️",
+      tag: "Processo Administrativo",
+      desc: "Requisição formal de instauração de Processo Administrativo Disciplinar (PAD) perante o Tribunal / Corregedoria contra servidores e agentes públicos externos, com pedido de aplicação de sanções como advertência, suspensão, demissão a bem do serviço público ou cassação de aposentadoria.",
+      webhook: "https://discord.com/api/webhooks/1561380508007534593/ZFAGt9x3aDs2vksYW8t3dmOA8uKQYzc1McrT-WaLOu_J1fmoScVi3l6DgMiOP4r_3Koc",
+      cor: 13938487,
+      cargoPadrao: "Juiz",
+      natureza: "Processo Administrativo Disciplinar (PAD Externo)",
+      eficacia: "Corregedoria Geral & Poder Disciplinar",
+      termo: "A CORREGEDORIA GERAL E O TRIBUNAL DE JUSTIÇA DA COMARCA DE BRAVA RP, no regular exercício de suas prerrogativas constitucionais de controle da legalidade, corregedoria e poder disciplinar sobre agentes públicos, CERTIFICAM a autuação deste Processo Administrativo Disciplinar, assegurados ao acusado o contraditório, a ampla defesa técnica e o devido processo legal (CF art. 5º, LIV e LV).",
+      guia: {
+        destaque: "Requisição de PAD × Sanções Administrativas (Advertência, Suspensão, Demissão e Cassação)",
+        resumo: "O Processo Administrativo Disciplinar (PAD) é o rito formal solene presidido pela autoridade judiciária / corregedoria para apurar desvios éticos, abusos de poder, violência desmedida, prevaricação ou quebra de decoro cometidos por agentes públicos externos (policiais civis/militares, socorristas, guardas de trânsito e servidores civis), culminando na aplicação de sanções disciplinares legais.",
+        quandoUsar: "Utilize para requisitar ou formalizar a abertura de PAD contra agentes externos da segurança pública, saúde ou administração pública quando houver indícios de conduta irregular grave, demandando a aplicação de advertência, suspensão, demissão a bem do serviço público ou cassação de aposentadoria.",
+        diferencas: [
+          {
+            nome: "Requisição de Instauração de PAD",
+            tag: "Abertura & Citação",
+            cor: "blue",
+            desc: "Petição e despacho inicial que formulam a acusação disciplinar, qualificam o servidor, juntam provas e fixam prazo de 48h para defesa prévia.",
+            quando: "Logo após o recebimento de representação da vítima, notícia de infração funcional ou requisição do Ministério Público.",
+            exemplo: "Representação contra policial por agressão física sem justificativa e retenção ilegal de bens de cidadão.",
+            resultado: "Abertura oficial dos autos do PAD, citação formal do servidor investigado e notificação ao Comando da Corporação."
+          },
+          {
+            nome: "Afastamento Cautelar Preventivo",
+            tag: "Proteção Probatória & Urgência",
+            cor: "amber",
+            desc: "Medida urgente para recolhimento provisório do armamento funcional, retenção de viatura/equipamentos e afastamento imediato do policiamento de rua.",
+            quando: "Quando a permanência do investigado no policiamento de rua colocar em risco testemunhas, provas ou a ordem pública.",
+            exemplo: "Servidor investigado por ameaçar a vítima da ocorrência ou coagir testemunhas durante a apuração.",
+            resultado: "O agente passa a atuar exclusivamente em funções administrativas internas ou é suspenso preventivamente até decisão final."
+          },
+          {
+            nome: "Demissão a Bem do Serviço Público",
+            tag: "Penalidade Máxima Expulsória",
+            cor: "purple",
+            desc: "Punição disciplinar expulsória que acarreta a perda definitiva do cargo público, exclusão da corporação e inabilitação para o serviço público.",
+            quando: "Em faltas disciplinares gravíssimas, como corrupção, tortura, homicídio arbitrário, concussão ou quebra de decoro irreparável.",
+            exemplo: "Comprovação de cobrança de propina para liberação de suspeito armado ou violência corporal extrema.",
+            resultado: "Exclusão sumária dos quadros públicos do servidor com certidão no Diário Oficial e comunicação à Vara Criminal."
+          },
+          {
+            nome: "Cassação de Aposentadoria / Disponibilidade",
+            tag: "Inativação Cassada",
+            cor: "green",
+            desc: "Sanção disciplinar aplicada a servidores inativos ou na reserva remunerada que praticaram falta punível com demissão enquanto em atividade.",
+            quando: "Quando o servidor já se encontrava aposentado no momento da conclusão do processo disciplinar condenatório.",
+            exemplo: "Ex-comandante que praticou fraudes orçamentárias na corporação enquanto na ativa.",
+            resultado: "Cancelamento do benefício de aposentadoria/reserva e perda de prerrogativas e patentes públicas."
+          }
+        ],
+        dicasEstagiario: [
+          "Identifique com precisão o órgão externo a que o servidor pertence (Polícia Militar, Civil, SAMU, Guarda Municipal ou Prefeitura).",
+          "O passaporte/ID do investigado é campo essencial para notificação no jogo e anotação na ficha funcional da corporação.",
+          "Especifique com clareza as sanções administrativas requisitadas: Advertência, Suspensão (5 a 30 dias), Demissão a bem do serviço público ou Cassação de aposentadoria.",
+          "Em medidas cautelares de afastamento, notifique de pronto o Comando Geral da Corporação externa para imediato cumprimento prático.",
+          "O prazo constitucional padrão para Defesa Prévia é de 48 (quarenta e oito) horas a contar da citação pessoal do servidor.",
+          "Acoste links de evidências materiais nos fatos (vídeos de bodycam, relatórios de rádio, fotografias e depoimentos de testemunhas).",
+          "A decisão em PAD não impede a responsabilização penal concomitante do agente pelo mesmo fato perante a Vara Criminal de Brava."
+        ],
+        baseLegal: "Constituição de Brava RP (Art. 5º, LIV e LV - Devido Processo Legal, Contraditório e Ampla Defesa) · Lei de Abuso de Autoridade (Lei nº 13.869/19) · Código Penal de Brava · Estatuto dos Servidores Públicos Civis e Militares (Sanções: Advertência, Suspensão, Demissão e Cassação de Aposentadoria) · Regimento da Corregedoria Geral."
+      },
+      fields: [
+        { id: "pad_numero", label: "Nº dos Autos (PAD)", type: "numero", prefixo: "PAD-EXT", dica: "Numeração oficial gerada automaticamente para o processo disciplinar externo. Clique no dado para gerar outro número." },
+        { id: "pad_fase", label: "Fase do Procedimento Administrativo", type: "options", options: [
+          "Requisição de Instauração de PAD",
+          "Portaria de Abertura & Citação do Servidor",
+          "Fase Instrutória & Oitiva do Servidor",
+          "Aguardando Julgamento da Comissão",
+          "Medida Cautelar Deferida (Afastamento Preventivo)",
+          "Julgado Procedente (Sanção Disciplinar Aplicada)",
+          "Julgado Improcedente (Arquivamento)"
+        ], dica: "Etapa processual atual do procedimento perante a Corregedoria / Tribunal." },
+        { id: "pad_orgao", label: "Órgão / Corporação Externa", type: "options", options: [
+          "Polícia Militar (PM / Choque / BOPE)",
+          "Polícia Civil (DPC / Investigação)",
+          "Saúde Pública (Hospital Municipal / SAMU)",
+          "Guarda Municipal & Trânsito",
+          "Ordem dos Advogados (OAB / Defensoria Externa)",
+          "Prefeitura & Secretarias Municipais",
+          "Outro Órgão da Administração Pública"
+        ], dica: "Instituição ou órgão público externo a que o servidor processado está vinculado." },
+        { id: "pad_investigado", label: "Nome do Servidor Público Investigado", req: true, dica: "Nome completo do servidor ou agente da corporação externa sob apuração disciplinar." },
+        { id: "pad_investigado_id", label: "Passaporte / ID do Investigado", req: true, dica: "Passaporte oficial do agente investigado no RP (essencial para registro funcional)." },
+        { id: "pad_cargo_funcional", label: "Cargo / Patente / Função na Corporação", req: true, placeholder: "Ex.: Sargento PM, Cabo, Delegado, Médico Socorrista, Guarda Municipal...", dica: "Graduação hierárquica, patente militar ou função desempenhada pelo investigado na corporação." },
+        { id: "pad_denunciante", label: "Autoridade Requisitante / Órgão Notificante", req: true, placeholder: "Ex.: Ministério Público de Brava / Corregedoria Geral / Cidadão Notificante / Comando", dica: "Autoridade, promotor ou cidadão que requisita a instauração do PAD." },
+        { id: "pad_artigos", label: "⚖️ Infração Disciplinar Imputada / Base Legal", req: true, isFull: true, placeholder: "Ex.: Abuso de Autoridade (Art. 350 CP), Prevaricação, Violência Excessiva, Quebra de Decoro Funcional...", dica: "Falta disciplinar imputada ao agente segundo o Estatuto e a legislação penal/administrativa de Brava." },
+        { id: "pad_sancao", label: "🛑 Sanção Administrativa Requisitada (Consequência)", type: "options", options: [
+          "Demissão a Bem do Serviço Público",
+          "Suspensão das Funções Públicas (5 a 30 dias com perda remuneratória)",
+          "Advertência Disciplinar Formal em Assentamento Funcional",
+          "Cassação de Aposentadoria ou Disponibilidade",
+          "Destituição de Cargo em Comissão / Função de Confiança",
+          "Repreensão Escrita Funcional",
+          "Em Apuração (Aguardando Parecer da Comissão Processante)",
+          "Absolvição por Falta de Provas / Arquivamento"
+        ], dica: "Aplicação das sanções administrativas cabíveis como consequência da infração apurada." },
+        { id: "pad_medida_cautelar", label: "Medida Cautelar Urgente Aplicada / Requisitada", type: "options", options: [
+          "Afastamento Preventivo Imediato das Funções Operacionais",
+          "Suspensão Temporária do Porte Funcional de Arma de Fogo",
+          "Retenção Cautelar de Veículo Oficial e Equipamentos",
+          "Proibição de Acesso a Instalações e Sistemas do Órgão",
+          "Nenhuma Medida Cautelar (Responde em Funções Administrativas)",
+          "Afastamento Total com Suspensão Remuneratória"
+        ], dica: "Medidas protetivas ou cautelares determinadas durante a tramitação do processo." },
+        { id: "pad_prazo_defesa", label: "Prazo para Defesa Prévia", value: "48 (quarenta e oito) horas a contar da citação", isFull: true, dica: "Prazo assinalado para o investigado apresentar advogado ou justificativa formal escrita." },
+        { id: "pad_comissao", label: "Comissão Disciplinar / Juiz Relator", placeholder: "Ex.: Dr. Roberto Vieira (Juiz Corregedor) e Promotoria de Justiça", isFull: true, dica: "Identificação da autoridade judiciária ou membros da comissão que presidem os autos." },
+        { id: "pad_fatos", label: "1. Relatório Circunstanciado dos Fatos e Conduta Funcional", type: "textarea", req: true, placeholder: "Descreva detalhadamente a conduta praticada pelo agente externo, data, local, ocorrência e provas...", dica: "Narre a ocorrência em ordem cronológica: data, horário, conduta irregular praticada e provas juntadas.", modelo: "1. HISTÓRICO DA OCORRÊNCIA E CONDUTA FUNCIONAL:\nNo dia [Data], por volta das [Horário], nas dependências/região de [Local em Brava RP], o agente público investigado, no exercício ostensivo de suas atribuições pelo órgão [Órgão/Corporação], praticou conduta incompatível com a dignidade da função pública, consubstanciada em: [descrever detalhadamente a ação ou omissão irregular apurada].\n\n2. ENQUADRAMENTO DA FALTA DISCIPLINAR:\nA conduta imputada afronta os deveres estatutários de probidade, legalidade e estrita obediência aos limites operacionais da função, configurando expressamente infração disciplinar de natureza grave com violação ao Código Penal da Cidade e regulamento da corporação.\n\n3. DILIGÊNCIAS PRELIMINARES E PROVAS JUNTADAS:\nForam acostados aos autos: termos de declaração da vítima/notificante, registros de gravação de câmeras corporais/segurança (links anexos), relatórios de ocorrência policial e registros de rádio da central de despacho." },
+        { id: "pad_pedidos_sancoes", label: "2. Da Requisição de Instauração e Aplicação de Sanções Administrativas", type: "textarea", req: true, placeholder: "Especifique os pedidos expressos de instauração do PAD, citação, cautelares e sanções (advertência, suspensão, demissão a bem do serviço público ou cassação de aposentadoria)...", dica: "Requisição formal de instauração de PAD e aplicação de sanções administrativas como advertência, suspensão, demissão ou cassação.", modelo: "Diante da gravidade dos elementos coligidos nos autos, REQUISITA-SE a INSTAURAÇÃO FORMAL DO PROCESSO ADMINISTRATIVO DISCIPLINAR (PAD) em face do servidor público investigado, determinando-se:\n\na) A INSTAURAÇÃO FORMAL DO PAD perante este Tribunal / Corregedoria Geral e a CITAÇÃO do servidor investigado no passaporte indicado para que, no prazo legal de 48 horas, ofereça Defesa Prévia por intermédio de Advogado legalmente constituído ou Defensor Dativo;\nb) O DEFERIMENTO DA MEDIDA CAUTELAR URGENTE de afastamento preventivo imediato das funções operacionais de rua, com retenção cautelar do armamento funcional e viatura oficial;\nc) A NOTIFICAÇÃO IMEDIATA ao Comando Geral / Direção da Corporação externa para ciência e rigoroso cumprimento das ordens cautelares sob pena de desobediência funcional;\nd) A designação de audiência de instrução disciplinar com oitiva das testemunhas, vítimas e interrogatório formal do investigado perante este Juízo;\ne) No mérito, após a regular instrução e garantida a ampla defesa técnica, a TOTAL PROCEDÊNCIA do processo disciplinar com a CONSEQUENTE APLICAÇÃO DE SANÇÃO ADMINISTRATIVA DISCIPLINAR cabível:\n   • Advertência formal em ficha funcional;\n   • Suspensão das funções públicas de 5 a 30 dias (com perda remuneratória);\n   • Demissão a bem do serviço público com exclusão da corporação; ou\n   • Cassação de aposentadoria ou disponibilidade;\nf) A expedição de cópia integral dos autos ao Ministério Público para apuração de ilícitos penais decorrentes dos mesmos fatos." },
+      ],
+    },
+
+    /* ---------------- PROCEDIMENTO INVESTIGATÓRIO CRIMINAL (PIC) ---------------- */
+    {
+      id: "pic",
+      grupo: "administrativo",
+      title: "Procedimento Investigatório Criminal (PIC)",
+      svg: "pic",
+      emoji: "🔱",
+      tag: "Investigação Penal",
+      desc: "Instauração e condução de investigação penal direta pelo Ministério Público para apuração de crimes, corrupção, tortura e abusos cometidos por agentes públicos externos.",
+      webhook: "https://discord.com/api/webhooks/1561380508007534593/ZFAGt9x3aDs2vksYW8t3dmOA8uKQYzc1McrT-WaLOu_J1fmoScVi3l6DgMiOP4r_3Koc",
+      cor: 12597547,
+      cargoPadrao: "Promotor de Justiça",
+      natureza: "Procedimento Investigatório Criminal (PIC)",
+      eficacia: "Investigação Penal do Ministério Público",
+      termo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP, com fulcro no art. 129, I e VIII da Constituição e Resolução Institucional de Investigação Criminal, CERTIFICA a instauração do presente PROCEDIMENTO INVESTIGATÓRIO CRIMINAL (PIC), assegurada a preservação da cadeia de custódia das provas e a legalidade das diligências ministeriais.",
+      guia: {
+        destaque: "PIC (Ministério Público) × Inquérito Policial (Polícia Civil) × Ação Penal",
+        resumo: "O Procedimento Investigatório Criminal (PIC) é o instrumento investigativo de natureza penal instaurado diretamente no âmbito do Ministério Público para apurar infrações penais de autoria de agentes públicos ou crimes complexos (corrupção, abuso, tortura e milícia).",
+        quandoUsar: "Utilize quando o Ministério Público conduzir a colheita probatória de crimes sem depender da autoridade policial comum, fundamentando pedidos de prisão preventiva, busca e apreensão ou ajuizamento direto de Denúncia Criminal.",
+        diferencas: [
+          {
+            nome: "Portaria de Instauração do PIC",
+            tag: "Início da Investigação",
+            cor: "blue",
+            desc: "Ato que delimita os indícios de autoria delitiva, os crimes penais sob apuração e determina as primeiras diligências sigilosas.",
+            quando: "Ao receber notícias fundamentadas de crimes graves praticados por autoridades ou corporações externas.",
+            exemplo: "Investigação contra agentes envolvidos em apreensão sem registro e desvio de armamentos.",
+            resultado: "Abertura oficial dos autos de investigação criminal com prazo determinado e requisições periciais."
+          },
+          {
+            nome: "Requerimento Cautelar Urgente",
+            tag: "Medidas Cautelares Penais",
+            cor: "red",
+            desc: "Requerimento dirigido ao Juiz de Direito para decretação de prisão temporária/preventiva, busca e apreensão ou interceptação telemática.",
+            quando: "Para garantir a ordem pública, impedir a fuga de alvos ou evitar a destruição de provas.",
+            exemplo: "Mandado de busca em armários funcionais e residência de servidor investigado por tráfico de influência.",
+            resultado: "Expedição de ordem judicial cautelar pelo Magistrado para cumprimento imediato."
+          },
+          {
+            nome: "Oferecimento de Denúncia Criminal",
+            tag: "Ação Penal Pública",
+            cor: "purple",
+            desc: "Peça acusatória final do Promotor de Justiça que dá início ao processo penal condenatório perante o Tribunal.",
+            quando: "Encerradas as investigações com justa causa e prova cabal da materialidade e autoria.",
+            exemplo: "Denúncia por corrupção passiva e prevaricação com pedido de condenação a pena privativa de liberdade.",
+            resultado: "O investigado torna-se réu formal em Ação Penal perante a Vara Criminal de Brava."
+          },
+          {
+            nome: "Promoção de Arquivamento",
+            tag: "Inexistência de Crime",
+            cor: "green",
+            desc: "Despacho fundamentado do Promotor de Justiça determinando o arquivamento dos autos por falta de provas ou atipicidade.",
+            quando: "Após esgotadas as diligências sem constatação de crime doloso praticado pelo investigado.",
+            exemplo: "Perícias comprovam que a atuação policial ocorreu em estrita e legítima defesa comprovada por câmeras.",
+            resultado: "Extinção da investigação criminal com expedição de certidão negativa."
+          }
+        ],
+        dicasEstagiario: [
+          "Indique os artigos específicos do Código Penal violados (ex.: Art. 3.2 Roubo/Extorsão, Art. 350 Abuso de Autoridade).",
+          "Em medidas cautelares penais, fundamente sempre o periculum in mora e fumus comissi delicti.",
+          "O PIC pode tramitar sob sigilo quando essencial para a eficácia das buscas e interceptações.",
+          "O prazo para conclusão das investigações deve ser expressamente assinalado na portaria."
+        ],
+        baseLegal: "Constituição de Brava (art. 129, I) · Código de Processo Penal · Código Penal de Brava RP · Resoluções do Ministério Público sobre PIC."
+      },
+      fields: [
+        { id: "pic_numero", label: "Nº dos Autos (PIC)", type: "numero", prefixo: "PIC", dica: "Numeração oficial gerada automaticamente para o Procedimento Investigatório Criminal." },
+        { id: "pic_fase", label: "Fase da Investigação Criminal", type: "options", options: [
+          "Portaria de Instauração (Início da Investigação Penal)",
+          "Diligências em Andamento & Juntada de Provas",
+          "Oitiva de Testemunhas e Investigados",
+          "Requerimento de Medidas Cautelares (Prisão / Busca)",
+          "Relatório Final Conclusivo (Oferecimento de Denúncia Crime)",
+          "Promoção de Arquivamento (Inexistência de Crime)"
+        ], dica: "Etapa da persecução penal perante o Ministério Público." },
+        { id: "pic_orgao", label: "Órgão / Corporação Externa", type: "options", options: [
+          "Polícia Militar (PM / Choque / BOPE)",
+          "Polícia Civil (DPC / Investigação)",
+          "Guarda Municipal & Trânsito",
+          "Saúde Pública (Hospital / SAMU)",
+          "Prefeitura & Secretarias Municipais",
+          "Outro Órgão / Ente Público"
+        ], dica: "Corporação ou órgão externo do agente investigado penalmente." },
+        { id: "pic_investigado", label: "Nome do Investigado(a)", req: true, dica: "Nome do suspeito ou agente público sob investigação penal." },
+        { id: "pic_investigado_id", label: "Passaporte / ID do Investigado", req: true, dica: "Passaporte ou identificação do investigado no RP." },
+        { id: "pic_cargo", label: "Cargo / Patente / Função", req: true, placeholder: "Ex.: Sargento PM, Delegado, Agente de Trânsito...", dica: "Função pública exercida pelo investigado." },
+        { id: "pic_delitos", label: "⚖️ Delitos Penais Apurados / Base Legal (CP)", req: true, isFull: true, placeholder: "Ex.: Art. 350 CP (Abuso de Autoridade), Art. 3.2 CP (Corrupção Passiva), Concussão, Tortura...", dica: "Crimes penais imputados com fulcro no Código Penal de Brava." },
+        { id: "pic_cautelar", label: "Medida Cautelar Penal Requerida", type: "options", options: [
+          "Nenhuma Medida Cautelar no Momento",
+          "Prisão Preventiva do Investigado",
+          "Busca e Apreensão em Domicílio / Viatura",
+          "Interceptação Telefônica / Telemática",
+          "Afastamento Imediato do Cargo com Perda do Porte de Arma",
+          "Retenção de Bens e Bloqueio de Ativos"
+        ], dica: "Medidas de coerção processual requeridas ao Juiz competente." },
+        { id: "pic_desfecho", label: "Desfecho / Provimento Pretendido", type: "options", options: [
+          "Oferecimento de Denúncia Criminal (Ação Penal Pública)",
+          "Conversão em Ação Penal com Pedido de Prisão",
+          "Proposta de Acordo de Não Persecução Penal (ANPP)",
+          "Arquivamento por Ausência de Justa Causa",
+          "Em Andamento (Diligências Sigilosas)"
+        ], dica: "Providência ministerial final pretendida nestes autos." },
+        { id: "pic_promotor", label: "Promotor de Justiça Titular / Presidente do PIC", req: true, placeholder: "Ex.: Promotoria de Justiça de Combate ao Crime Organizado", isFull: true, dica: "Nome da autoridade ministerial que preside a investigação." },
+        { id: "pic_fatos", label: "1. Notícia do Crime e Fatos Apurados", type: "textarea", req: true, placeholder: "Descreva os fatos criminosos noticiados, data, hora, local, dinâmica do delito e vítimas...", dica: "Histórico da conduta criminosa e indícios veementes de materialidade.", modelo: "1. DOS FATOS INVESTIGADOS:\nChegou ao conhecimento do Ministério Público, por meio de notícia de fato fundamentada, a ocorrência de conduta delituosa grave praticada por agente público no exercício da função, consistente em [descrever a prática criminosa], no dia [Data], na região de [Local em Brava RP].\n\n2. DA MATERIALIDADE E INDÍCIOS DE AUTORIA:\nRestou preliminarmente constatada a prática dos tipos penais capitulados no Código Penal de Brava, respaldados por depoimentos das vítimas e mídias audiovisuais acostadas aos autos." },
+        { id: "pic_diligencias", label: "2. Diligências Realizadas, Provas e Determinações", type: "textarea", req: true, placeholder: "Diligências requisitadas, quebras de sigilo, oitivas e medidas requeridas ao Juízo...", dica: "Determinações expressas do Ministério Público para elucidação do crime.", modelo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP DETERMINA:\n\na) A autuação formal do presente Procedimento Investigatório Criminal (PIC);\nb) A requisição de cópias integrais de gravações de câmeras corporais (bodycam) e registros de rádio da ocorrência;\nc) A expedição de notificação para oitiva das vítimas e testemunhas no prazo de 48 horas;\nd) O encaminhamento de requerimento ao Juízo Criminal competente para deferimento de medidas cautelares de urgência;\ne) A conclusão dos autos para elaboração da competente Denúncia Criminal." },
+      ],
+    },
+
+    /* ---------------- INQUÉRITO CIVIL (IC) ---------------- */
+    {
+      id: "inquerito_civil",
+      grupo: "administrativo",
+      title: "Inquérito Civil (IC)",
+      svg: "inquerito_civil",
+      emoji: "🏛️",
+      tag: "Probidade & Erário",
+      desc: "Instauração de Inquérito Civil pelo Ministério Público para investigar atos de improbidade administrativa, lesão ao patrimônio público, fraudes em licitações e desvios praticados por órgãos ou servidores externos.",
+      webhook: "https://discord.com/api/webhooks/1562540639336407251/ABIYnCGnEexXqjt4VIBpXssWr75_5PKBCbEFHaMnIA5reOzuVNF6P1UPulylL6oRmi4x",
+      cor: 3447003,
+      cargoPadrao: "Promotor de Justiça",
+      natureza: "Inquérito Civil Público (IC)",
+      eficacia: "Proteção ao Patrimônio Público & Erário",
+      termo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP, no regular exercício de suas atribuições constitucionais de defesa do patrimônio público, probidade administrativa e interesses difusos, CERTIFICA a instauração do presente INQUÉRITO CIVIL PÚBLICO (IC) para apuração de atos lesivos ao interesse coletivo.",
+      guia: {
+        destaque: "Inquérito Civil (IC) × Ação Civil Pública (ACP) × Termo de Ajustamento de Conduta (TAC)",
+        resumo: "O Inquérito Civil é o procedimento investigatório preparatório privativo do Ministério Público destinado a colher provas sobre atos de improbidade administrativa, fraudes fiscais, danos ao erário e violações coletivas.",
+        quandoUsar: "Utilize para apurar fraudes em contratos e licitações de secretarias, desvio de materiais hospitalares, corrupção administrativa ou obras irregulares na cidade antes de propor Ação Civil Pública.",
+        diferencas: [
+          {
+            nome: "Instauração do Inquérito Civil",
+            tag: "Portaria de Abertura",
+            cor: "blue",
+            desc: "Ato inaugural pelo qual o Promotor delimita o dano patrimonial investigado e determina auditoria contábil e documental.",
+            quando: "Ao constatar indícios de superfaturamento, enriquecimento ilícito de servidores ou contratos simulados.",
+            exemplo: "Investigação sobre compras superfaturadas de medicamentos para o Hospital Municipal de Brava.",
+            resultado: "Requisição obrigatória de livros contábeis, extratos e cópias dos contratos públicos."
+          },
+          {
+            nome: "Termo de Ajustamento de Conduta (TAC)",
+            tag: "Solução Consensual",
+            cor: "amber",
+            desc: "Acordo formal com força de título executivo extrajudicial pelo qual a empresa ou órgão se compromete a sanar o dano e pagar multa.",
+            quando: "Quando o investigado reconhece a inconformidade e concorda em devolver os valores desviados com correções.",
+            exemplo: "Empresa prestadora de serviços hospitalares concorda em ressarcir R$ 200.000 ao Fundo Municipal.",
+            resultado: "Extinção consensual do inquérito civil sem necessidade de processo judicial prolongado."
+          },
+          {
+            nome: "Ação Civil Pública (ACP)",
+            tag: "Processo Judicial de Improbidade",
+            cor: "purple",
+            desc: "Ação judicial proposta pelo MP perante a Vara Cível do Tribunal para condenação dos réus em perda de bens e ressarcimento integral.",
+            quando: "Quando restar comprovado o dolo de improbidade e for rejeitada a celebração de TAC voluntário.",
+            exemplo: "Ação requerendo a indisponibilidade de bens dos gestores e bloqueio judicial de contas bancárias.",
+            resultado: "Condenação judicial dos gestores ao ressarcimento do erário e suspensão dos direitos políticos."
+          },
+          {
+            nome: "Arquivamento Homologado",
+            tag: "Inexistência de Dano",
+            cor: "green",
+            desc: "Encerramento da investigação quando a auditoria documental comprovar que não houve dolo nem desvio de verbas.",
+            quando: "Após conferência de notas fiscais e prestação de contas regulares que afastam a suspeita inicial.",
+            exemplo: "Comprovação de regularidade documental em licitação de veículos para a Guarda Municipal.",
+            resultado: "Homologação do arquivamento e expedição de certidão de regularidade do órgão."
+          }
+        ],
+        dicasEstagiario: [
+          "Verifique com rigor a Razão Social da empresa e o CNPJ/registro no RP.",
+          "Estime sempre o valor do prejuízo financeiro suportado pelo erário municipal.",
+          "O Inquérito Civil não visa pena de prisão (que é do PIC), mas sim a devolução do dinheiro público e a perda da função.",
+          "Notifique os investigados com prazo formal de 5 dias úteis para manifestação prévia."
+        ],
+        baseLegal: "Lei da Ação Civil Pública (Lei nº 7.347/85) · Lei de Improbidade Administrativa (Lei nº 8.429/92) · Constituição de Brava (art. 129, III) · Código Civil de Brava RP (Arts. 37 a 43 e 93)."
+      },
+      fields: [
+        { id: "ic_numero", label: "Nº dos Autos (IC)", type: "numero", prefixo: "IC", dica: "Numeração oficial gerada automaticamente para o Inquérito Civil." },
+        { id: "ic_objeto", label: "Objeto da Investigação Civil", req: true, placeholder: "Ex.: Fraude em licitação / Desvio de verbas / Improbidade Administrativa", dica: "Fato central investigado pelo Ministério Público no âmbito civil." },
+        { id: "ic_orgao", label: "Órgão / Ente Público sob Investigação", type: "options", options: [
+          "Prefeitura Municipal de Brava RP",
+          "Secretaria de Saúde / Hospital Municipal",
+          "Secretaria de Segurança Pública / Batalhão",
+          "Empresa Pública / Concessionária Municipal",
+          "Guarda Municipal & Departamento de Trânsito",
+          "Outra Entidade da Administração Direta ou Indireta"
+        ], dica: "Órgão ou ente público municipal alvo da auditoria do MP." },
+        { id: "ic_investigados", label: "Servidores / Gestores Investigados", req: true, placeholder: "Ex.: Secretário de Saúde e Diretor Financeiro", dica: "Pessoas físicas ou jurídicas que respondem ao inquérito civil." },
+        { id: "ic_passaportes", label: "Passaportes / IDs dos Investigados", placeholder: "Ex.: 1042, 2819", dica: "Passaportes no RP dos investigados (se conhecidos)." },
+        { id: "ic_base_legal", label: "⚖️ Fundamentação Legal / Improbidade", req: true, isFull: true, placeholder: "Ex.: Lei nº 8.429/92 (Arts. 9º - Enriquecimento Ilícito e 10 - Dano ao Erário) c/c CF/Brava", dica: "Artigos da Lei de Improbidade Administrativa e legislação civil aplicados." },
+        { id: "ic_fase", label: "Fase do Inquérito Civil", type: "options", options: [
+          "Portaria Inaugural de Instauração",
+          "Fase Instrutória (Perícias e Requisição de Documentos)",
+          "Oitiva de Gestores e Testemunhas",
+          "Proposta de Termo de Ajustamento de Conduta (TAC)",
+          "Concluso para Ajuizamento de Ação Civil Pública (ACP)",
+          "Arquivamento por Ausência de Dano ao Erário"
+        ], dica: "Etapa de tramitação do inquérito civil perante a Promotoria." },
+        { id: "ic_desfecho", label: "Consequência / Provimento Pretendido", type: "options", options: [
+          "Ajuizamento de Ação Civil Pública (ACP) com Indisponibilidade de Bens",
+          "Celebração de Termo de Ajustamento de Conduta (TAC) com Reparação",
+          "Recomendação Ministerial ao Prefeito / Gestor Municipal",
+          "Ressarcimento Integral do Erário com Perda de Função Pública",
+          "Arquivamento Homologado pelo Conselho Superior"
+        ], dica: "Medida final almejada pelo Ministério Público nestes autos." },
+        { id: "ic_promotor", label: "Promotor(a) de Justiça Titular da Probidade Administrativa", req: true, isFull: true, placeholder: "Ex.: Promotoria de Justiça de Defesa do Patrimônio Público de Brava", dica: "Autoridade do Ministério Público responsável pela condução do IC." },
+        { id: "ic_fatos", label: "1. Dos Fatos e Indícios de Lesão ao Interesse Público", type: "textarea", req: true, placeholder: "Narre os indícios de malversação do erário, contratos suspeitos, valores apurados e prejuízos...", dica: "Narrativa fática pormenorizada com valores e documentos probatórios.", modelo: "1. DOS FATOS INVESTIGADOS:\nChegou ao conhecimento desta Promotoria de Justiça a existência de fortes indícios de irregularidades administrativas consistentes em [descrever detalhadamente a fraude/desvio], envolvendo o ente público [Órgão sob investigação] e a quantia estimada de R$ [Valor estimado].\n\n2. DO DANO AO ERÁRIO E IMPROBIDADE:\nA conduta viola frontalmente os princípios constitucionais da moralidade, legalidade e eficiência (CF art. 37), caracterizando em tese ato de improbidade administrativa gerador de dano ao patrimônio público da Comarca de Brava RP." },
+        { id: "ic_providencias", label: "2. Providências Ministeriais, Requisições e Prazo", type: "textarea", req: true, placeholder: "Ordens de auditoria, notificações para esclarecimentos e fixação de prazo...", dica: "Determinações expressas para realização de perícias contábeis e oitivas.", modelo: "O MINISTÉRIO PÚBLICO DA COMARCA DE BRAVA RP DETERMINA:\n\na) A AUTUAÇÃO e registro oficial deste Inquérito Civil Público;\nb) A expedição de ofício requisitório à Secretaria/Órgão para que, no prazo de 5 (cinco) dias úteis, apresente cópia integral dos processos licitatórios e notas de empenho;\nc) A notificação dos investigados para apresentarem manifestação preliminar formal perante esta Promotoria;\nd) A realização de perícia técnica contábil para apuração do valor líquido a ser ressarcido;\ne) A conclusão para análise de propositura de Termo de Ajustamento de Conduta (TAC) ou Ação Civil Pública." },
+      ],
+    },
+
+    /* ---------------- NOTÍCIA DE FATO (NF) ---------------- */
+    {
+      id: "noticia_fato",
+      grupo: "administrativo",
+      title: "Notícia de Fato (NF)",
+      svg: "noticia_fato",
+      emoji: "📑",
+      tag: "Triagem & Registro",
+      desc: "Registro inaugural e autuação prévia de qualquer representação, denúncia de cidadão ou notícia de ilícito recebida no Ministério Público / Corregedoria, para triagem e deliberação de abertura de PA/PAD, PIC ou IC.",
+      webhook: "https://discord.com/api/webhooks/1562539281669554186/5F4X79ZZPvXeuzhvcALuPsTr3zPMk8U-YcWXS2Thlpiwjd3j408HIRnV8rYuF-47vEeX",
+      cor: 15844367,
+      cargoPadrao: "Promotor de Justiça",
+      natureza: "Notícia de Fato (NF)",
+      eficacia: "Juízo de Admissibilidade & Triagem",
+      termo: "A SECRETARIA DO MINISTÉRIO PÚBLICO E DA CORREGEDORIA DA COMARCA DE BRAVA RP CERTIFICA o recebimento e protocolo da presente NOTÍCIA DE FATO (NF), instaurada para análise de admissibilidade preliminar no prazo regulamentar de 30 (trinta) dias.",
+      guia: {
+        destaque: "Notícia de Fato (NF) × Admissibilidade Preliminar × Conversão em PIC/IC/PAD",
+        resumo: "A Notícia de Fato é o registro embrionário de qualquer denúncia, comunicação ou representação que chega ao Ministério Público. Ela passa por triagem preliminar em até 30 dias para decidir se deve ser arquivada ou convertida em procedimento formal.",
+        quandoUsar: "Utilize como primeiro ato oficial quando um cidadão, advogado ou autoridade formalizar uma denúncia contra agentes públicos ou empresas, antes de definir se haverá abertura de PAD, PIC criminal ou Inquérito Civil.",
+        diferencas: [
+          {
+            nome: "Protocolo da Notícia de Fato",
+            tag: "Recepção da Denúncia",
+            cor: "blue",
+            desc: "Registro solene que gera numeração oficial e confere comprovante ao denunciante com início da contagem do prazo de triagem.",
+            quando: "Assim que a notícia de ilícito for apresentada no protocolo físico ou eletrônico do Ministério Público.",
+            exemplo: "Cidadão relata ter sido cobrado indevidamente por taxa abusiva ou vítima de agressão em abordagem.",
+            resultado: "Autuação oficial da NF e distribuição ao Promotor de Justiça competente para análise."
+          },
+          {
+            nome: "Conversão em PAD Externo",
+            tag: "Encaminhamento Disciplinar",
+            cor: "amber",
+            desc: "Decisão do Promotor que reconhece indícios de infração funcional e remete os autos para abertura de Processo Disciplinar.",
+            quando: "Quando o fato configurar infração aos deveres estatutários de servidor público externo (PM, PC, SAMU).",
+            exemplo: "Policial que descumpriu procedimento operacional e agiu com descaso ou violência moderada.",
+            resultado: "A Notícia de Fato é encerrada com a instauração imediata do Procedimento Administrativo Disciplinar (PAD)."
+          },
+          {
+            nome: "Conversão em PIC / Inquérito",
+            tag: "Encaminhamento Penal / Civil",
+            cor: "purple",
+            desc: "Conversão em Procedimento Investigatório Criminal (se houver crime doloso) ou Inquérito Civil (se houver dano ao erário).",
+            quando: "Quando a narrativa estiver respaldada por provas materiais prévias de crime grave ou lesão financeira coletiva.",
+            exemplo: "Vídeo comprovando tortura cometida em cela ou desvio documentado de combustível oficial.",
+            resultado: "Abertura imediata de PIC criminal ou Inquérito Civil preparatório para medidas judiciais."
+          },
+          {
+            nome: "Indeferimento / Arquivamento Sumário",
+            tag: "Fato Atípico / Improcedente",
+            cor: "green",
+            desc: "Despacho de arquivamento liminar quando o fato for manifestamente atípico, calunioso ou destituído de qualquer elemento.",
+            quando: "Denúncias genéricas, sem elementos mínimos ou que não constituem infração disciplinar ou crime.",
+            exemplo: "Reclamação de cidadão insatisfeito com multa de trânsito legalmente aplicada com sinalização visível.",
+            resultado: "Arquivamento sumário com notificação ao noticiante para ciência."
+          }
+        ],
+        dicasEstagiario: [
+          "Verifique com atenção a qualificação do Noticiante e do Noticiado (passaportes no RP).",
+          "O prazo regulamentar para o Promotor proferir despacho na NF é de 30 dias (prorrogável por mais 30).",
+          "Se o noticiante solicitar anonimato, resguarde sua identidade nos assentamentos oficiais.",
+          "Indique sempre a natureza provisória do fato para direcionar à promotoria correta."
+        ],
+        baseLegal: "Resolução nº 174/2017 do CNMP (Disciplina a Notícia de Fato) · Constituição de Brava RP · Regimento Interno do Ministério Público e Corregedoria."
+      },
+      fields: [
+        { id: "nf_numero", label: "Nº da Notícia de Fato (NF)", type: "numero", prefixo: "NF", dica: "Numeração oficial automática gerada para a Notícia de Fato." },
+        { id: "nf_noticiante", label: "Noticiante / Denunciante", req: true, placeholder: "Ex.: Nome do Cidadão / Vítima / Denúncia Anônima nº...", dica: "Pessoa física ou jurídica que formalizou a representação." },
+        { id: "nf_noticiante_id", label: "Passaporte / ID do Noticiante", placeholder: "Ex.: 1492 (deixe vazio se anônimo)", dica: "Passaporte no RP do noticiante." },
+        { id: "nf_noticiado", label: "Agente Noticiado / Autoridade Alvo", req: true, placeholder: "Ex.: Policial Militar ID 1420 / Funcionário do Hospital / Delegado", dica: "Agente público, autoridade ou pessoa contra quem a notícia é formulada." },
+        { id: "nf_noticiado_id", label: "Passaporte / ID do Noticiado", placeholder: "Ex.: 2841", dica: "Passaporte do agente noticiado (se conhecido)." },
+        { id: "nf_orgao", label: "Órgão / Corporação Envolvida", type: "options", options: [
+          "Polícia Militar (PM / Choque / BOPE)",
+          "Polícia Civil (DPC / Delegacia)",
+          "Saúde Pública (Hospital Municipal / SAMU)",
+          "Guarda Municipal & Trânsito",
+          "Prefeitura & Secretarias Municipais",
+          "Ordem dos Advogados / Defensoria",
+          "Outro Órgão da Administração"
+        ], dica: "Instituição ou setor a que os fatos noticiados se referem." },
+        { id: "nf_assunto", label: "Síntese do Assunto Noticiado", req: true, placeholder: "Ex.: Agressão em abordagem / Cobrança de propina / Abuso de autoridade", dica: "Resumo objetivo da denúncia apresentada." },
+        { id: "nf_natureza", label: "Classificação da Infração Noticiada", type: "options", options: [
+          "Infração Disciplinar de Servidor Público (Encaminhar para PAD)",
+          "Crime / Ilícito Penal (Encaminhar para PIC ou Inquérito Policial)",
+          "Dano ao Patrimônio / Improbidade (Encaminhar para Inquérito Civil)",
+          "Lesão ao Consumidor / Saúde Pública",
+          "Dúvida / Solicitação de Orientação Jurídica"
+        ], dica: "Enquadramento preliminar para definir o destino dos autos." },
+        { id: "nf_deliberacao", label: "Deliberação Inicial do Ministério Público", type: "options", options: [
+          "Em Triagem Preliminar (Prazo de 30 dias para análise)",
+          "Instauração de Processo Administrativo Disciplinar (PAD)",
+          "Instauração de Procedimento Investigatório Criminal (PIC)",
+          "Instauração de Inquérito Civil (IC)",
+          "Notificação Prévia para Esclarecimentos em 48h",
+          "Indeferimento Liminar / Arquivamento Sumário (Fato Atípico)"
+        ], dica: "Decisão inicial do Promotor de Justiça sobre a admissibilidade da representação." },
+        { id: "nf_prazo", label: "Prazo Regulamentar para Despacho", value: "30 (trinta) dias regulamentares", isFull: true, dica: "Prazo regulamentar máximo para deliberação conclusiva da Notícia de Fato." },
+        { id: "nf_relato", label: "1. Relato dos Fatos Noticiados pelo Denunciante", type: "textarea", req: true, placeholder: "Descreva fielmente os fatos narrados pelo cidadão ou autoridade, data, local e envolvidos...", dica: "Transcrição fiel da denúncia ou representação recebida no Ministério Público.", modelo: "1. DA DENÚNCIA / REPRESENTAÇÃO APRESENTADA:\nNo dia [Data], compareceu perante este órgão ministerial o Noticiante acima qualificado, noticiando a ocorrência de fatos que demandam a intervenção do Ministério Público / Corregedoria, consistentes em: [descrever detalhadamente a narrativa apresentada pelo noticiante].\n\n2. ELEMENTOS APRESENTADOS:\nO noticiante acostou como indícios preliminares: [mídias, capturas de tela, testemunhas indicadas, registros de atendimento médico ou boletim de ocorrência]." },
+        { id: "nf_despacho", label: "2. Despacho Inicial do Ministério Público e Deliberação", type: "textarea", req: true, placeholder: "Despacho preliminar da autoridade ministerial determinando a triagem, conversão ou arquivamento...", dica: "Despacho oficial que delibera sobre a admissibilidade da denúncia.", modelo: "DESPACHO INAUGURAL:\n1. Registre-se e autue-se a presente Notícia de Fato nos sistemas oficiais do Ministério Público da Comarca de Brava RP;\n2. Notifique-se o Noticiado para que, querendo, preste esclarecimentos preliminares no prazo de 48 (quarenta e oito) horas;\n3. Oficie-se à chefia da corporação externa para fornecimento de informações cadastrais do servidor no mesmo prazo;\n4. Decorrido o prazo legal com ou sem manifestação, venham os autos conclusos para deliberação sobre a INSTAURAÇÃO DE PROCEDIMENTO FORMAL (PAD / PIC / IC) ou ARQUIVAMENTO." },
       ],
     },
 
@@ -844,6 +1271,69 @@ const TRIBUNAL_HELP_OPTIONS = {
   "Audiência de Instrução": "Sessão principal para produção de provas orais: oitiva de vítima, testemunhas e interrogatório do réu.",
   "Audiência de Conciliação": "Tentativa amigável conduzida pelo Tribunal para acordo financeiro entre as partes em matéria cível.",
   "Julgamento": "Sessão para debate final entre acusação e defesa e prolação da sentença pelo Juiz ou Júri.",
-  "Atendimento": "Despacho de urgência do advogado ou servidor diretamente no gabinete com o Magistrado."
+  "Atendimento": "Despacho de urgência do advogado ou servidor diretamente no gabinete com o Magistrado.",
+
+  // PAD Externo - Fases
+  "Portaria de Instauração (Início dos Autos)": "Abertura oficial do processo disciplinar com formulação da acusação e prazo de 48h para defesa prévia.",
+  "Fase Instrutória & Oitiva do Servidor": "Fase de oitiva de testemunhas, exibição pericial de câmeras corporais (bodycam) e interrogatório do servidor acusado.",
+  "Aguardando Julgamento da Comissão": "Instrução encerrada e alegações finais apresentadas; autos aguardam deliberação e voto dos membros da comissão.",
+  "Medida Cautelar Deferida (Afastamento)": "Afastamento preventivo imediato do agente de funções operacionais de rua para resguardar a ordem e provas.",
+  "Julgado Procedente (Penalidade Aplicada)": "Infração funcional julgada provada com aplicação de sanção disciplinar proporcional (advertência, suspensão ou demissão).",
+  "Julgado Improcedente (Arquivamento)": "Falta disciplinar não comprovada ou inexistente; absolvição do servidor com imediato arquivamento dos autos.",
+
+  // PAD Externo - Órgãos
+  "Polícia Militar (PM / Choque / BOPE)": "Agente vinculado aos quadros operacionais do Batalhão, Choque, ROCAM ou unidades de elite da PM.",
+  "Polícia Civil (DPC / Investigação)": "Delegado, escrivão ou investigador de polícia da Polícia Civil.",
+  "Saúde Pública (Hospital Municipal / SAMU)": "Médico, socorrista, enfermeiro ou diretor do Hospital Municipal ou Serviço de Atendimento Móvel.",
+  "Guarda Municipal & Trânsito": "Agente municipal responsável pelo patrulhamento preventivo, posturas e fiscalização de trânsito.",
+  "Ordem dos Advogados (OAB / Defensoria Externa)": "Advogado ou defensor sob investigação por falta ética disciplinar ou desrespeito a prerrogativas.",
+  "Prefeitura & Secretarias Municipais": "Servidor da administração direta, fiscal de posturas, auditor de fazenda ou ocupante de cargo comissionado.",
+
+  // PAD Externo - Cautelares
+  "Nenhuma Medida Cautelar (Responde em Funções Administrativas)": "O investigado responde ao procedimento disciplinar sem suspensão cautelar de prerrogativas funcionais.",
+  "Afastamento Preventivo Imediato das Funções Operacionais": "Retirada compulsória do servidor das ruas e do contato com o público, atuando em tarefas administrativas.",
+  "Suspensão Temporária do Porte Funcional de Arma de Fogo": "Recolhimento obrigatório do armamento institucional para preservação de testemunhas e segurança pública.",
+  "Retenção Cautelar de Veículo Oficial e Equipamentos": "Proibição cautelar de conduzir viaturas da corporação ou ter acesso a arsenais e equipamentos.",
+  "Proibição de Acesso a Instalações e Sistemas do Órgão": "Impedimento de ingresso nas dependências da corporação e bloqueio de logins em sistemas policiais/governamentais.",
+  "Afastamento Total com Suspensão Remuneratória": "Medida cautelar extrema aplicada em crimes hediondos ou faltas gravíssimas com interrupção funcional completa.",
+
+  // PAD Externo - Sanções (Consequências Administrativas)
+  "Demissão a Bem do Serviço Público": "Penalidade disciplinar máxima expulsória que acarreta a exclusão definitiva dos quadros da administração pública e inabilitação para cargos públicos.",
+  "Suspensão das Funções Públicas (5 a 30 dias com perda remuneratória)": "Punição funcional intermediária com afastamento coercitivo do cargo e corte integral dos vencimentos no período.",
+  "Advertência Disciplinar Formal em Assentamento Funcional": "Sanção disciplinar solene registrada nos assentamentos e ficha funcional do servidor, gerando reincidência.",
+  "Cassação de Aposentadoria ou Disponibilidade": "Sanção expulsória aplicada a servidores inativos ou na reserva remunerada que cometeram infração punível com demissão na ativa.",
+  "Destituição de Cargo em Comissão / Função de Confiança": "Exoneração punitiva de função de chefia, comando de batalhão ou cargo de confiança ocupado pelo servidor.",
+  "Em Apuração (Sem Penalidade Aplicada)": "Autos em andamento; nenhuma sanção definitiva foi fixada até o encerramento do contraditório.",
+  "Absolvição por Falta de Provas / Arquivamento": "Declaração de inexistência do fato ou inocência do acusado com certidão de assentamento limpo.",
+
+  // Procedimento Investigatório Criminal (PIC)
+  "Portaria de Instauração (Início da Investigação Penal)": "Ato inaugural do Ministério Público que instaura formalmente a persecução penal ministerial com prazo definido.",
+  "Diligências em Andamento & Juntada de Provas": "Fase de coleta de perícias, quebras de sigilo, degravações e oitivas sigilosas de testemunhas pelo MP.",
+  "Requerimento de Medidas Cautelares (Prisão / Busca)": "Petição urgente ao Juiz Criminal para decretação de prisão temporária/preventiva ou busca e apreensão domiciliar.",
+  "Relatório Final Conclusivo (Oferecimento de Denúncia Crime)": "Conclusão das investigações com prova de materialidade e autoria, culminando no ajuizamento da ação penal pública.",
+  "Promoção de Arquivamento (Inexistência de Crime)": "Decisão ministerial fundamentada pelo arquivamento por ausência de crime ou justa causa.",
+  "Prisão Preventiva do Investigado": "Medida cautelar extrema de privação de liberdade para resguardar a ordem pública ou instrução criminal.",
+  "Busca e Apreensão em Domicílio / Viatura": "Medida cautelar probatória de invasão legal com ordem judicial para arrecadação de objetos e ilícitos.",
+  "Interceptação Telefônica / Telemática": "Monitoramento em tempo real de comunicações telefônicas e dados digitais do alvo investigado.",
+  "Oferecimento de Denúncia Criminal (Ação Penal Pública)": "Peça formal que inicia o processo judicial penal condenatório contra o réu perante a Vara Criminal.",
+
+  // Inquérito Civil (IC)
+  "Portaria Inaugural de Instauração": "Ato que dá início ao Inquérito Civil para apurar fraudes, improbidade administrativa ou lesão ao erário.",
+  "Proposta de Termo de Ajustamento de Conduta (TAC)": "Acordo extrajudicial em que o investigado se compromete a sanar a irregularidade e ressarcir os danos sob pena de multa.",
+  "Concluso para Ajuizamento de Ação Civil Pública (ACP)": "Investigação concluída que ruma para ação judicial com pedidos de perda de bens e indisponibilidade de contas.",
+  "Ajuizamento de Ação Civil Pública (ACP) com Indisponibilidade de Bens": "Demanda judicial perante a Vara Cível para condenação e bloqueio judicial de patrimônio do gestor ou empresa.",
+  "Celebração de Termo de Ajustamento de Conduta (TAC) com Reparação": "Solução consensual definitiva homologada com devolução de quantias ao fundo municipal e extinção do inquérito.",
+  "Ressarcimento Integral do Erário com Perda de Função Pública": "Pedido ministerial de restituição total aos cofres municipais e perda da função de gestor público.",
+
+  // Notícia de Fato (NF)
+  "Em Triagem Preliminar (Prazo de 30 dias para análise)": "Período regulamentar de até 30 dias em que o Promotor analisa se a representação preenche requisitos mínimos.",
+  "Instauração de Processo Administrativo Disciplinar (PAD)": "Decisão que converte a notícia de fato em processo disciplinar para apurar conduta de servidor externo.",
+  "Instauração de Procedimento Investigatório Criminal (PIC)": "Decisão que converte a denúncia em investigação penal ministerial direta sobre crime doloso.",
+  "Instauração de Inquérito Civil (IC)": "Decisão que converte a representação em inquérito civil para investigar improbidade ou lesão ao patrimônio.",
+  "Indeferimento Liminar / Arquivamento Sumário (Fato Atípico)": "Rejeição imediata da denúncia por manifesta ausência de crime, difamação infundada ou fato atípico.",
+  "Infração Disciplinar de Servidor Público (Encaminhar para PAD)": "Classificação preliminar voltada a desvios éticos ou operacionais de policiais, médicos ou fiscais.",
+  "Crime / Ilícito Penal (Encaminhar para PIC ou Inquérito Policial)": "Classificação preliminar voltada a práticas tipificadas no Código Penal de Brava.",
+  "Dano ao Patrimônio / Improbidade (Encaminhar para Inquérito Civil)": "Classificação voltada a licitações fraudulentas, contratos irregulares ou desvio de dinheiro público."
 };
+
 

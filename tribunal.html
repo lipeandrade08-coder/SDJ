@@ -84,58 +84,16 @@
     </div>
 
     <div class="top-actions">
-      <!-- Botão para voltar à Calculadora / Jurídico -->
-      <a href="index.html" class="btn-outline btn-nav-tribunal" title="Ir para o Sistema do Departamento Jurídico / Calculadora">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3v18M7 21h10M5 7h14M12 7l0 0" />
-          <path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z" />
-        </svg>
-        <span>Departamento Jurídico</span>
-      </a>
-
-      <!-- Botão Gabinete dos Juízes & Magistrados -->
-      <a href="gabinete.html" class="btn-outline btn-gabinete-topbar" title="Acessar o Gabinete dos Juízes &amp; Magistrados (Área Exclusiva · Requer Senha PIN)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          <path d="M9 12l2 2 4-4"/>
-        </svg>
-        <span>Gabinete do Juiz</span>
-        <span class="pin-badge">PIN</span>
-      </a>
-
-      <!-- Botão Guia & Dúvidas do Advogado / Estagiário -->
-      <button id="btn-guia-geral" class="btn-outline btn-guia-topbar" type="button" title="Guia Jurídico e Dúvidas Frequentes (Advogados & Estagiários)">
-        <span class="star-pill">*</span>
-        <span>Guia &amp; Dúvidas</span>
-      </button>
-
-      <!-- Botão Consulta & Download do Código Civil Oficial de Brava RP -->
-      <button id="btn-codigo-civil" class="btn-outline btn-codigo-civil-topbar" type="button" title="Consultar na tela ou Baixar o Código Civil Oficial de Brava RP (106 Artigos)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-          <path d="M9 7h7M9 11h5"/>
-        </svg>
-        <span>Código Civil</span>
-      </button>
-
-      <!-- Botão Consulta & Download do Código Penal de Brava RP -->
-      <button id="btn-codigo-penal" class="btn-outline btn-codigo-penal-topbar" type="button" title="Consultar Código Penal de Brava RP (Tabela de Crimes, Penas, Multas e Fiança)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-        </svg>
-        <span>Código Penal</span>
-      </button>
-
-      <!-- Botão Quadro de Avisos -->
-      <button id="btn-avisos" class="btn-outline" type="button" title="Publicar ou Gerenciar Quadro de Avisos do Discord">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        <span>Quadro de Avisos</span>
-      </button>
+      <!-- Botões do Topbar agrupados para manter IDs no DOM -->
+      <div class="top-buttons-cluster">
+        <a href="index.html" id="top-link-juridico">Departamento Jurídico</a>
+        <a href="gabinete.html" id="top-link-gabinete">Gabinete do Juiz</a>
+        <a href="administrativo.html" id="top-link-admin">Administrativo</a>
+        <button id="btn-guia-geral" type="button">Guia &amp; Dúvidas</button>
+        <button id="btn-codigo-civil" type="button">Código Civil</button>
+        <button id="btn-codigo-penal" type="button">Código Penal</button>
+        <button id="btn-avisos" type="button">Quadro de Avisos</button>
+      </div>
 
       <!-- Botão de alternar tema -->
       <button id="btn-tema" class="theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema">
@@ -147,6 +105,156 @@
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
         </svg>
       </button>
+
+      <!-- Botão Menu Hambúrguer Oficial -->
+      <button id="btn-hamburger" class="btn-hamburger" type="button" aria-label="Abrir Menu de Funções" title="Abrir Menu Geral de Funções">
+        <div class="hamburger-bars">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="hamburger-text">Menu</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       MENU DE HAMBÚRGUER (DRAWER LATERAL DE FUNÇÕES - TRIBUNAL)
+       ======================================================== -->
+  <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true">
+    <div class="drawer-menu" role="dialog" aria-modal="true" aria-label="Menu Geral do Tribunal">
+      
+      <!-- Cabeçalho do Drawer -->
+      <div class="drawer-header">
+        <div class="drawer-brand">
+          <img src="arte.png" alt="Brasão SDJ" />
+          <div class="drawer-brand-text">
+            <h3>Menu do Tribunal</h3>
+            <small>Poder Judiciário · Brava RP</small>
+          </div>
+        </div>
+        <button class="btn-drawer-close" id="btn-close-drawer" type="button" aria-label="Fechar menu">✕</button>
+      </div>
+
+      <!-- Corpo do Drawer -->
+      <div class="drawer-body">
+
+        <!-- Categoria 1: Portais & Gabinetes -->
+        <div>
+          <div class="drawer-section-title">
+            <span>🏛️</span>
+            <span>Portais &amp; Gabinetes</span>
+          </div>
+          <div class="drawer-grid">
+            <a href="index.html" class="drawer-item" id="drawer-item-sdj">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">⚖️</span>
+                <div class="drawer-item-texts">
+                  <strong>Cartório SDJ &amp; Calculadora</strong>
+                  <small>Cálculo de penas, certidões, CNPJ e recibo de impostos</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge">SDJ</span>
+            </a>
+
+            <a href="gabinete.html" class="drawer-item" id="drawer-item-gabinete">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">👑</span>
+                <div class="drawer-item-texts">
+                  <strong>Gabinete dos Juízes</strong>
+                  <small>Sentenças, alvarás, liminares e chancelas</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge badge-pin">🔒 PIN</span>
+            </a>
+
+            <a href="administrativo.html" class="drawer-item" id="drawer-item-admin">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">📁</span>
+                <div class="drawer-item-texts">
+                  <strong>Painel Administrativo</strong>
+                  <small>Exonerações, desligamentos, blacklist e advertências</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge badge-admin">🔒 PIN Geral</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Categoria 2: Legislação & Consultas -->
+        <div>
+          <div class="drawer-section-title">
+            <span>📚</span>
+            <span>Legislação &amp; Consultas</span>
+          </div>
+          <div class="drawer-grid">
+            <button type="button" class="drawer-item" id="drawer-item-guia">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">⭐</span>
+                <div class="drawer-item-texts">
+                  <strong>Guia Jurídico &amp; Dúvidas</strong>
+                  <small>Manual e rotinas de audiência e peticionamento</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge">Guia</span>
+            </button>
+
+            <button type="button" class="drawer-item" id="drawer-item-codigo-penal">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">📜</span>
+                <div class="drawer-item-texts">
+                  <strong>Código Penal de Brava RP</strong>
+                  <small>Tabela completa de crimes, penas, multas e fiança</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge">Penal</span>
+            </button>
+
+            <button type="button" class="drawer-item" id="drawer-item-codigo-civil">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">📖</span>
+                <div class="drawer-item-texts">
+                  <strong>Código Civil Oficial</strong>
+                  <small>106 Artigos com busca rápida e download em PDF</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge">106 Arts</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Categoria 3: Comunicação & Avisos -->
+        <div>
+          <div class="drawer-section-title">
+            <span>📢</span>
+            <span>Comunicação Oficial</span>
+          </div>
+          <div class="drawer-grid">
+            <button type="button" class="drawer-item" id="drawer-item-avisos">
+              <div class="drawer-item-left">
+                <span class="drawer-item-icon">📢</span>
+                <div class="drawer-item-texts">
+                  <strong>Quadro de Avisos Discord</strong>
+                  <small>Publicação e comunicados oficiais integrados</small>
+                </div>
+              </div>
+              <span class="drawer-item-badge">Discord</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Drawer -->
+      <div class="drawer-footer">
+        <span class="drawer-footer-text">Tribunal de Justiça · Brava RP</span>
+        <button type="button" class="btn-outline" id="drawer-btn-tema-toggle" style="font-size:11.5px;padding:6px 14px;">
+          🌓 Alternar Tema
+        </button>
+      </div>
+
+    </div>
+  </div>
     </div>
   </header>
 
@@ -161,8 +269,8 @@
           <p>Portal solene de expedição de mandados, protocolo de petições, tramitação de processos cíveis e criminais,
             intimações e sentenças com geração de PDF oficial e envio imediato ao Discord.</p>
           <div class="hero-stats">
-            <div class="stat"><b id="stat-servicos">11</b><span>Serviços Judiciais</span></div>
-            <div class="stat"><b id="stat-grupos">4</b><span>Seções Judiciárias</span></div>
+            <div class="stat"><b id="stat-servicos">15</b><span>Serviços Judiciais</span></div>
+            <div class="stat"><b id="stat-grupos">5</b><span>Seções Judiciárias</span></div>
             <div class="stat"><b id="stat-data">—</b><span id="stat-dia">Hoje</span></div>
           </div>
         </div>
@@ -181,14 +289,15 @@
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-3.5-3.5" />
             </svg>
-            <input id="home-search" type="text" placeholder="Filtrar por ofício, notificação, mandado, petição, decisão..." autocomplete="off" />
-            <span class="trib-search-counter" id="search-count-badge">11 serviços</span>
+            <input id="home-search" type="text" placeholder="Filtrar por PAD, PIC, Inquérito Civil, Notícia de Fato, mandado, petição, decisão..." autocomplete="off" />
+            <span class="trib-search-counter" id="search-count-badge">15 serviços</span>
           </div>
 
           <!-- Filtros Rápidos por Categoria -->
           <div class="trib-category-filters" role="tablist" aria-label="Filtrar por categoria">
-            <button type="button" class="category-pill active" data-filter-group="all">Todos (11)</button>
+            <button type="button" class="category-pill active" data-filter-group="all">Todos (15)</button>
             <button type="button" class="category-pill" data-filter-group="processos">⚖️ Processos</button>
+            <button type="button" class="category-pill" data-filter-group="administrativo">🛡️ Processo Administrativo (PAD · PIC · IC · NF)</button>
             <button type="button" class="category-pill" data-filter-group="mandados">📜 Mandados</button>
             <button type="button" class="category-pill" data-filter-group="agenda">⏰ Agenda</button>
             <button type="button" class="category-pill" data-filter-group="notificacoes">📨 Ofícios &amp; Notificações</button>

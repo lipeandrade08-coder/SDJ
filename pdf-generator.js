@@ -637,6 +637,8 @@
       ? "Certidão de Limpeza de Ficha Criminal"
       : opts.service && opts.service.id === "divorcio"
       ? "Certidão Notarial de Divórcio & Dissolução Matrimonial"
+      : opts.service && opts.service.id === "recibo_cnpj"
+      ? "Recibo de Pagamento de Impostos do CNPJ · Quitação Fiscal"
       : (opts.service.title || "Certidão Oficial Notarial");
     const cidade = opts.cidade || (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
 
@@ -655,6 +657,8 @@
         ? "1. Dados do Cidadão e Termo de Reabilitação"
         : opts.service && opts.service.id === "divorcio"
         ? "1. Qualificação dos Cônjuges e Assento de Dissolução"
+        : opts.service && opts.service.id === "recibo_cnpj"
+        ? "1. Identificação da Empresa, CNPJ & Dados do Recolhimento"
         : "1. Dados e Declarações do Assento Cartorário"
     );
 
@@ -1065,6 +1069,20 @@
 
       termoCompleto =
         `O CARTÓRIO DO REGISTRO EMPRESARIAL DO DEPARTAMENTO JURÍDICO DA COMARCA DE ${cidade.toUpperCase()}, sob a autoridade da Presidência do Judiciário e nos termos da legislação civil, CERTIFICA a abertura, registro e homologação cadastral da pessoa jurídica ${empNome}. O presente registro mercantil goza de fé pública e eficácia legal para o exercício das atividades autorizadas.${jovemObs}`;
+    } else if (opts.service && opts.service.id === "recibo_cnpj") {
+      const empField = (opts.fields || []).find(f => /empresa|raz[aã]o/i.test(f.label));
+      const empNome = empField ? empField.value : "empresa qualificada";
+      const cnpjField = (opts.fields || []).find(f => /cnpj/i.test(f.label));
+      const cnpjVal = cnpjField ? cnpjField.value : "—";
+      const tributoField = (opts.fields || []).find(f => /tributo|taxa/i.test(f.label));
+      const tributoVal = tributoField ? tributoField.value : "Tributo Municipal / Taxa Semanal";
+      const valorField = (opts.fields || []).find(f => /valor/i.test(f.label));
+      const valorVal = valorField ? valorField.value : "R$ 50.000";
+      const compField = (opts.fields || []).find(f => /compet[eê]ncia|per[ií]odo/i.test(f.label));
+      const compVal = compField && compField.value !== "Não informado" ? ` referente à competência ${compField.value}` : "";
+
+      termoCompleto =
+        `A SECRETARIA DA FAZENDA E O DEPARTAMENTO NOTARIAL DE REGISTRO EMPRESARIAL DA COMARCA DE ${cidade.toUpperCase()}, sob a autoridade da Presidência do Judiciário e com amparo nos Arts. 43 e 99 do Código Civil de Brava RP, CERTIFICAM o regular pagamento e a quitação integral do tributo (${tributoVal})${compVal}, no montante de ${valorVal}, pela pessoa jurídica ${empNome}, inscrita no CNPJ sob o nº ${cnpjVal}. O presente recibo comprova a regularidade fiscal perante a Fazenda Pública, os órgãos de fiscalização do Estado e a Prefeitura de Brava RP, gozando de fé pública e eficácia plena.`;
     }
 
     // Validade da certidão (padrão 15 dias a contar da emissão, editável no formulário - não aplicável a Limpeza de Ficha nem Divórcio)
@@ -1202,7 +1220,8 @@
     // Seção 4: Assinaturas Grandes da Presidência, Oficial e Chancela Digital
     // Garante que o bloco de assinaturas comece em posição harmônica e nunca estoure o rodapé
     const signatureStartY = Math.min(Math.max(curY + 1, 226), 231);
-    desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, "Oficial Notarial Titular", protocolo);
+    const cargoOficial = opts.service && opts.service.id === "recibo_cnpj" ? "Oficial Notarial & Fazendário" : "Oficial Notarial Titular";
+    desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, cargoOficial, protocolo);
 
     const safeTitle = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
     const filename = `${safeTitle}_${protocolo}.pdf`;
@@ -1640,8 +1659,214 @@
   }
 
   /* ==========================================================
+     LAYOUT DEDICADO: PROCESSO ADMINISTRATIVO DISCIPLINAR (PAD EXTERNO)
+     ========================================================== */
+  async function renderPadPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade) {
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+    const fields = opts.fields || [];
+
+    const getVal = (idPattern, lblPattern, fallback = "") => {
+      const f = fields.find(x => (x.id && idPattern.test(x.id)) || (x.label && lblPattern.test(x.label)));
+      return f && f.value && f.value !== "—" && f.value !== "Não informado" ? String(f.value).trim() : fallback;
+    };
+
+    const numPad = getVal(/pad_numero/i, /n[ºo].*autos|processo/i, protocolo);
+    const fase = getVal(/pad_fase/i, /fase|situa[çc][aã]o/i, "Portaria de Instauração (Início dos Autos)");
+    const orgao = getVal(/pad_orgao/i, /[oó]rg[aã]o|corpora[çc][aã]o/i, "Polícia Militar (PM / Choque / BOPE)");
+    const investigado = getVal(/pad_investigado$/i, /servidor.*investigado|agente/i, "Servidor Investigado");
+    const passaporte = getVal(/pad_investigado_id/i, /passaporte|id.*investigado/i, "Não informado");
+    const cargoFuncional = getVal(/pad_cargo_funcional/i, /cargo|patente|fun[çc][aã]o/i, "Agente Público");
+    const denunciante = getVal(/pad_denunciante/i, /denunciante|notificante/i, "Corregedoria Geral / MP");
+    const artigos = getVal(/pad_artigos/i, /infra[çc][aã]o|base legal|falta/i, "Abuso de Autoridade (Art. 350 CP), Prevaricação e Quebra de Decoro Funcional");
+    const medidaCautelar = getVal(/pad_medida_cautelar/i, /cautelar/i, "Afastamento Preventivo Imediato das Funções Operacionais");
+    const sancao = getVal(/pad_sancao/i, /san[çc][aã]o|decis[aã]o/i, "Em Apuração (Sem Penalidade Aplicada)");
+    const prazoDefesa = getVal(/pad_prazo_defesa/i, /prazo/i, "48 (quarenta e oito) horas a contar da citação");
+    const comissao = getVal(/pad_comissao/i, /comiss[aã]o|relator/i, opts.agente || "Comissão Processante da Corregedoria");
+    const fatos = getVal(/pad_fatos/i, /fatos|relat[oó]rio/i, "Constatou-se a prática de conduta incompatível com a dignidade da função pública e limites legais da corporação externa.");
+    const determinacoes = getVal(/pad_pedidos_sancoes|pad_determinacoes/i, /requisi[çc][aã]o|pedidos|san[çc][oõ]es|determina[çc][oõ]es/i, "Requisita-se a instauração formal do Processo Administrativo Disciplinar (PAD), citação do servidor com prazo de 48h para defesa prévia e aplicação de sanções administrativas cabíveis (advertência, suspensão, demissão a bem do serviço público ou cassação de aposentadoria).");
+
+    const d = new Date();
+    const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    const dataExtenso = `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+
+    let curY = desenharEstruturaBase(doc, logo, watermark, "PROCESSO ADMINISTRATIVO DISCIPLINAR", protocolo, dataHora, cidade);
+
+    // 1. Título & Autos com Badge de Fase
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.8);
+    doc.setTextColor(...AZUL_NOITE);
+    doc.text(`AUTOS DE PAD Nº ${numPad} · CORREGEDORIA EXTERNA`, 14, curY + 2.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.0);
+    doc.setTextColor(...TEXTO_MUTED);
+    doc.text(`Comarca de ${cidade}, ${dataExtenso}`, pageWidth - 14, curY + 2.5, { align: "right" });
+
+    curY += 6.5;
+
+    // 2. Seção 1: Identificação do Servidor & Órgão Externo
+    curY = desenharCabecalhoSecao(doc, curY, "1. Qualificação do Agente Público Investigado & Órgão Externo");
+
+    const qualifH = 22;
+    doc.setFillColor(252, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, qualifH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, qualifH, "F");
+
+    const col1X = 18;
+    const col2X = 14 + (boxW / 2) + 2;
+
+    // Linha 1
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...ORO_ESCURO);
+    doc.text("• INVESTIGADO(A):", col1X, curY + 4.2);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.4); doc.setTextColor(...AZUL_NOITE);
+    doc.text(`${investigado} (Passaporte: ${passaporte})`, col1X, curY + 8.0, { maxWidth: (boxW / 2) - 8 });
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...ORO_ESCURO);
+    doc.text("• CORPORAÇÃO / ÓRGÃO EXTERNO:", col2X, curY + 4.2);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.2); doc.setTextColor(...AZUL_MEDIO);
+    doc.text(orgao, col2X, curY + 8.0, { maxWidth: (boxW / 2) - 8 });
+
+    // Linha 2
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Cargo / Patente Funcional:", col1X, curY + 13.0);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.0); doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(cargoFuncional, col1X + 34, curY + 13.0, { maxWidth: (boxW / 2) - 38 });
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Denunciante / Origem:", col2X, curY + 13.0);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.0); doc.setTextColor(...TEXTO_ESCURO);
+    doc.text(denunciante, col2X + 30, curY + 13.0, { maxWidth: (boxW / 2) - 34 });
+
+    // Linha 3
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Fase Processual:", col1X, curY + 18.0);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.0); doc.setTextColor(180, 50, 50);
+    doc.text(fase, col1X + 24, curY + 18.0, { maxWidth: (boxW / 2) - 28 });
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...TEXTO_MUTED);
+    doc.text("Prazo para Defesa Prévia:", col2X, curY + 18.0);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.0); doc.setTextColor(190, 40, 40);
+    doc.text(prazoDefesa, col2X + 34, curY + 18.0, { maxWidth: (boxW / 2) - 38 });
+
+    curY += qualifH + 2.2;
+
+    // 3. Seção 2: Infração Disciplinar & Medidas Cautelares
+    curY = desenharCabecalhoSecao(doc, curY, "2. Infração Disciplinar Imputada & Provimentos Cautelares");
+
+    const infracH = 15.5;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, infracH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, infracH, "F");
+
+    // Infração
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...ORO_ESCURO);
+    doc.text("• INFRAÇÃO / BASE LEGAL:", col1X, curY + 3.8);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); doc.setTextColor(20, 25, 40);
+    const artSplit = doc.splitTextToSize(artigos, (boxW / 2) - 8);
+    doc.text(artSplit.slice(0, 2), col1X, curY + 7.4);
+
+    // Cautelar & Decisão
+    doc.setFont("helvetica", "bold"); doc.setFontSize(5.8); doc.setTextColor(...ORO_ESCURO);
+    doc.text("• MEDIDA CAUTELAR / SANÇÃO:", col2X, curY + 3.8);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); doc.setTextColor(180, 45, 45);
+    const cautSplit = doc.splitTextToSize(`Cautelar: ${medidaCautelar}`, (boxW / 2) - 8);
+    doc.text(cautSplit.slice(0, 1), col2X, curY + 7.4);
+
+    doc.setFont("helvetica", "normal"); doc.setFontSize(6.6); doc.setTextColor(...TEXTO_ESCURO);
+    const sancSplit = doc.splitTextToSize(`Decisão: ${sancao}`, (boxW / 2) - 8);
+    doc.text(sancSplit.slice(0, 1), col2X, curY + 11.4);
+
+    curY += infracH + 2.0;
+
+    // 4. Seção 3: Relatório Circunstanciado dos Fatos & Conduta
+    curY = desenharCabecalhoSecao(doc, curY, "3. Relatório Circunstanciado dos Fatos & Conduta Funcional");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    const fatosSplit = doc.splitTextToSize(fatos, boxW - 8);
+    const fatosMaxLines = 5;
+    const fatosLinesToPrint = fatosSplit.slice(0, fatosMaxLines);
+    if (fatosSplit.length > fatosMaxLines) fatosLinesToPrint[fatosMaxLines - 1] += "...";
+    const fatosH = Math.max(12, 5.0 + (fatosLinesToPrint.length * 2.8));
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, fatosH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, fatosH, "F");
+
+    doc.setTextColor(30, 36, 50);
+    doc.text(fatosLinesToPrint, 18, curY + 4.6, { maxWidth: boxW - 8, lineHeightFactor: 1.16 });
+
+    curY += fatosH + 2.0;
+
+    // 5. Seção 4: Requisição de Instauração & Sanções Administrativas
+    curY = desenharCabecalhoSecao(doc, curY, "4. Requisição de Instauração & Sanções Administrativas Requisitadas");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.2);
+    const detSplit = doc.splitTextToSize(determinacoes, boxW - 8);
+    const detMaxLines = 6;
+    const detLinesToPrint = detSplit.slice(0, detMaxLines);
+    if (detSplit.length > detMaxLines) detLinesToPrint[detMaxLines - 1] += "...";
+    const detH = Math.max(13, 5.0 + (detLinesToPrint.length * 2.8));
+
+    doc.setFillColor(255, 253, 245);
+    doc.setDrawColor(...ORO);
+    doc.setLineWidth(0.32);
+    doc.roundedRect(14, curY, boxW, detH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 2, detH, "F");
+
+    doc.setTextColor(25, 30, 45);
+    doc.text(detLinesToPrint, 18, curY + 4.6, { maxWidth: boxW - 8, lineHeightFactor: 1.16 });
+
+    curY += detH + 2.0;
+
+    // 6. Seção 5: Certidão Correcional & Fé Pública
+    curY = desenharCabecalhoSecao(doc, curY, "5. Certidão Correcional de Fé Pública");
+    const certBoxH = 10.5;
+    doc.setFillColor(251, 253, 255);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, certBoxH, 0.8, 0.8, "FD");
+    doc.setFillColor(...ORO);
+    doc.rect(14, curY, 1.8, certBoxH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("CERTIDÃO DE AUTUAÇÃO DISCIPLINAR:", 18, curY + 3.8);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(5.8);
+    doc.setTextColor(45, 52, 68);
+    const termoTxt = "A Corregedoria Geral e o Tribunal de Justiça da Comarca de Brava RP CERTIFICAM a autuação deste procedimento disciplinar com força coercitiva imediata perante a corporação externa, assegurados a ampla defesa técnica e o contraditório.";
+    const termoSplit = doc.splitTextToSize(termoTxt, boxW - 8);
+    doc.text(termoSplit, 18, curY + 7.2, { maxWidth: boxW - 8, lineHeightFactor: 1.15 });
+
+    curY += certBoxH + 2.5;
+
+    // 7. Bloco de Assinaturas e Chancela
+    const sigStartY = Math.min(Math.max(curY, 226), 231);
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, opts.agente || comissao, opts.agenteId, opts.cargo || "Juiz de Direito / Corregedor Geral", protocolo);
+
+    const safeNome = investigado.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `PAD_Externo_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
+  /* ==========================================================
      1-B. GERAÇÃO DE PDF PARA OS ATOS DO TRIBUNAL
-          (Petições, Mandados, Intimações, Processos, Decisões, Ofícios, Notificações...)
+          (Petições, Mandados, Intimações, Processos, Decisões, Ofícios, Notificações, PAD...)
           opts = { titulo, fields:[{label,value,long}], agente, agenteId,
                    cargo, termo, natureza, eficacia, cidade, secaoDados, secaoTexto, serviceId }
      ========================================================== */
@@ -1656,12 +1881,15 @@
     const titulo = opts.titulo || "Ato Oficial do Tribunal";
     const cidade = opts.cidade || "Brava RP";
 
-    // Roteamento inteligente para layouts dedicados de Ofício e Notificação Extrajudicial
+    // Roteamento inteligente para layouts dedicados de Ofício, Notificação Extrajudicial e PAD Externo
     if (opts.serviceId === "oficio" || (titulo && titulo.toLowerCase().includes("ofício"))) {
       return await renderOficioPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade);
     }
     if (opts.serviceId === "notificacao" || (titulo && titulo.toLowerCase().includes("notificação"))) {
       return await renderNotificacaoPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade);
+    }
+    if (opts.serviceId === "pad_externo" || (titulo && (titulo.toLowerCase().includes("pad") || titulo.toLowerCase().includes("disciplinar")))) {
+      return await renderPadPDF(doc, opts, logo, watermark, protocolo, dataHora, cidade);
     }
 
     let curY = desenharEstruturaBase(doc, logo, watermark, titulo, protocolo, dataHora, cidade);
@@ -3143,15 +3371,191 @@
     return { doc, blob, filename, protocolo };
   }
 
+  /* ==========================================================
+     8. GERAÇÃO DE PDF ADMINISTRATIVO
+        (Exonerações, Desligamentos, Blacklist, Advertências)
+     ========================================================== */
+  async function generateAdministrativoPDF(opts = {}) {
+    const jsPDF = getJsPDF();
+    if (!jsPDF) throw new Error("Biblioteca jsPDF não encontrada.");
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const { logo, watermark } = await getLogoAndWatermark();
+
+    const dataHora = opts.dataAto || new Date().toLocaleString("pt-BR");
+    const protocolo = opts.protocolo || gerarProtocolo();
+    const cidade = opts.cidade || (window.CONFIG && window.CONFIG.cidade) || "Brava RP";
+    const tipoAto = opts.tipoAto || "exoneracao"; // "exoneracao" | "desligamento" | "blacklist" | "advertencia"
+
+    let tituloDoc = "Ato Oficial Administrativo";
+    if (tipoAto === "exoneracao") tituloDoc = "Portaria Notarial de Exoneração Funcional";
+    else if (tipoAto === "desligamento") tituloDoc = "Termo de Rescisão e Desligamento Institucional";
+    else if (tipoAto === "blacklist") tituloDoc = "Certidão Notarial de Inclusão em Blacklist";
+    else if (tipoAto === "advertencia") tituloDoc = "Notificação de Advertência Disciplinar";
+
+    if (opts.titulo) tituloDoc = opts.titulo;
+
+    let curY = desenharEstruturaBase(doc, logo, watermark, tituloDoc, protocolo, dataHora, cidade);
+
+    const pageWidth = 210;
+    const boxW = pageWidth - 28;
+    const dados = opts.dados || {};
+
+    // Seção 1: Qualificação do Servidor / Cidadão Envolvido
+    curY = desenharCabecalhoSecao(doc, curY, "1. Qualificação do Membro / Servidor Objeto do Ato");
+
+    const rowH = 7.8;
+    const colW = (boxW - 3) / 2;
+
+    const fieldsGrid = [];
+    if (tipoAto === "exoneracao") {
+      fieldsGrid.push(
+        [{ label: "SERVIDOR EXONERADO", val: dados.nome || "—" }, { label: "ID / PASSAPORTE", val: String(dados.id || "—") }],
+        [{ label: "CARGO ANTERIOR", val: dados.cargo || "—" }, { label: "LOTAÇÃO / UNIDADE", val: dados.lotacao || "Departamento Jurídico" }],
+        [{ label: "MODALIDADE DA EXONERAÇÃO", val: dados.tipoExoneracao || "A pedido do servidor" }, { label: "DATA DE VIGÊNCIA", val: dados.data || dataHora }]
+      );
+    } else if (tipoAto === "desligamento") {
+      fieldsGrid.push(
+        [{ label: "COLABORADOR DESLIGADO", val: dados.nome || "—" }, { label: "ID / PASSAPORTE", val: String(dados.id || "—") }],
+        [{ label: "FUNÇÃO / CARGO OCUPADO", val: dados.cargo || "—" }, { label: "TEMPO DE ATUAÇÃO", val: dados.tempoAtuacao || "—" }],
+        [{ label: "CATEGORIA DO DESLIGAMENTO", val: dados.motivoTipo || "Rescisão Contratual" }, { label: "DATA DE RESCISÃO", val: dados.data || dataHora }]
+      );
+    } else if (tipoAto === "blacklist") {
+      fieldsGrid.push(
+        [{ label: "INDIVÍDUO IMPEDIDO", val: dados.nome || "—" }, { label: "ID / PASSAPORTE", val: String(dados.id || "—") }],
+        [{ label: "CONDICIONAMENTO ANTERIOR", val: dados.cargoAnterior || "Civil / Externo" }, { label: "PERÍODO DO IMPEDIMENTO", val: dados.periodo || "Permanente" }],
+        [{ label: "AUTORIDADE DETERMINANTE", val: dados.autoridadeNome || "Diretoria Geral" }, { label: "DATA DE INGRESSO NA LISTA", val: dados.data || dataHora }]
+      );
+    } else { // advertencia
+      fieldsGrid.push(
+        [{ label: "MEMBRO ADVERTIDO", val: dados.nome || "—" }, { label: "ID / PASSAPORTE", val: String(dados.id || "—") }],
+        [{ label: "CARGO / FUNÇÃO ATUAL", val: dados.cargo || "—" }, { label: "GRAU DA ADVERTÊNCIA", val: dados.grau || "1ª Advertência Escrita (Leve)" }],
+        [{ label: "TIPIFICAÇÃO DA CONDUTA", val: dados.infracao || "Infração Regimental" }, { label: "DATA DA NOTIFICAÇÃO", val: dados.data || dataHora }]
+      );
+    }
+
+    fieldsGrid.forEach((pair, rIdx) => {
+      pair.forEach((item, cIdx) => {
+        const x = cIdx === 0 ? 14 : 14 + colW + 3;
+        const isEven = rIdx % 2 === 0;
+        doc.setFillColor(isEven ? 255 : 249, isEven ? 255 : 250, isEven ? 255 : 253);
+        doc.setDrawColor(220, 226, 238);
+        doc.setLineWidth(0.25);
+        doc.roundedRect(x, curY, colW, rowH, 0.8, 0.8, "FD");
+        doc.setFillColor(...ORO);
+        doc.rect(x, curY, 1.8, rowH, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(5.6);
+        doc.setTextColor(110, 118, 134);
+        doc.text(item.label, x + 4, curY + 2.8, { maxWidth: colW - 7 });
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.6);
+        doc.setTextColor(18, 24, 38);
+        doc.text(String(item.val), x + 4, curY + 6.4, { maxWidth: colW - 7 });
+      });
+      curY += rowH + 1.0;
+    });
+
+    curY += 1.5;
+
+    // Seção 2: Fundamentação, Motivo ou Relatório Circunstanciado
+    let sec2Title = "2. Fundamentação Fática e Motivação do Ato Administrativo";
+    if (tipoAto === "blacklist") sec2Title = "2. Relatório Circunstanciado dos Fatos & Evidências";
+    else if (tipoAto === "advertencia") sec2Title = "2. Descrição da Conduta Infracional e Parecer Notarial";
+
+    curY = desenharCabecalhoSecao(doc, curY, sec2Title);
+
+    const textoMotivo = dados.relato || dados.motivo || dados.justificativa || "Sem observações adicionais registradas.";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.4);
+    const motivoLines = doc.splitTextToSize(textoMotivo, boxW - 8);
+    const motivoBoxH = Math.max(16, 7.5 + (motivoLines.length * 3.5));
+
+    doc.setFillColor(255, 253, 245);
+    doc.setDrawColor(230, 215, 175);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, motivoBoxH, 1, 1, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...ORO_ESCURO);
+    doc.text("PARECER E RELATÓRIO OFICIAL:", 18, curY + 4.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(35, 40, 52);
+    doc.text(motivoLines, 18, curY + 8.2, { lineHeightFactor: 1.25 });
+
+    curY += motivoBoxH + 3.0;
+
+    // Seção 3: Determinações, Vedações e Efeitos Jurídicos
+    let sec3Title = "3. Determinações Administrativas e Providências Imediatas";
+    if (tipoAto === "blacklist") sec3Title = "3. Efeitos Jurídicos Notariais e Vedações expressas";
+    else if (tipoAto === "advertencia") sec3Title = "3. Penalidade Aplicada e Prazo Recursal à Presidência";
+
+    curY = desenharCabecalhoSecao(doc, curY, sec3Title);
+
+    let textoEfeitos = "";
+    if (tipoAto === "exoneracao") {
+      textoEfeitos = dados.providencias || "Determina-se a cessação imediata de todas as prerrogativas inerentes ao cargo, recolhimento da carteirinha funcional, revogação de permissões institucionais e baixa nos registros do SDJ.";
+    } else if (tipoAto === "desligamento") {
+      textoEfeitos = dados.efeitos || `Vínculo institucional rescindido em definitivo. Cláusula de reingresso: ${dados.clausulaRetorno || "Apto para recontratação futura após interstício legal"}. Casos e processos sob sua guarda devidamente redistribuídos.`;
+    } else if (tipoAto === "blacklist") {
+      textoEfeitos = `Fica EXPRESSAMENTE VEDADO o ingresso, recontratação, atuação ou prestação de qualquer serviço nas dependências do Departamento Jurídico e do Poder Judiciário de Brava RP, com inscrição deste registro no cadastro geral de impedimentos notariais.`;
+    } else {
+      textoEfeitos = `Aplicação de ${dados.grau || "Advertência Disciplinar"} com registro na folha funcional do membro. Fica concedido o prazo improrrogável de 48 (quarenta e oito) horas para apresentação de recurso fundamentado perante o Gabinete da Presidência.`;
+    }
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.4);
+    const efeitosLines = doc.splitTextToSize(textoEfeitos, boxW - 8);
+    const efeitosBoxH = Math.max(14, 7.5 + (efeitosLines.length * 3.4));
+
+    doc.setFillColor(252, 252, 254);
+    doc.setDrawColor(220, 226, 238);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(14, curY, boxW, efeitosBoxH, 1, 1, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(70, 80, 95);
+    doc.text("DELIBERAÇÕES E PENALIDADES:", 18, curY + 4.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(30, 36, 48);
+    doc.text(efeitosLines, 18, curY + 8.2, { lineHeightFactor: 1.25 });
+
+    curY += efeitosBoxH + 3.0;
+
+    // Seção 4: Bloco de Assinaturas Oficiais (Presidência + Autoridade Notificante)
+    const sigStartY = Math.max(curY + 2.0, 230);
+    const autoridadeNome = dados.autoridadeNome || "Zaith Frost";
+    const autoridadeId = dados.autoridadeId || "708";
+    const autoridadeCargo = dados.autoridadeCargo || "Diretoria Administrativa";
+
+    desenharBlocoAssinaturasEChancela(doc, sigStartY, autoridadeNome, autoridadeId, autoridadeCargo, protocolo);
+
+    const safeNome = (dados.nome || "Servidor").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const filename = `SDJ_${tipoAto.toUpperCase()}_${safeNome}_${protocolo}.pdf`;
+    const blob = doc.output("blob");
+
+    return { doc, blob, filename, protocolo };
+  }
+
   // Exporta globalmente para o aplicativo
   window.SDJ_PDF = {
     generateServicePDF,
+    generateReciboCnpjPDF: (opts) => generateServicePDF({ ...opts, service: { id: "recibo_cnpj", title: "Recibo de Impostos do CNPJ" } }),
     generateTribunalPDF,
     generateOficioPDF: (opts) => generateTribunalPDF({ ...opts, serviceId: "oficio" }),
     generateNotificacaoPDF: (opts) => generateTribunalPDF({ ...opts, serviceId: "notificacao" }),
+    generatePadPDF: (opts) => generateTribunalPDF({ ...opts, serviceId: "pad_externo" }),
     generatePenalPDF,
     generateProvaOralPDF,
     generateCarterinhaPDF,
+    generateAdministrativoPDF,
     renderCarterinhaCanvas,
     getLogoAndWatermark,
     toSignatureCase,

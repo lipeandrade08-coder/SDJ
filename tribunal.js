@@ -26,6 +26,10 @@
     download: svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
     oficio: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>'),
     notificacao: svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+    pad: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/>'),
+    pic: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3.2"/><line x1="12" y1="14.2" x2="12" y2="17"/><path d="m9 8 3 3 3-3"/>'),
+    inquerito_civil: svg('<path d="M3 21h18M4 18h16M4 10h16M12 2 2 7h20zM6 10v8M10 10v8M14 10v8M18 10v8"/>'),
+    noticia_fato: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="12" y1="9" x2="12.01" y2="9"/>'),
   };
   const DISCORD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
   const DISCORD_LABEL = `${DISCORD_SVG}<span>Enviar para o Discord</span>`;
@@ -656,6 +660,10 @@
     if (svc.id === "agendamentos") return `Pauta · ${val(campos, "ag_tipo")}`;
     if (svc.id === "oficio") return `Ofício de Fiscalização Institucional`;
     if (svc.id === "notificacao") return `Notificação Extrajudicial`;
+    if (svc.id === "pad_externo") return `Processo Administrativo · ${val(campos, "pad_fase") || "Instauração de PAD"}`;
+    if (svc.id === "pic") return `Procedimento Investigatório Criminal · ${val(campos, "pic_fase") || "Investigação Penal"}`;
+    if (svc.id === "inquerito_civil") return `Inquérito Civil · ${val(campos, "ic_fase") || "Defesa do Patrimônio Público"}`;
+    if (svc.id === "noticia_fato") return `Notícia de Fato · ${val(campos, "nf_deliberacao") || "Triagem Inicial"}`;
     return svc.title;
   }
 
@@ -669,6 +677,31 @@
       const r = val(campos, "mc_resultado");
       if (r === "Não Cumprido") return 15158332;
       if (r === "Cumprido") return 3066993;
+    }
+    if (svc.id === "pad_externo") {
+      const f = val(campos, "pad_fase");
+      if (/Penalidade|Procedente|Demissão|Suspensão|Afastamento/i.test(f)) return 15158332;
+      if (/Arquivamento|Improcedente|Absolvição/i.test(f)) return 3066993;
+      return 15105570;
+    }
+    if (svc.id === "pic") {
+      const f = val(campos, "pic_fase");
+      if (/Cautelar|Prisão|Denúncia/i.test(f)) return 15158332;
+      if (/Arquivamento/i.test(f)) return 3066993;
+      return 12597547;
+    }
+    if (svc.id === "inquerito_civil") {
+      const f = val(campos, "ic_fase");
+      if (/Ação Civil Pública|ACP/i.test(f)) return 15158332;
+      if (/TAC|Termo de Ajustamento/i.test(f)) return 15105570;
+      if (/Arquivamento/i.test(f)) return 3066993;
+      return 3447003;
+    }
+    if (svc.id === "noticia_fato") {
+      const d = val(campos, "nf_deliberacao");
+      if (/PAD|PIC|IC/i.test(d)) return 15105570;
+      if (/Arquivamento|Indeferimento/i.test(d)) return 3066993;
+      return 15844367;
     }
     return svc.cor;
   }
@@ -1882,14 +1915,98 @@ Criada uma plataforma dedicada ao Tribunal com **9 serviços judiciais automatiz
     }
   });
 
+  /* ---------- Menu de Hambúrguer (Drawer Lateral) ---------- */
+  function initHamburgerDrawerTribunal() {
+    const btnOpen = $("#btn-hamburger");
+    const drawerBackdrop = $("#drawer-backdrop");
+    const btnClose = $("#btn-close-drawer");
+    if (!btnOpen || !drawerBackdrop) return;
+
+    function openDrawer() {
+      drawerBackdrop.classList.add("open");
+      drawerBackdrop.setAttribute("aria-hidden", "false");
+    }
+
+    function closeDrawer() {
+      drawerBackdrop.classList.remove("open");
+      drawerBackdrop.setAttribute("aria-hidden", "true");
+    }
+
+    btnOpen.addEventListener("click", openDrawer);
+    if (btnClose) btnClose.addEventListener("click", closeDrawer);
+
+    drawerBackdrop.addEventListener("click", (e) => {
+      if (e.target === drawerBackdrop) closeDrawer();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && drawerBackdrop.classList.contains("open")) {
+        closeDrawer();
+      }
+    });
+
+    const itemGuia = $("#drawer-item-guia");
+    if (itemGuia) {
+      itemGuia.addEventListener("click", () => {
+        closeDrawer();
+        const b = $("#btn-guia-geral");
+        if (b) b.click();
+      });
+    }
+
+    const itemCP = $("#drawer-item-codigo-penal");
+    if (itemCP) {
+      itemCP.addEventListener("click", () => {
+        closeDrawer();
+        const b = $("#btn-codigo-penal");
+        if (b) b.click();
+      });
+    }
+
+    const itemCC = $("#drawer-item-codigo-civil");
+    if (itemCC) {
+      itemCC.addEventListener("click", () => {
+        closeDrawer();
+        const b = $("#btn-codigo-civil");
+        if (b) b.click();
+      });
+    }
+
+    const itemAvisos = $("#drawer-item-avisos");
+    if (itemAvisos) {
+      itemAvisos.addEventListener("click", () => {
+        closeDrawer();
+        const b = $("#btn-avisos");
+        if (b) b.click();
+      });
+    }
+
+    const itemTema = $("#drawer-btn-tema-toggle");
+    if (itemTema) {
+      itemTema.addEventListener("click", () => {
+        const b = $("#btn-tema");
+        if (b) b.click();
+      });
+    }
+  }
+
   initAvisosModal();
   initGuiaModal();
   initCodigoCivilModal();
   initCodigoPenalModal();
+  initHamburgerDrawerTribunal();
 
-  // Suporte a abertura direta de abas via URL (ex.: tribunal.html?service=oficio ou tribunal.html#tab-notificacao)
+  // Suporte a abertura direta de abas via URL (ex.: tribunal.html?service=pad ou tribunal.html?service=administrativo ou tribunal.html?service=oficio)
   const urlParams = new URLSearchParams(window.location.search);
-  const targetService = urlParams.get("service") || (window.location.hash ? window.location.hash.replace("#tab-", "").replace("#", "") : null);
+  if (targetService === "pad" || targetService === "administrativo" || targetService === "pad_externo" || targetService === "pa") {
+    targetService = "pad_externo";
+  } else if (targetService === "pic") {
+    targetService = "pic";
+  } else if (targetService === "ic" || targetService === "inquerito_civil") {
+    targetService = "inquerito_civil";
+  } else if (targetService === "nf" || targetService === "noticia_fato") {
+    targetService = "noticia_fato";
+  }
   if (targetService) {
     const s = SERVICOS.find((x) => x.id === targetService);
     if (s) {

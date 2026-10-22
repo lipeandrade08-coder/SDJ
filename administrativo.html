@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrativo · Departamento Jurídico | Brava RP</title>
+  <meta name="description"
+    content="Painel Administrativo restrito do Departamento Jurídico de Brava RP. Gestão e controle de exonerações, desligamentos, blacklist e advertências disciplinares." />
+
+  <link rel="icon" type="image/png" href="arte.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20261022-admin" />
+  <link rel="stylesheet" href="administrativo.css?v=20261022-admin" />
+  <script>
+    (function () {
+      var t = localStorage.getItem("brava-tema");
+      if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+
+<body data-view="administrativo">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Barra de Topo -->
+  <header class="topbar">
+    <div class="brand">
+      <a href="index.html" class="btn-back" title="Voltar ao Sistema Principal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </a>
+      <img class="brand-logo" src="arte.png" alt="Poder Judiciário de Brava" />
+      <div class="brand-text">
+        <h1>Administrativo · SDJ Brava</h1>
+        <nav class="crumb" aria-label="Navegação">
+          <a href="index.html">SDJ</a>
+          <span class="crumb-sep">›</span>
+          <span class="crumb-current">Diretoria Administrativa</span>
+        </nav>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <!-- Links Rápidos para outros módulos -->
+      <a href="index.html" class="btn-outline" title="Acessar o Cartório do Sistema do Departamento Jurídico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18M7 21h10M5 7h14M12 7l0 0" />
+          <path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z" />
+        </svg>
+        <span>Cartório SDJ</span>
+      </a>
+
+      <a href="tribunal.html" class="btn-outline btn-nav-tribunal" title="Ir para o Tribunal de Justiça">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <span>Tribunal</span>
+      </a>
+
+      <a href="gabinete.html" class="btn-outline btn-gabinete-topbar" title="Acessar o Gabinete dos Juízes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M9 12l2 2 4-4" />
+        </svg>
+        <span>Gabinete do Juiz</span>
+        <span class="pin-badge">PIN</span>
+      </a>
+
+      <!-- Indicador de Sessão Ativa -->
+      <div id="admin-session-badge" class="admin-topbar-session-badge hidden">
+        <span class="pulse-dot"></span>
+        <span>Diretoria Administrativa Ativa</span>
+      </div>
+
+      <!-- Botão Webhooks Discord -->
+      <button id="btn-webhooks" class="btn-outline hidden" type="button" title="Configurar Webhooks dos Canais do Discord">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span>Webhooks Discord</span>
+      </button>
+
+      <!-- Botão Trocar PIN Geral -->
+      <button id="btn-trocar-pin" class="btn-outline hidden" type="button" title="Alterar o PIN Geral do Administrativo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-1.5 1.5L16 7l-4 4-4-4 4-4 1.5 1.5z"/>
+          <path d="M15.5 8.5l-8 8a2.121 2.121 0 0 1-3 0 2.121 2.121 0 0 1 0-3l8-8"/>
+          <circle cx="18" cy="6" r="3"/>
+        </svg>
+        <span>Alterar PIN</span>
+      </button>
+
+      <!-- Botão Bloquear Sessão -->
+      <button id="btn-bloquear" class="btn-outline hidden" type="button" title="Encerrar sessão segura do Administrativo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Bloquear</span>
+      </button>
+
+      <!-- Alternar Tema -->
+      <button id="btn-tema" class="theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.5" />
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+        </svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container" id="main">
+
+    <!-- ========================================================
+         1. LOCKSCREEN POR SENHA PIN GERAL DE ADMINISTRATIVO
+         ======================================================== -->
+    <div id="admin-lockscreen" class="lockscreen-container">
+      <div class="lockscreen-card admin-lockscreen-card" id="admin-lockscreen-card">
+        <div class="lockscreen-icon-wrap">
+          <img src="arte.png" alt="Brasão SDJ" />
+        </div>
+        <h2>Painel Administrativo</h2>
+        <p>Acesso exclusivo reservado à <strong>Diretoria e Presidência</strong> do Departamento Jurídico. Digite a senha PIN geral de administrativo:</p>
+
+        <div class="pin-display-group">
+          <div class="pin-dots" id="admin-pin-dots">
+            <span class="pin-dot admin-pin-dot" data-index="0"></span>
+            <span class="pin-dot admin-pin-dot" data-index="1"></span>
+            <span class="pin-dot admin-pin-dot" data-index="2"></span>
+            <span class="pin-dot admin-pin-dot" data-index="3"></span>
+          </div>
+          <div class="pin-status-msg" id="admin-pin-status">Digite a senha PIN de 4 dígitos</div>
+        </div>
+
+        <div class="pin-keypad" id="admin-pin-keypad">
+          <button type="button" class="pin-key admin-pin-key" data-digit="1">1</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="2">2</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="3">3</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="4">4</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="5">5</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="6">6</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="7">7</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="8">8</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="9">9</button>
+          <button type="button" class="pin-key admin-pin-key btn-action" id="btn-admin-pin-backspace" title="Apagar dígito">⌫</button>
+          <button type="button" class="pin-key admin-pin-key" data-digit="0">0</button>
+          <button type="button" class="pin-key admin-pin-key btn-confirm" id="btn-admin-pin-confirm" title="Confirmar PIN">🔒 Entrar</button>
+        </div>
+
+        <div class="admin-lockscreen-hint">
+          🔑 <strong>PIN Padrão Inicial:</strong> <code>2026</code> (você pode alterar a qualquer momento)
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         2. PAINEL PRINCIPAL (DESBLOQUEADO)
+         ======================================================== -->
+    <div id="admin-panel" class="admin-wrapper hidden">
+
+      <!-- Banner Superior -->
+      <section class="admin-banner">
+        <div class="admin-banner-info">
+          <h2>
+            <span>| ⌜ADMINISTRATIVO⌟</span>
+            <span class="tag-admin">DIRETORIA GERAL</span>
+          </h2>
+          <p>
+            Módulo interno restrito para deliberações notariais de gestão de pessoas: 
+            expedição de portarias de <strong>exoneração</strong>, termos de <strong>desligamento</strong>, controle oficial de <strong>blacklist</strong> institucional e notificação de <strong>advertências disciplinares</strong> com envio integrado aos canais oficiais do Discord.
+          </p>
+        </div>
+        <div class="admin-banner-stats">
+          <div class="admin-stat-pill">
+            <b id="stat-blk-count">0</b>
+            <span>Na Blacklist</span>
+          </div>
+          <div class="admin-stat-pill">
+            <b id="stat-history-count">0</b>
+            <span>Atos Expedidos</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Layout em Duas Colunas: Sidebar Discord + Painel de Conteúdo -->
+      <div class="admin-grid-layout">
+
+        <!-- Sidebar Estilo Discord -->
+        <aside class="discord-sidebar">
+          <div class="discord-category-header">
+            <div class="discord-category-title">
+              <span class="category-caret">▼</span>
+              <span>| ⌜ADMINISTRATIVO⌟</span>
+            </div>
+            <span class="discord-category-action" title="Diretoria Geral SDJ">+</span>
+          </div>
+
+          <nav class="discord-channel-list">
+            <!-- Canal 1: ❌・exonerações -->
+            <button type="button" class="discord-channel-btn active" data-channel="exoneracoes" id="btn-chan-exoneracoes">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#<span class="discord-hash-lock">🔒</span></span>
+                <span class="discord-channel-emoji">❌</span>
+                <span class="discord-channel-name">exonerações</span>
+              </div>
+            </button>
+
+            <!-- Canal 2: ⛔・desligamentos -->
+            <button type="button" class="discord-channel-btn" data-channel="desligamentos" id="btn-chan-desligamentos">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#<span class="discord-hash-lock">🔒</span></span>
+                <span class="discord-channel-emoji">⛔</span>
+                <span class="discord-channel-name">desligamentos</span>
+              </div>
+            </button>
+
+            <!-- Canal 3: 🚫・blacklist -->
+            <button type="button" class="discord-channel-btn" data-channel="blacklist" id="btn-chan-blacklist">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#<span class="discord-hash-lock">🔒</span></span>
+                <span class="discord-channel-emoji">🚫</span>
+                <span class="discord-channel-name">blacklist</span>
+              </div>
+              <span class="discord-channel-badge" id="badge-sidebar-blk">0</span>
+            </button>
+
+            <!-- Canal 4: ❗️・advertências -->
+            <button type="button" class="discord-channel-btn" data-channel="advertencias" id="btn-chan-advertencias">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#<span class="discord-hash-lock">🔒</span></span>
+                <span class="discord-channel-emoji">❗️</span>
+                <span class="discord-channel-name">advertências</span>
+              </div>
+            </button>
+
+            <div class="discord-channel-divider"></div>
+
+            <!-- Canal 5: 📜・histórico de atos -->
+            <button type="button" class="discord-channel-btn" data-channel="historico" id="btn-chan-historico">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#</span>
+                <span class="discord-channel-emoji">📜</span>
+                <span class="discord-channel-name">histórico de atos</span>
+              </div>
+            </button>
+
+            <!-- Canal 6: ⚙️・configurações -->
+            <button type="button" class="discord-channel-btn" data-channel="configuracoes" id="btn-chan-configuracoes">
+              <div class="discord-channel-left">
+                <span class="discord-hash">#</span>
+                <span class="discord-channel-emoji">⚙️</span>
+                <span class="discord-channel-name">configurações</span>
+              </div>
+            </button>
+          </nav>
+
+          <!-- Perfil do Usuário na Sidebar Discord -->
+          <div class="discord-user-bar">
+            <div class="discord-user-info">
+              <div class="discord-user-avatar">⚖️</div>
+              <div class="discord-user-text">
+                <strong>Diretoria SDJ</strong>
+                <small>Acesso Autenticado</small>
+              </div>
+            </div>
+            <button type="button" class="btn-table-icon" id="btn-sidebar-lock" title="Bloquear Painel" onclick="document.getElementById('btn-bloquear').click()">
+              🔒
+            </button>
+          </div>
+        </aside>
+
+        <!-- Área de Conteúdo dos Canais -->
+        <div class="admin-content-area">
+
+          <!-- ====================================================
+               CANAL 1: ❌・EXONERAÇÕES
+               ==================================================== -->
+          <div class="admin-channel-view active" id="view-exoneracoes">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>❌</span><span># exonerações · Portaria de Exoneração</span></h3>
+                <p>Emissão de termo solene de exoneração de cargo de confiança, comissão ou chefia administrativa do SDJ.</p>
+              </div>
+              <div class="channel-head-actions">
+                <span class="tag-admin">PORTARIA OFICIAL</span>
+              </div>
+            </div>
+
+            <div class="admin-split-layout">
+              <!-- Formulário -->
+              <div class="admin-form-card" id="form-exoneracoes">
+                <div class="admin-form-section-title">
+                  <span>1. Dados da Portaria &amp; Identificação</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Número do Ato <small id="btn-regen-num-exo" style="cursor:pointer;color:var(--gold-3);">(regerar)</small></label>
+                    <input type="text" id="exo_numero" readonly />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Data de Vigência</label>
+                    <input type="text" id="exo_data" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Nome do Servidor Exonerado</label>
+                    <input type="text" id="exo_nome" placeholder="Ex.: Lucas Mendonça" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>ID / Passaporte</label>
+                    <input type="text" id="exo_id" placeholder="Ex.: 458" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo Atual a ser Exonerado</label>
+                    <select id="exo_cargo">
+                      <option value="Advogado Administrativo">Advogado Administrativo</option>
+                      <option value="Advogado Sênior">Advogado Sênior</option>
+                      <option value="Advogado Pleno">Advogado Pleno</option>
+                      <option value="Advogado Júnior">Advogado Júnior</option>
+                      <option value="Assistente Social">Assistente Social</option>
+                      <option value="Estagiário">Estagiário</option>
+                      <option value="Promotor de Justiça">Promotor de Justiça</option>
+                      <option value="Juiz de Direito">Juiz de Direito</option>
+                      <option value="Chefe de Gabinete">Chefe de Gabinete</option>
+                      <option value="Corregedor Notarial">Corregedor Notarial</option>
+                      <option value="Vice-Presidente">Vice-Presidente</option>
+                      <option value="Presidente">Presidente</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Lotação / Setor</label>
+                    <select id="exo_lotacao">
+                      <option value="Departamento Jurídico">Departamento Jurídico (Geral)</option>
+                      <option value="Diretoria Administrativa">Diretoria Administrativa</option>
+                      <option value="Tribunal de Justiça">Tribunal de Justiça</option>
+                      <option value="Gabinete Notarial">Gabinete Notarial</option>
+                      <option value="Secretaria Geral">Secretaria Geral</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group col-span-2">
+                    <label>Modalidade da Exoneração</label>
+                    <select id="exo_tipo">
+                      <option value="A pedido do próprio servidor (Exoneração Voluntária)">A pedido do próprio servidor (Exoneração Voluntária)</option>
+                      <option value="De ofício pela Presidência (Conveniência e Oportunidade)">De ofício pela Presidência (Conveniência e Oportunidade)</option>
+                      <option value="Reestruturação do quadro de servidores">Reestruturação do quadro de servidores</option>
+                      <option value="Incompatibilidade de horários ou inatividade">Incompatibilidade de horários ou inatividade</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>2. Motivação Administrativa</span>
+                </div>
+                <div class="admin-form-grid single-col">
+                  <div class="admin-form-group">
+                    <label>Descrição dos Fatos / Parecer da Presidência</label>
+                    <textarea id="exo_motivo" placeholder="Descreva os motivos que fundamentam o ato de exoneração...">O servidor solicitou exoneração voluntária para dedicação a assuntos particulares, com prestação de contas dos casos sob sua responsabilidade devidamente homologada.</textarea>
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>3. Providências e Efeitos do Ato</span>
+                </div>
+                <div class="admin-checkbox-list">
+                  <label class="admin-checkbox-item">
+                    <input type="checkbox" class="exo-chk" value="Revogação imediata de credenciais e permissões nos canais do Discord" checked />
+                    <span>Revogação imediata de credenciais e permissões nos canais do Discord</span>
+                  </label>
+                  <label class="admin-checkbox-item">
+                    <input type="checkbox" class="exo-chk" value="Recolhimento obrigatório da Carteira de Identidade Funcional do SDJ" checked />
+                    <span>Recolhimento obrigatório da Carteira de Identidade Funcional do SDJ</span>
+                  </label>
+                  <label class="admin-checkbox-item">
+                    <input type="checkbox" class="exo-chk" value="Vedação expressa de manifestação pública ou representação em nome do SDJ" checked />
+                    <span>Vedação expressa de manifestação pública ou representação em nome do SDJ</span>
+                  </label>
+                  <label class="admin-checkbox-item">
+                    <input type="checkbox" class="exo-chk" value="Redistribuição imediata de processos e intimações sob sua responsabilidade" checked />
+                    <span>Redistribuição imediata de processos e intimações sob sua responsabilidade</span>
+                  </label>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>4. Autoridade Subscritora</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Autoridade Expedidora</label>
+                    <input type="text" id="exo_autoridade_nome" value="Zaith Frost" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo da Autoridade</label>
+                    <input type="text" id="exo_autoridade_cargo" value="Presidente do Departamento Jurídico" />
+                  </div>
+                </div>
+
+                <div class="admin-action-bar">
+                  <button type="button" class="btn-primary btn-admin-primary" id="btn-pdf-exo">
+                    📄 Gerar Portaria em PDF
+                  </button>
+                  <button type="button" class="btn-primary btn-discord-send" id="btn-discord-exo">
+                    🚀 Enviar para o Discord
+                  </button>
+                  <button type="button" class="btn-outline" id="btn-copy-exo">
+                    📋 Copiar Formato Discord
+                  </button>
+                  <button type="button" class="btn-ghost" id="btn-limpar-exo">
+                    Limpar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Preview (Folha Timbrada) -->
+              <div class="admin-preview-card">
+                <div class="preview-watermark">
+                  <img src="arte.png" alt="Marca D'água" />
+                </div>
+                <div class="admin-preview-content">
+                  <div class="preview-header">
+                    <img src="arte.png" alt="Brasão Oficial" />
+                    <div class="preview-header-text">
+                      <h4>Departamento Jurídico · Brava RP</h4>
+                      <small>DIRETORIA GERAL NOTARIAL &amp; GABINETE DA PRESIDÊNCIA</small>
+                    </div>
+                  </div>
+
+                  <div class="preview-title-banner">
+                    PORTARIA NOTARIAL DE EXONERAÇÃO FUNCIONAL
+                  </div>
+
+                  <div class="preview-meta-row">
+                    <div>PROTOCOLO: <b id="prev_exo_num">PORTARIA-EXO Nº 001/2026-SDJ</b></div>
+                    <div>DATA: <b id="prev_exo_data">—</b></div>
+                  </div>
+
+                  <div class="preview-data-grid">
+                    <div class="preview-data-box">
+                      <span>Servidor Exonerado:</span>
+                      <strong id="prev_exo_nome">Nome do Servidor</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>ID / Passaporte:</span>
+                      <strong id="prev_exo_id">—</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Cargo Anterior:</span>
+                      <strong id="prev_exo_cargo">Advogado Pleno</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Lotação:</span>
+                      <strong id="prev_exo_lotacao">Departamento Jurídico</strong>
+                    </div>
+                    <div class="preview-data-box full">
+                      <span>Modalidade da Exoneração:</span>
+                      <strong id="prev_exo_tipo">A pedido do servidor</strong>
+                    </div>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Parecer e Motivação Administrativa:</h5>
+                    <p id="prev_exo_motivo">—</p>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Determinações Notariais &amp; Efeitos:</h5>
+                    <p id="prev_exo_providencias">—</p>
+                  </div>
+
+                  <div class="preview-signatures">
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name" id="prev_exo_autoridade">ZAITH FROST</span>
+                      <span class="preview-sig-role" id="prev_exo_autoridade_cargo">Presidente do SDJ</span>
+                    </div>
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name">MIKE SANTARONI</span>
+                      <span class="preview-sig-role">Vice-Presidente do SDJ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               CANAL 2: ⛔・DESLIGAMENTOS
+               ==================================================== -->
+          <div class="admin-channel-view" id="view-desligamentos">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>⛔</span><span># desligamentos · Rescisão &amp; Desligamento</span></h3>
+                <p>Registro formal de encerramento de vínculo e desligamento definitivo de membros e colaboradores.</p>
+              </div>
+              <div class="channel-head-actions">
+                <span class="tag-admin" style="background:rgba(249,115,22,0.2);border-color:#f97316;color:#fed7aa;">TERMO DE RESCISÃO</span>
+              </div>
+            </div>
+
+            <div class="admin-split-layout">
+              <!-- Formulário -->
+              <div class="admin-form-card" id="form-desligamentos">
+                <div class="admin-form-section-title">
+                  <span>1. Identificação do Colaborador &amp; Vínculo</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Número do Termo <small id="btn-regen-num-desl" style="cursor:pointer;color:var(--gold-3);">(regerar)</small></label>
+                    <input type="text" id="desl_numero" readonly />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Data do Desligamento</label>
+                    <input type="text" id="desl_data" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Nome do Colaborador</label>
+                    <input type="text" id="desl_nome" placeholder="Ex.: Rodrigo Santos" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>ID / Passaporte</label>
+                    <input type="text" id="desl_id" placeholder="Ex.: 912" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Função / Cargo</label>
+                    <select id="desl_cargo">
+                      <option value="Estagiário">Estagiário</option>
+                      <option value="Advogado Júnior">Advogado Júnior</option>
+                      <option value="Advogado Pleno">Advogado Pleno</option>
+                      <option value="Advogado Sênior">Advogado Sênior</option>
+                      <option value="Advogado Administrativo">Advogado Administrativo</option>
+                      <option value="Assistente Social">Assistente Social</option>
+                      <option value="Colaborador Externo">Colaborador Externo</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Tempo de Atuação no SDJ</label>
+                    <input type="text" id="desl_tempo" placeholder="Ex.: 4 meses e 10 dias" value="3 meses" />
+                  </div>
+                  <div class="admin-form-group col-span-2">
+                    <label>Categoria do Desligamento</label>
+                    <select id="desl_tipo">
+                      <option value="Desligamento Voluntário (A pedido)">Desligamento Voluntário (A pedido)</option>
+                      <option value="Desligamento por Incompatibilidade / Baixo Desempenho">Desligamento por Incompatibilidade / Baixo Desempenho</option>
+                      <option value="Desligamento por Inatividade Prolongada / Abandono">Desligamento por Inatividade Prolongada / Abandono</option>
+                      <option value="Desligamento por Falta Grave / Justa Causa">Desligamento por Falta Grave / Justa Causa</option>
+                      <option value="Reprovação no Período Probatório de Estágio">Reprovação no Período Probatório de Estágio</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>2. Parecer e Motivos Circunstanciados</span>
+                </div>
+                <div class="admin-form-grid single-col">
+                  <div class="admin-form-group">
+                    <label>Relatório do Desligamento</label>
+                    <textarea id="desl_relato" placeholder="Detalhes do motivo do desligamento...">Encerramento formal do vínculo institucional por consenso das partes, inexistindo pendências disciplinares ou éticas em aberto.</textarea>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Situação dos Casos e Processos</label>
+                    <input type="text" id="desl_processos" value="Todos os 4 processos pendentes foram redistribuídos à equipe da Vara Cível e Penal." />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cláusula de Reingresso / Recontratação</label>
+                    <select id="desl_retorno">
+                      <option value="Apto para recontratação futura após 30 dias">Apto para recontratação futura após 30 dias</option>
+                      <option value="Apto para recontratação futura após 90 dias">Apto para recontratação futura após 90 dias</option>
+                      <option value="Recontratação desaconselhada pela Diretoria">Recontratação desaconselhada pela Diretoria</option>
+                      <option value="Reingresso VETADO expressamente (Recomendado para Blacklist)">Reingresso VETADO expressamente (Recomendado para Blacklist)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>3. Autoridade Responsável</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Responsável pelo Desligamento</label>
+                    <input type="text" id="desl_autoridade_nome" value="Zaith Frost" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo</label>
+                    <input type="text" id="desl_autoridade_cargo" value="Presidente do Departamento Jurídico" />
+                  </div>
+                </div>
+
+                <div class="admin-action-bar">
+                  <button type="button" class="btn-primary btn-admin-primary" id="btn-pdf-desl" style="background:linear-gradient(135deg,#f97316,#c2410c)!important;border-color:#f97316!important;">
+                    📄 Gerar Termo em PDF
+                  </button>
+                  <button type="button" class="btn-primary btn-discord-send" id="btn-discord-desl">
+                    🚀 Enviar para o Discord
+                  </button>
+                  <button type="button" class="btn-outline" id="btn-copy-desl">
+                    📋 Copiar Formato Discord
+                  </button>
+                  <button type="button" class="btn-ghost" id="btn-limpar-desl">
+                    Limpar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Preview -->
+              <div class="admin-preview-card">
+                <div class="preview-watermark">
+                  <img src="arte.png" alt="Marca D'água" />
+                </div>
+                <div class="admin-preview-content">
+                  <div class="preview-header">
+                    <img src="arte.png" alt="Brasão Oficial" />
+                    <div class="preview-header-text">
+                      <h4>Departamento Jurídico · Brava RP</h4>
+                      <small>DIRETORIA ADMINISTRATIVA &amp; RECURSOS HUMANOS FORENSES</small>
+                    </div>
+                  </div>
+
+                  <div class="preview-title-banner" style="background:#1e1b4b;border-color:#f97316;">
+                    TERMO DE RESCISÃO &amp; DESLIGAMENTO INSTITUCIONAL
+                  </div>
+
+                  <div class="preview-meta-row">
+                    <div>PROTOCOLO: <b id="prev_desl_num">TERMO-DESL Nº 001/2026-SDJ</b></div>
+                    <div>DATA: <b id="prev_desl_data">—</b></div>
+                  </div>
+
+                  <div class="preview-data-grid">
+                    <div class="preview-data-box">
+                      <span>Colaborador Desligado:</span>
+                      <strong id="prev_desl_nome">Nome do Colaborador</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>ID / Passaporte:</span>
+                      <strong id="prev_desl_id">—</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Cargo / Função:</span>
+                      <strong id="prev_desl_cargo">Estagiário</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Tempo de Atuação:</span>
+                      <strong id="prev_desl_tempo">3 meses</strong>
+                    </div>
+                    <div class="preview-data-box full">
+                      <span>Categoria da Rescisão:</span>
+                      <strong id="prev_desl_tipo">Desligamento Voluntário</strong>
+                    </div>
+                    <div class="preview-data-box full">
+                      <span>Cláusula de Retorno:</span>
+                      <strong id="prev_desl_retorno">Apto após 30 dias</strong>
+                    </div>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Parecer e Relatório do Desligamento:</h5>
+                    <p id="prev_desl_relato">—</p>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Redistribuição de Processos:</h5>
+                    <p id="prev_desl_processos">—</p>
+                  </div>
+
+                  <div class="preview-signatures">
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name" id="prev_desl_autoridade">ZAITH FROST</span>
+                      <span class="preview-sig-role" id="prev_desl_autoridade_cargo">Presidente do SDJ</span>
+                    </div>
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name">MIKE SANTARONI</span>
+                      <span class="preview-sig-role">Vice-Presidente do SDJ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               CANAL 3: 🚫・BLACKLIST (CADASTRO & LISTA GERAL)
+               ==================================================== -->
+          <div class="admin-channel-view" id="view-blacklist">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>🚫</span><span># blacklist · Cadastro &amp; Impedimentos</span></h3>
+                <p>Lista Negra Oficial: indivíduos impedidos de ingressar, atuar ou prestar serviços perante o SDJ.</p>
+              </div>
+              <div class="channel-head-actions">
+                <span class="tag-admin" style="background:rgba(220,38,38,0.2);border-color:#dc2626;color:#fecaca;">IMPEDIMENTO ABSOLUTO</span>
+              </div>
+            </div>
+
+            <div class="admin-split-layout">
+              <!-- Formulário de Inclusão -->
+              <div class="admin-form-card" id="form-blacklist">
+                <div class="admin-form-section-title">
+                  <span>1. Nova Inclusão na Blacklist</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Nome do Cidadão / Indivíduo</label>
+                    <input type="text" id="blk_nome" placeholder="Ex.: Marcos Falcão" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>ID / Passaporte</label>
+                    <input type="text" id="blk_id" placeholder="Ex.: 1042" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Condição / Cargo Anterior</label>
+                    <input type="text" id="blk_cargo_anterior" placeholder="Ex.: Civil / Ex-Advogado" value="Civil / Externo" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Gravidade / Prazo de Impedimento</label>
+                    <select id="blk_periodo">
+                      <option value="Permanente (Indeterminada)">Permanente (Indeterminada)</option>
+                      <option value="Temporária (180 dias)">Temporária (180 dias)</option>
+                      <option value="Temporária (90 dias)">Temporária (90 dias)</option>
+                      <option value="Temporária (30 dias)">Temporária (30 dias)</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group col-span-2">
+                    <label>Data da Inclusão</label>
+                    <input type="text" id="blk_data" />
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>2. Motivação e Evidências Comprovadas</span>
+                </div>
+                <div class="admin-form-grid single-col">
+                  <div class="admin-form-group">
+                    <label>Infração Ética Gravíssima / Motivo</label>
+                    <textarea id="blk_motivo" placeholder="Descreva pormenorizadamente a infração, dolo, quebra de sigilo ou conduta que motivou o impedimento...">Tentativa comprovada de suborno a magistrado, quebra de sigilo funcional e falsificação de certidões notariais.</textarea>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Provas Anexadas / Processos / Logs</label>
+                    <input type="text" id="blk_provas" placeholder="Ex.: Processo Disciplinar 04/2026 • Gravações" value="Processo Ético Disciplinar Nº 04/2026 • Gravações e Logs de Transação" />
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>3. Autoridade Determinante</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Autoridade</label>
+                    <input type="text" id="blk_autoridade_nome" value="Zaith Frost" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo</label>
+                    <input type="text" id="blk_autoridade_cargo" value="Presidente do Departamento Jurídico" />
+                  </div>
+                </div>
+
+                <div class="admin-action-bar">
+                  <button type="button" class="btn-primary btn-admin-primary" id="btn-submit-blacklist" style="background:linear-gradient(135deg,#dc2626,#991b1b)!important;">
+                    🚫 Inserir na Blacklist &amp; Publicar
+                  </button>
+                  <button type="button" class="btn-outline" id="btn-copy-blk">
+                    📋 Copiar Comunicado Discord
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Preview Certidão de Blacklist -->
+              <div class="admin-preview-card">
+                <div class="preview-watermark">
+                  <img src="arte.png" alt="Marca D'água" />
+                </div>
+                <div class="admin-preview-content">
+                  <div class="preview-header">
+                    <img src="arte.png" alt="Brasão Oficial" />
+                    <div class="preview-header-text">
+                      <h4>Departamento Jurídico · Brava RP</h4>
+                      <small>CADASTRO NOTARIAL DE IMPEDIMENTOS &amp; BLACKLIST</small>
+                    </div>
+                  </div>
+
+                  <div class="preview-title-banner" style="background:#450a0a;border-color:#dc2626;">
+                    CERTIDÃO NOTARIAL DE INCLUSÃO EM BLACKLIST
+                  </div>
+
+                  <div class="preview-meta-row">
+                    <div>REGISTRO: <b>CADASTRO GERAL DE IMPEDIMENTOS</b></div>
+                    <div>DATA: <b id="prev_blk_data">—</b></div>
+                  </div>
+
+                  <div class="preview-data-grid">
+                    <div class="preview-data-box">
+                      <span>Indivíduo Impedido:</span>
+                      <strong id="prev_blk_nome">Nome do Indivíduo</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>ID / Passaporte:</span>
+                      <strong id="prev_blk_id">—</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Condição Anterior:</span>
+                      <strong id="prev_blk_cargo">Civil / Externo</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Gravidade / Período:</span>
+                      <strong id="prev_blk_periodo" style="color:#b91c1c;">Permanente</strong>
+                    </div>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Infração Fática Comprovada:</h5>
+                    <p id="prev_blk_motivo">—</p>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Evidências e Ocorrências:</h5>
+                    <p id="prev_blk_provas">—</p>
+                  </div>
+
+                  <div class="preview-text-block" style="background:#fff1f2;border-color:#fda4af;">
+                    <h5 style="color:#9f1239;">Efeitos e Vedações Absolutas:</h5>
+                    <p style="color:#881337;">Fica expressamente vedado o ingresso, recontratação, atuação ou representação perante o Departamento Jurídico e Tribunal de Justiça de Brava RP.</p>
+                  </div>
+
+                  <div class="preview-signatures">
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name" id="prev_blk_autoridade">ZAITH FROST</span>
+                      <span class="preview-sig-role" id="prev_blk_autoridade_cargo">Presidente do SDJ</span>
+                    </div>
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name">MIKE SANTARONI</span>
+                      <span class="preview-sig-role">Vice-Presidente do SDJ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela Interativa de Gestão da Blacklist -->
+            <div class="blacklist-table-container">
+              <div class="blacklist-toolbar">
+                <div class="search" style="max-width:320px;flex:1;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-3.5-3.5" />
+                  </svg>
+                  <input type="text" id="blk_search" placeholder="Buscar por Nome ou ID na Blacklist..." autocomplete="off" />
+                </div>
+
+                <div class="blacklist-filter-chips">
+                  <button type="button" class="filter-chip active" data-filter="todos">Todos</button>
+                  <button type="button" class="filter-chip" data-filter="permanente">Permanentes</button>
+                  <button type="button" class="filter-chip" data-filter="temporaria">Temporários</button>
+                  <button type="button" class="filter-chip" data-filter="revogada">Revogados</button>
+                </div>
+              </div>
+
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:90px;">Registro</th>
+                      <th>Indivíduo (Nome / ID)</th>
+                      <th style="width:140px;">Gravidade</th>
+                      <th>Motivo Resumido</th>
+                      <th style="width:110px;">Data</th>
+                      <th style="width:110px;text-align:center;">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="blacklist-table-body">
+                    <!-- Renderizado dinamicamente via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               CANAL 4: ❗️・ADVERTÊNCIAS
+               ==================================================== -->
+          <div class="admin-channel-view" id="view-advertencias">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>❗️</span><span># advertências · Notificações Disciplinares</span></h3>
+                <p>Aplicação formal de advertências disciplinares e suspensões preventivas a membros do SDJ.</p>
+              </div>
+              <div class="channel-head-actions">
+                <span class="tag-admin" style="background:rgba(234,179,8,0.2);border-color:#eab308;color:#fef08a;">MEDIDA DISCIPLINAR</span>
+              </div>
+            </div>
+
+            <div class="admin-split-layout">
+              <!-- Formulário -->
+              <div class="admin-form-card" id="form-advertencias">
+                <div class="admin-form-section-title">
+                  <span>1. Identificação do Membro Advertido</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Número do Ato <small id="btn-regen-num-adv" style="cursor:pointer;color:var(--gold-3);">(regerar)</small></label>
+                    <input type="text" id="adv_numero" readonly />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Data da Notificação</label>
+                    <input type="text" id="adv_data" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Nome do Membro Advertido</label>
+                    <input type="text" id="adv_nome" placeholder="Ex.: Bruno Alcantara" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>ID / Passaporte</label>
+                    <input type="text" id="adv_id" placeholder="Ex.: 771" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo Atual</label>
+                    <select id="adv_cargo">
+                      <option value="Estagiário">Estagiário</option>
+                      <option value="Advogado Júnior">Advogado Júnior</option>
+                      <option value="Advogado Pleno">Advogado Pleno</option>
+                      <option value="Advogado Sênior">Advogado Sênior</option>
+                      <option value="Advogado Administrativo">Advogado Administrativo</option>
+                      <option value="Assistente Social">Assistente Social</option>
+                      <option value="Promotor de Justiça">Promotor de Justiça</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Grau da Advertência</label>
+                    <select id="adv_grau">
+                      <option value="1ª Advertência Escrita (Leve)">🟡 1ª Advertência Escrita (Leve)</option>
+                      <option value="2ª Advertência Escrita (Média / Reincidência)">🟠 2ª Advertência Escrita (Média / Reincidência)</option>
+                      <option value="3ª Advertência com Suspensão Preventiva (Grave)">🔴 3ª Advertência com Suspensão Preventiva (Grave)</option>
+                    </select>
+                  </div>
+                  <div class="admin-form-group col-span-2">
+                    <label>Tipificação da Infração</label>
+                    <select id="adv_infracao">
+                      <option value="Atraso injustificado ou abandono de plantão">Atraso injustificado ou abandono de plantão</option>
+                      <option value="Postura inadequada ou falta de decoro profissional">Postura inadequada ou falta de decoro profissional</option>
+                      <option value="Descumprimento de prazos judiciais ou ordens superiores">Descumprimento de prazos judiciais ou ordens superiores</option>
+                      <option value="Erro crasso em peça jurídica por negligência">Erro crasso em peça jurídica por negligência</option>
+                      <option value="Quebra de confidencialidade interna ou conduta desrespeitosa">Quebra de confidencialidade interna ou conduta desrespeitosa</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>2. Relato dos Fatos &amp; Penalidade</span>
+                </div>
+                <div class="admin-form-grid single-col">
+                  <div class="admin-form-group">
+                    <label>Descrição Pormenorizada da Falta</label>
+                    <textarea id="adv_relato" placeholder="Detalhes dos fatos ocorridos...">O membro deixou de comparecer ao plantão obrigatório sem justificativa prévia e sem prestar esclarecimentos aos seus pares, gerando atraso no atendimento ao público.</textarea>
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Medida Aplicada / Penalidade</label>
+                    <input type="text" id="adv_penalidade" value="Registro permanente na folha funcional e suspensão temporária de 48 horas das escalas." />
+                  </div>
+                </div>
+
+                <div class="admin-form-section-title">
+                  <span>3. Autoridade Notificante</span>
+                </div>
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label>Autoridade</label>
+                    <input type="text" id="adv_autoridade_nome" value="Zaith Frost" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label>Cargo</label>
+                    <input type="text" id="adv_autoridade_cargo" value="Presidente do Departamento Jurídico" />
+                  </div>
+                </div>
+
+                <div class="admin-action-bar">
+                  <button type="button" class="btn-primary btn-admin-primary" id="btn-pdf-adv" style="background:linear-gradient(135deg,#eab308,#ca8a04)!important;border-color:#eab308!important;color:#0f172a!important;">
+                    📄 Gerar Notificação em PDF
+                  </button>
+                  <button type="button" class="btn-primary btn-discord-send" id="btn-discord-adv">
+                    🚀 Enviar para o Discord
+                  </button>
+                  <button type="button" class="btn-outline" id="btn-copy-adv">
+                    📋 Copiar Formato Discord
+                  </button>
+                  <button type="button" class="btn-ghost" id="btn-limpar-adv">
+                    Limpar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Preview Advertência -->
+              <div class="admin-preview-card">
+                <div class="preview-watermark">
+                  <img src="arte.png" alt="Marca D'água" />
+                </div>
+                <div class="admin-preview-content">
+                  <div class="preview-header">
+                    <img src="arte.png" alt="Brasão Oficial" />
+                    <div class="preview-header-text">
+                      <h4>Departamento Jurídico · Brava RP</h4>
+                      <small>COMISSÃO DISCIPLINAR &amp; CORREGEDORIA INTERNA</small>
+                    </div>
+                  </div>
+
+                  <div class="preview-title-banner" style="background:#713f12;border-color:#eab308;">
+                    NOTIFICAÇÃO DE ADVERTÊNCIA DISCIPLINAR
+                  </div>
+
+                  <div class="preview-meta-row">
+                    <div>PROTOCOLO: <b id="prev_adv_num">ADV-DISC Nº 001/2026-SDJ</b></div>
+                    <div>DATA: <b id="prev_adv_data">—</b></div>
+                  </div>
+
+                  <div class="preview-data-grid">
+                    <div class="preview-data-box">
+                      <span>Membro Notificado:</span>
+                      <strong id="prev_adv_nome">Nome do Membro</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>ID / Passaporte:</span>
+                      <strong id="prev_adv_id">—</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Cargo Atual:</span>
+                      <strong id="prev_adv_cargo">Advogado Júnior</strong>
+                    </div>
+                    <div class="preview-data-box">
+                      <span>Grau da Medida:</span>
+                      <strong id="prev_adv_grau" style="color:#b45309;">1ª Advertência</strong>
+                    </div>
+                    <div class="preview-data-box full">
+                      <span>Infração Tipificada:</span>
+                      <strong id="prev_adv_infracao">Atraso injustificado</strong>
+                    </div>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Fatos Apurados &amp; Parecer Notarial:</h5>
+                    <p id="prev_adv_relato">—</p>
+                  </div>
+
+                  <div class="preview-text-block">
+                    <h5>Penalidade &amp; Prazo Recursal:</h5>
+                    <p id="prev_adv_penalidade">—</p>
+                    <small style="display:block;margin-top:6px;color:#94a3b8;font-size:9.5px;">Prazo de 48h para interposição de recurso fundamentado perante o Gabinete da Presidência.</small>
+                  </div>
+
+                  <div class="preview-signatures">
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name" id="prev_adv_autoridade">ZAITH FROST</span>
+                      <span class="preview-sig-role" id="prev_adv_autoridade_cargo">Presidente do SDJ</span>
+                    </div>
+                    <div class="preview-sig-col">
+                      <div class="preview-sig-line"></div>
+                      <span class="preview-sig-name">MIKE SANTARONI</span>
+                      <span class="preview-sig-role">Vice-Presidente do SDJ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               CANAL 5: 📜・HISTÓRICO DE ATOS
+               ==================================================== -->
+          <div class="admin-channel-view" id="view-historico">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>📜</span><span># histórico de atos · Auditoria Administrativa</span></h3>
+                <p>Relatório de todos os atos expedidos nesta sessão com reemissão instantânea de PDF.</p>
+              </div>
+            </div>
+
+            <div class="admin-form-card">
+              <div id="history-list-body">
+                <!-- Renderizado via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               CANAL 6: ⚙️・CONFIGURAÇÕES
+               ==================================================== -->
+          <div class="admin-channel-view" id="view-configuracoes">
+            <div class="admin-channel-head">
+              <div class="channel-head-left">
+                <h3><span>⚙️</span><span># configurações · Diretoria Administrativa</span></h3>
+                <p>Gestão de canais do Discord, webhooks dedicados e credenciais de segurança.</p>
+              </div>
+            </div>
+
+            <div class="admin-form-card">
+              <div class="admin-form-section-title">
+                <span>1. Segurança e Acesso por PIN</span>
+              </div>
+              <p class="muted" style="font-size:13px;margin-bottom:14px;">
+                O PIN Geral protege o acesso ao módulo administrativo. Para alterá-lo, utilize o botão abaixo:
+              </p>
+              <button type="button" class="btn-outline" onclick="document.getElementById('btn-trocar-pin').click()">
+                🔑 Alterar Senha PIN Geral
+              </button>
+
+              <div class="admin-form-section-title" style="margin-top:28px;">
+                <span>2. Webhooks dos Canais do Discord</span>
+              </div>
+              <p class="muted" style="font-size:13px;margin-bottom:14px;">
+                Você pode direcionar cada ato administrativo para o seu respectivo canal do Discord (#❌・exonerações, #⛔・desligamentos, #🚫・blacklist, #❗️・advertências):
+              </p>
+              <button type="button" class="btn-primary btn-discord-send" onclick="document.getElementById('btn-webhooks').click()">
+                🔗 Configurar Webhooks dos Canais
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================
+       MODAL: ALTERAR SENHA PIN GERAL
+       ======================================================== -->
+  <div id="modal-pin" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="admin-modal-box">
+      <div class="admin-modal-head">
+        <h3>🔑 Alterar PIN Geral Administrativo</h3>
+        <button class="admin-modal-close" id="btn-close-modal-pin" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <div class="admin-form-grid single-col" style="gap:10px;">
+        <div class="admin-form-group">
+          <label>PIN Atual (4 dígitos):</label>
+          <input type="password" id="input-pin-atual" maxlength="4" placeholder="••••" />
+        </div>
+        <div class="admin-form-group">
+          <label>Novo PIN (4 dígitos):</label>
+          <input type="password" id="input-novo-pin" maxlength="4" placeholder="••••" />
+        </div>
+        <div class="admin-form-group">
+          <label>Confirmar Novo PIN:</label>
+          <input type="password" id="input-confirma-pin" maxlength="4" placeholder="••••" />
+        </div>
+      </div>
+      <div class="admin-modal-foot">
+        <button type="button" class="btn-outline" id="btn-cancelar-pin">Cancelar</button>
+        <button type="button" class="btn-primary btn-admin-primary" id="btn-salvar-pin">Salvar Novo PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: CONFIGURAÇÃO DE WEBHOOKS DISCORD
+       ======================================================== -->
+  <div id="modal-webhooks" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="admin-modal-box" style="max-width:580px;">
+      <div class="admin-modal-head">
+        <h3>🔗 Configuração de Webhooks do Discord</h3>
+        <button class="admin-modal-close" id="btn-close-modal-webhooks" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <p class="muted" style="font-size:12px;margin:0 0 14px;">
+        Insira as URLs dos Webhooks para cada canal do Discord. Se um canal estiver vazio, usará o <strong>Webhook Geral</strong>:
+      </p>
+      <div class="admin-form-grid single-col" style="gap:10px;">
+        <div class="admin-form-group">
+          <label>Webhook Geral Administrativo (Padrão):</label>
+          <input type="url" id="input-wh-geral" value="https://discord.com/api/webhooks/1562889902876532810/Id3efdQB4It9FXoNsUUFAAnRe8lGUx5jCn7r_o2Pbd95nWn_j4QLRC91PdFURe5-pII_" />
+        </div>
+        <div class="admin-form-group">
+          <label>Canal ❌・exonerações:</label>
+          <input type="url" id="input-wh-exo" value="https://discord.com/api/webhooks/1562889902876532810/Id3efdQB4It9FXoNsUUFAAnRe8lGUx5jCn7r_o2Pbd95nWn_j4QLRC91PdFURe5-pII_" />
+        </div>
+        <div class="admin-form-group">
+          <label>Canal ⛔・desligamentos:</label>
+          <input type="url" id="input-wh-desl" value="https://discord.com/api/webhooks/1562891114594443294/mo6LAuPuZ9rbRZVfrjPUwEY1PljvoQ9gDUw02cqr_-TNb0C-wkh7uRY5lOQbpxilnKRt" />
+        </div>
+        <div class="admin-form-group">
+          <label>Canal 🚫・blacklist:</label>
+          <input type="url" id="input-wh-blk" value="https://discord.com/api/webhooks/1562891598126256168/kyeNsx4BwCT3OXu04mmX2gwqGhamPLfmaX-R85n1dOPJ7KsCOKBho2CaYngRTjJbwxQP" />
+        </div>
+        <div class="admin-form-group">
+          <label>Canal ❗️・advertências:</label>
+          <input type="url" id="input-wh-adv" value="https://discord.com/api/webhooks/1562891800606285926/ifW_Z1pAHRFd4sDHvortGo2iQd466YXq2mZmrOq2BxEtb_c9Wls93rgFYTiKMhbWZMkQ" />
+        </div>
+      </div>
+      <div class="admin-modal-foot" style="justify-content:space-between;">
+        <button type="button" class="btn-outline" id="btn-testar-webhook">🔔 Testar Conexão</button>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn-outline" onclick="document.getElementById('btn-close-modal-webhooks').click()">Cancelar</button>
+          <button type="button" class="btn-primary btn-discord-send" id="btn-salvar-webhooks">Salvar Webhooks</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="jspdf.umd.min.js"></script>
+  <script src="qrcode.min.js"></script>
+  <script src="data.js"></script>
+  <script src="pdf-generator.js"></script>
+  <script src="administrativo.js"></script>
+</body>
+
+</html>
