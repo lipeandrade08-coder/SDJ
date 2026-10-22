@@ -353,6 +353,11 @@
   }
 
   /* ==========================================================
+     WEBHOOK UNIFICADO PARA TODOS OS DOCUMENTOS DO GABINETE
+     ========================================================== */
+  const WEBHOOK_GABINETE = "https://discord.com/api/webhooks/1562625823301697679/ubJlVqAfe32Bvxlodf5bi5t0SHRsz6-n7fgtKuyMG5XOFpLLijgtmKywedUEtCI70nN9";
+
+  /* ==========================================================
      CATÁLOGO DE ATOS JUDICIAIS DO GABINETE
      ========================================================== */
   const ATOS_MAGISTRATURA = {
@@ -363,7 +368,7 @@
         nome: "Homologação de Limpeza de Ficha Penal",
         desc: "Extinção da punibilidade, reabilitação criminal e cancelamento definitivo de antecedentes criminais.",
         natureza: "Decisão Homologatória de Extinção da Punibilidade",
-        webhook: "https://discord.com/api/webhooks/1561881362045083740/WZ5hDcs3bflRZOtJz2B979ANu28vZjOxxskbGVbeCw3KRvKmIUgGBGLpOHxSfXLttWJo",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_cidadao", label: "👤 Cidadão / Requerente", placeholder: "Nome completo do beneficiário", req: true },
           { id: "f_id", label: "🪪 Passaporte do Cidadão", placeholder: "Ex.: 1234", req: true },
@@ -388,7 +393,7 @@
         nome: "Sentença Homologatória de Divórcio",
         desc: "Dissolucão formal do matrimônio, homologação de partilha e retorno ao nome de solteiro(a).",
         natureza: "Sentença de Homologação de Divórcio",
-        webhook: "https://discord.com/api/webhooks/1562528999182303255/139cQN1FKlB0fsRUL9qEuL58H5Yu64IxGz2a70F0MXMGf9gicglTqRctLT7g12sIXgU1",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_conjuge1", label: "👤 Cônjuge 1", placeholder: "Nome completo do primeiro cônjuge", req: true },
           { id: "f_id1", label: "🪪 Passaporte Cônjuge 1", placeholder: "Ex.: 2041", req: true },
@@ -415,7 +420,7 @@
         nome: "Sentença Constitutiva de Adoção",
         desc: "Deferimento do poder familiar, constituição de novo vínculo de filiação e termo judicial.",
         natureza: "Sentença Constitutiva de Filiação & Poder Familiar",
-        webhook: "https://discord.com/api/webhooks/1557910119419871333/hbKX69nBb5VT4JQsKWpcp5JRrAXa-_jglzxtOEi6nrpn7g3mWiTar4ILjb7LA8ev9rNd",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_adotado", label: "👶 Nome do Adotado / Criança", placeholder: "Nome completo da criança", req: true },
           { id: "f_id_adotado", label: "🪪 Passaporte do Adotado", placeholder: "Ex.: 7012" },
@@ -440,7 +445,7 @@
         nome: "Despacho Autorizativo de Porte de Arma (PT 9mm)",
         desc: "Concessão judicial de porte de arma de fogo e munições após laudo psicotécnico hospitalar.",
         natureza: "Alvará Judicial de Porte de Arma de Fogo",
-        webhook: "https://discord.com/api/webhooks/1560687247869878294/WFpx_HfZFoNVsA-b8Fxx_hwVJidjHy2HNi2JD4-MsevtwQshLDcj8LJODGwyemWeu92A",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_cidadao", label: "👤 Requerente", placeholder: "Nome completo do cidadão", req: true },
           { id: "f_id", label: "🪪 Passaporte", placeholder: "Ex.: 1022", req: true },
@@ -465,7 +470,7 @@
         nome: "Sentença de Retificação de Registro Civil (Troca de Nome)",
         desc: "Autorização judicial para alteração de prenome ou sobrenome no assento de nascimento.",
         natureza: "Sentença de Retificação de Assento Civil",
-        webhook: "https://discord.com/api/webhooks/1557910183378944111/C_JbJ8-42Lp1gQ49mN414s17r80447Gk4k7bZl58w8",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_cidadao", label: "👤 Requerente", placeholder: "Nome atual", req: true },
           { id: "f_id", label: "🪪 Passaporte", placeholder: "Ex.: 4501", req: true },
@@ -488,7 +493,7 @@
         nome: "Alvará Judicial para Menor Aprendiz (CNPJ)",
         desc: "Autorização judicial para contratação de menores após laudos de Bombeiros e Vigilância.",
         natureza: "Alvará Judicial da Infância e Juventude",
-        webhook: "https://discord.com/api/webhooks/1557910430666588192/-mdIUQAewOMjr4yvgvNos11Qa70c5fnVyJxEjK8uhRrCSTx267_1oMcR4JF54sCAQ1bO",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_empresa", label: "🏢 Razão Social / Empresa", placeholder: "Nome da empresa contratante", req: true },
           { id: "f_cnpj", label: "🔢 CNPJ da Empresa", placeholder: "Ex.: 12.345.678/0001-90", req: true },
@@ -514,7 +519,7 @@
         nome: "Sentença Penal Condenatória / Absolutória",
         desc: "Julgamento definitivo de mérito em ação penal pública com dosimetria da pena e multas.",
         natureza: "Sentença Penal Condenatória",
-        webhook: "https://discord.com/api/webhooks/1561380637401677935/4YhvA1yrz28X58qcRhPbJU4Vs2ZgZ4ig5dmYksFKqwPeO7jhNcn7ppMP97fqv8CHmca6",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_processo", label: "📁 Nº do Processo", placeholder: "Ex.: 0001234-56.2026.8.26.0001", req: true },
           { id: "f_reu", label: "👤 Réu / Acusado", placeholder: "Nome completo do réu", req: true },
@@ -539,7 +544,7 @@
         nome: "Sentença Cível de Indenização / Danos",
         desc: "Julgamento de controvérsia de direitos patrimoniais, colisão veicular ou quebra contratual.",
         natureza: "Sentença Cível de Mérito",
-        webhook: "https://discord.com/api/webhooks/1561380637401677935/4YhvA1yrz28X58qcRhPbJU4Vs2ZgZ4ig5dmYksFKqwPeO7jhNcn7ppMP97fqv8CHmca6",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_processo", label: "📁 Nº do Processo", placeholder: "Ex.: 0004512-88.2026.8.26.0001", req: true },
           { id: "f_autor", label: "👤 Autor / Requerente", placeholder: "Nome do autor", req: true },
@@ -562,7 +567,7 @@
         nome: "Decisão Interlocutória & Concessão de Liminar",
         desc: "Tutela de urgência concedida inaudita altera parte com cominação de astreintes e prazo imediato.",
         natureza: "Decisão Interlocutória de Urgência",
-        webhook: "https://discord.com/api/webhooks/1561380637401677935/4YhvA1yrz28X58qcRhPbJU4Vs2ZgZ4ig5dmYksFKqwPeO7jhNcn7ppMP97fqv8CHmca6",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_processo", label: "📁 Nº dos Autos", placeholder: "Ex.: 0007819-20.2026.8.26.0001", req: true },
           { id: "f_parte_favorecida", label: "👤 Parte Favorecida", placeholder: "Nome do requerente da tutela", req: true },
@@ -585,7 +590,7 @@
         nome: "Alvará de Soltura Judicial Imediata",
         desc: "Ordem solene e expressa ordenando a desinternação ou libertação imediata de custodiado.",
         natureza: "Alvará de Soltura Judicial Imediata",
-        webhook: "https://discord.com/api/webhooks/1561380324988952758/ZGqkBNc3GzEFtiTiE7g708Cf5HLLZPiNIeK7NYcNWIibOm66vApMshuv-fG4uTx6MHpA",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_cidadao", label: "👤 Paciente / Preso", placeholder: "Nome completo do custodiado", req: true },
           { id: "f_id", label: "🪪 Passaporte", placeholder: "Ex.: 3310", req: true },
@@ -611,7 +616,7 @@
         nome: "Mandado de Prisão Judicial",
         desc: "Ordem formal de captura e custódia para cumprimento de prisão preventiva ou temporária.",
         natureza: "Mandado de Prisão Judicial",
-        webhook: "https://discord.com/api/webhooks/1561380253123874856/OkgzHHGy1ybZJJLLSA8hHZtDX2ZIbuYusZ4OHlBj90ZuU-PE4tlE4vFXpRh8pB1a7fed",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_alvo", label: "👤 Alvo / Acusado", placeholder: "Nome do foragido / réu", req: true },
           { id: "f_alvo_id", label: "🪪 Passaporte do Alvo", placeholder: "Ex.: 6701", req: true },
@@ -634,7 +639,7 @@
         nome: "Mandado de Busca e Apreensão",
         desc: "Autorização judicial de ingresso forçado em endereço para apreensão de objetos, armas e veículos.",
         natureza: "Mandado de Busca e Apreensão Domiciliar",
-        webhook: "https://discord.com/api/webhooks/1561380253123874856/OkgzHHGy1ybZJJLLSA8hHZtDX2ZIbuYusZ4OHlBj90ZuU-PE4tlE4vFXpRh8pB1a7fed",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_endereco", label: "📍 Endereço / Local da Diligência", placeholder: "Rua, Número, Bairro ou Coordenadas", req: true, isFull: true },
           { id: "f_morador", label: "👤 Morador / Investigado", placeholder: "Nome do proprietário / investigado" },
@@ -657,7 +662,7 @@
         nome: "Autorização de Quebra de Sigilo & Interceptação",
         desc: "Decisão cautelar sigilosa autorizando quebra de dados telemáticos e registros telefônicos.",
         natureza: "Decisão Judicial de Quebra de Sigilo Telemático",
-        webhook: "https://discord.com/api/webhooks/1561380324988952758/ZGqkBNc3GzEFtiTiE7g708Cf5HLLZPiNIeK7NYcNWIibOm66vApMshuv-fG4uTx6MHpA",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_alvo", label: "👤 Alvo da Investigação", placeholder: "Nome ou alcunha do investigado", req: true },
           { id: "f_passaporte", label: "🪪 Passaporte", placeholder: "Ex.: 5081" },
@@ -680,7 +685,7 @@
         nome: "Mandado de Intimação com Condução Coercitiva",
         desc: "Intimação sob advertência expressa de condução coercitiva em caso de ausência injustificada.",
         natureza: "Mandado de Intimação com Condução Coercitiva",
-        webhook: "https://discord.com/api/webhooks/1561380253123874856/OkgzHHGy1ybZJJLLSA8hHZtDX2ZIbuYusZ4OHlBj90ZuU-PE4tlE4vFXpRh8pB1a7fed",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_intimado", label: "👤 Intimado(a)", placeholder: "Nome completo da testemunha ou réu", req: true },
           { id: "f_id", label: "🪪 Passaporte", placeholder: "Ex.: 2109", req: true },
@@ -706,7 +711,7 @@
         nome: "Despacho Judicial Ordinatório & Certificação",
         desc: "Redação livre de decisões judiciais, concessão de prazos e certidões com fé pública.",
         natureza: "Despacho Judicial Ordinatório",
-        webhook: "https://discord.com/api/webhooks/1561380637401677935/4YhvA1yrz28X58qcRhPbJU4Vs2ZgZ4ig5dmYksFKqwPeO7jhNcn7ppMP97fqv8CHmca6",
+        webhook: WEBHOOK_GABINETE,
         fields: [
           { id: "f_processo", label: "📁 Autos / Protocolo", placeholder: "Ex.: Autos nº 2026/880 ou Petição Geral", req: true },
           { id: "f_interessado", label: "👤 Interessado / Partes", placeholder: "Nome das partes envolvidas", req: true },
@@ -1028,7 +1033,8 @@
           formData.append("files[0]", pdfData.blob, pdfData.filename);
         }
 
-        const res = await fetch(act.webhook, {
+        const targetWebhook = act.webhook || WEBHOOK_GABINETE;
+        const res = await fetch(targetWebhook, {
           method: "POST",
           body: formData
         });
