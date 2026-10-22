@@ -259,6 +259,12 @@
         ctx.bezierCurveTo(startX + 55, baseY + 32, endX - 42, baseY - 10, endX + 15, baseY + 15);
         ctx.bezierCurveTo(endX + 32, baseY + 28, endX + 20, baseY + 42, endX - 48, baseY + 38);
         ctx.bezierCurveTo(endX - 110, baseY + 32, endX - 200, baseY + 45, endX - 300, baseY + 35);
+      } else if (estilo.tipo === "manu") {
+        // Rubrica elegante e harmônica da Juíza Manu Garcia (arco ascendente, laço judicante sofisticado e sweep sutil)
+        ctx.moveTo(startX - 6, baseY - 4);
+        ctx.bezierCurveTo(startX + 42, baseY - 38, startX + 88, baseY + 42, endX - 22, baseY - 14);
+        ctx.bezierCurveTo(endX + 32, baseY + 8, endX + 18, baseY + 44, endX - 44, baseY + 34);
+        ctx.bezierCurveTo(endX - 125, baseY + 24, endX - 235, baseY + 42, endX - 345, baseY + 28);
       } else {
         // Rubrica dinâmica personalizada para qualquer oficial/agente ampliada
         ctx.moveTo(startX, baseY);
@@ -288,6 +294,14 @@
       cachedSignatureMike = gerarAssinaturaCanvas("Mike Santaroni", { rot: -2.6, tipo: "mike" });
     }
     return cachedSignatureMike;
+  }
+
+  let cachedSignatureManu = null;
+  function getAssinaturaManu() {
+    if (!cachedSignatureManu) {
+      cachedSignatureManu = gerarAssinaturaCanvas("Manu Garcia", { rot: -2.8, tipo: "manu" });
+    }
+    return cachedSignatureManu;
   }
 
   /* ==========================================================
@@ -448,7 +462,7 @@
      BLOCO DE ASSINATURAS GRANDES & CHANCELA NOTARIAL DIGITAL
      Com rubricas amplas de Zaith Frost, Mike Santaroni, Oficial e QR Code
      ========================================================== */
-  function desenharBlocoAssinaturasEChancela(doc, startY, agenteNome, agenteId, cargoAgente, protocolo) {
+  function desenharBlocoAssinaturasEChancela(doc, startY, agenteNome, agenteId, cargoAgente, protocolo, tipoAssinatura) {
     const pageWidth = 210;
 
     // Linha 1 de Assinaturas (Presidência): Zaith Frost & Mike Santaroni
@@ -512,7 +526,14 @@
 
     // Coluna Esquerda: Agente/Oficial Responsável com RUBRICA GRANDE DINÂMICA
     const nomeLimpo = toSignatureCase(agenteNome);
-    const sigAgenteImg = gerarAssinaturaCanvas(nomeLimpo, { rot: -3.0, tipo: "agente" });
+    let rubricaTipo = tipoAssinatura || "agente";
+    if (!tipoAssinatura) {
+      const lower = String(agenteNome || "").toLowerCase();
+      if (lower.includes("zaith")) rubricaTipo = "zaith";
+      else if (lower.includes("mike")) rubricaTipo = "mike";
+      else if (lower.includes("manu")) rubricaTipo = "manu";
+    }
+    const sigAgenteImg = gerarAssinaturaCanvas(nomeLimpo, { rot: -3.0, tipo: rubricaTipo });
 
     if (sigAgenteImg) {
       try {
@@ -1823,7 +1844,7 @@
 
     // Assinaturas: Presidência + Responsável pelo ato + Chancela com QR Code
     const signatureStartY = Math.min(Math.max(curY + 1, SIG_TOP), 231);
-    desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, opts.cargo || "Juiz de Direito", protocolo);
+    desenharBlocoAssinaturasEChancela(doc, signatureStartY, opts.agente, opts.agenteId, opts.cargo || "Juiz de Direito", protocolo, opts.assinaturaTipo);
 
     const safeTitle = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
     const filename = `Tribunal_${safeTitle}_${protocolo}.pdf`;
@@ -3134,7 +3155,11 @@
     renderCarterinhaCanvas,
     getLogoAndWatermark,
     toSignatureCase,
-    gerarQrCodeDataUrl
+    gerarQrCodeDataUrl,
+    gerarAssinaturaCanvas,
+    getAssinaturaZaith,
+    getAssinaturaMike,
+    getAssinaturaManu
   };
 })();
 

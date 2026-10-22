@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gabinete dos Magistrados · Tribunal de Justiça | Brava RP</title>
+  <meta name="description"
+    content="Gabinete Exclusivo dos Magistrados do Poder Judiciário de Brava RP. Acesso restrito por PIN para homologações notariais, sentenças, alvarás, mandados e chancelas judiciais." />
+
+  <link rel="icon" type="image/png" href="arte.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20261021-gabinete" />
+  <script>
+    (function () {
+      var t = localStorage.getItem("brava-tema");
+      if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+
+<body data-view="gabinete">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Barra de Topo -->
+  <header class="topbar">
+    <div class="brand">
+      <a href="tribunal.html" class="btn-back" title="Voltar ao Tribunal de Justiça">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </a>
+      <img class="brand-logo" src="arte.png" alt="Poder Judiciário de Brava" />
+      <div class="brand-text">
+        <h1>Gabinete dos Magistrados · Brava</h1>
+        <nav class="crumb" aria-label="Navegação">
+          <a href="tribunal.html">Tribunal</a>
+          <span class="crumb-sep">›</span>
+          <span class="crumb-current">Gabinete do Juiz</span>
+        </nav>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <!-- Link Departamento Jurídico / SDJ -->
+      <a href="index.html" class="btn-outline" title="Acessar o Cartório do Sistema do Departamento Jurídico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18M7 21h10M5 7h14M12 7l0 0" />
+          <path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z" />
+        </svg>
+        <span>Cartório SDJ</span>
+      </a>
+
+      <!-- Link Tribunal de Justiça -->
+      <a href="tribunal.html" class="btn-outline btn-nav-tribunal" title="Ir para o Tribunal de Justiça">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <span>Tribunal</span>
+      </a>
+
+      <!-- Indicador do Magistrado Logado -->
+      <div id="topbar-magistrado-badge" class="magistrado-topbar-badge hidden">
+        <span class="badge-icon" id="topbar-mag-icon">👑</span>
+        <span id="topbar-mag-name">Zaith Frost</span>
+      </div>
+
+      <!-- Botão Trocar Magistrado (quando logado) -->
+      <button id="btn-trocar-magistrado" class="btn-outline hidden" type="button" title="Alternar entre os perfis de magistrados">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        <span>Trocar Magistrado</span>
+      </button>
+
+      <!-- Botão Trocar PIN (quando logado) -->
+      <button id="btn-trocar-pin" class="btn-outline hidden" type="button" title="Alterar a senha PIN do perfil logado">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-1.5 1.5L16 7l-4 4-4-4 4-4 1.5 1.5z"/>
+          <path d="M15.5 8.5l-8 8a2.121 2.121 0 0 1-3 0 2.121 2.121 0 0 1 0-3l8-8"/>
+          <circle cx="18" cy="6" r="3"/>
+        </svg>
+        <span>Alterar PIN</span>
+      </button>
+
+      <!-- Botão Bloquear Gabinete (quando logado) -->
+      <button id="btn-bloquear" class="btn-outline hidden" type="button" title="Bloquear o Gabinete e encerrar sessão segura">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Bloquear</span>
+      </button>
+
+      <!-- Alternar Tema -->
+      <button id="btn-tema" class="theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.5" />
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+        </svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container" id="main">
+
+    <!-- ========================================================
+         1. TELA DE BLOQUEIO POR SENHA PIN (LOCKSCREEN)
+         ======================================================== -->
+    <div id="lockscreen-view" class="lockscreen-container">
+      <div class="lockscreen-card" id="lockscreen-card">
+        <div class="lockscreen-icon-wrap">
+          <img src="arte.png" alt="Brasão Judicial" />
+        </div>
+        <h2>Gabinete dos Magistrados</h2>
+        <p>Acesso exclusivo reservado aos <strong>Magistrados</strong> do Poder Judiciário de Brava RP. Selecione seu perfil ou digite seu PIN:</p>
+
+        <!-- Seletor dos 3 Perfis Oficiais dos Magistrados -->
+        <div class="magistrados-profile-picker" id="magistrados-profile-picker">
+          <div class="magistrado-chip active" data-profile="zaith" title="Perfil: Zaith Frost (Presidente)">
+            <div class="magistrado-avatar">👑</div>
+            <div class="magistrado-details">
+              <strong>Zaith Frost</strong>
+              <small>Presidente do TJ &amp; SDJ · ID: 708 · OAB/SDJ-2026-0708</small>
+            </div>
+            <span class="chip-pin-pill">🔒 PIN Pessoal</span>
+          </div>
+
+          <div class="magistrado-chip" data-profile="mike" title="Perfil: Mike Santaroni (Vice-Presidente)">
+            <div class="magistrado-avatar">⚖️</div>
+            <div class="magistrado-details">
+              <strong>Mike Santaroni</strong>
+              <small>Vice-Presidente do TJ &amp; SDJ · ID: 512 · OAB/SDJ-2026-0512</small>
+            </div>
+            <span class="chip-pin-pill">🔒 PIN Pessoal</span>
+          </div>
+
+          <div class="magistrado-chip" data-profile="manu" title="Perfil: Manu Garcia (Juíza de Direito)">
+            <div class="magistrado-avatar">⚖️</div>
+            <div class="magistrado-details">
+              <strong>Manu Garcia</strong>
+              <small>Juíza de Direito · ID: 725 · TJ/SDJ-2026-0725</small>
+            </div>
+            <span class="chip-pin-pill">🔒 PIN Pessoal</span>
+          </div>
+        </div>
+
+        <div class="pin-display-group">
+          <div class="pin-dots" id="pin-dots">
+            <span class="pin-dot" data-index="0"></span>
+            <span class="pin-dot" data-index="1"></span>
+            <span class="pin-dot" data-index="2"></span>
+            <span class="pin-dot" data-index="3"></span>
+          </div>
+          <div class="pin-status-msg" id="pin-status">Selecione seu perfil e digite seu PIN secreto</div>
+        </div>
+
+        <div class="pin-keypad" id="pin-keypad">
+          <button type="button" class="pin-key" data-digit="1">1</button>
+          <button type="button" class="pin-key" data-digit="2">2</button>
+          <button type="button" class="pin-key" data-digit="3">3</button>
+          <button type="button" class="pin-key" data-digit="4">4</button>
+          <button type="button" class="pin-key" data-digit="5">5</button>
+          <button type="button" class="pin-key" data-digit="6">6</button>
+          <button type="button" class="pin-key" data-digit="7">7</button>
+          <button type="button" class="pin-key" data-digit="8">8</button>
+          <button type="button" class="pin-key" data-digit="9">9</button>
+          <button type="button" class="pin-key btn-action" id="btn-pin-backspace" title="Apagar último dígito">⌫</button>
+          <button type="button" class="pin-key" data-digit="0">0</button>
+          <button type="button" class="pin-key btn-confirm" id="btn-pin-confirm" title="Confirmar PIN">🔒 Entrar</button>
+        </div>
+
+        <div style="font-size: 11px; color: var(--muted); margin-top: 14px;">
+          <span>🔒 Criptografia Notarial SHA-256 · Acesso Pessoal, Restrito e Intransferível</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         2. PAINEL PRINCIPAL DO GABINETE (QUANDO AUTENTICADO)
+         ======================================================== -->
+    <div id="gabinete-view" class="gabinete-panel-active">
+      
+      <!-- Hero de Boas-Vindas da Magistratura -->
+      <section class="gabinete-hero">
+        <div class="gabinete-hero-top">
+          <div class="gabinete-badge-active">
+            <span class="pulse-dot"></span>
+            <span id="label-sessao-cargo">Sessão Autenticada · Juiz Titular</span>
+          </div>
+          <div style="font-size: 12px; color: var(--gold-3); font-weight: 600;">
+            <span id="gabinete-data-hora">—</span>
+          </div>
+        </div>
+        <h2>Gabinete Judicial &amp; Homologações</h2>
+        <p>Espaço solene para magistrados analisarem, homologarem atos notariais do SDJ, expedirem sentenças de mérito, mandados de prisão, buscas, liminares e chancelarem documentos com fé pública irretratável.</p>
+      </section>
+
+      <!-- Card de Credencial do Magistrado em Atuação -->
+      <section class="magistrado-credencial-card">
+        <div class="credencial-head">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18" style="color:var(--gold);">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <span>Identificação do Magistrado Subscritor</span>
+          </h3>
+          <span class="muted" style="font-size: 12px;">Gravado automaticamente para os atos judiciais</span>
+        </div>
+        <div class="credencial-grid">
+          <div class="credencial-field">
+            <label for="mag_nome">Nome do Magistrado</label>
+            <input id="mag_nome" type="text" placeholder="Ex.: Dr. Roberto Albuquerque" value="Dr. Roberto Albuquerque" />
+          </div>
+          <div class="credencial-field">
+            <label for="mag_cargo">Cargo na Magistratura</label>
+            <select id="mag_cargo">
+              <option value="Presidente do Tribunal de Justiça">Presidente do Tribunal de Justiça (Zaith Frost)</option>
+              <option value="Vice-Presidente do Tribunal de Justiça">Vice-Presidente do Tribunal de Justiça (Mike Santaroni)</option>
+              <option value="Juíza de Direito">Juíza de Direito (Manu Garcia)</option>
+              <option value="Juiz de Direito">Juiz de Direito (Vara Única)</option>
+              <option value="Juiz de Direito Titular (Vara Criminal)">Juiz de Direito (Vara Criminal)</option>
+              <option value="Juiz de Direito Titular (Vara Cível &amp; Família)">Juiz de Direito (Vara Cível &amp; Família)</option>
+              <option value="Juiz de Direito da Infância e Juventude">Juiz de Direito da Infância e Juventude</option>
+              <option value="Juiz Corregedor">Juiz Corregedor</option>
+              <option value="Desembargador de Justiça">Desembargador de Justiça</option>
+            </select>
+          </div>
+          <div class="credencial-field">
+            <label for="mag_matricula">Inscrição da Carteirinha / Registro Funcional</label>
+            <input id="mag_matricula" type="text" placeholder="Ex.: OAB/SDJ-2026-0708 ou TJ/SDJ-2026-0725" value="OAB/SDJ-2026-0708" />
+          </div>
+          <div class="credencial-field">
+            <label for="mag_vara">Unidade Jurisdicional</label>
+            <input id="mag_vara" type="text" placeholder="Ex.: Comarca de Brava RP" value="Vara Única da Comarca de Brava RP" />
+          </div>
+          <div class="credencial-field">
+            <label for="mag_assinatura_tipo">Estilo da Rubrica Oficial</label>
+            <select id="mag_assinatura_tipo">
+              <option value="zaith">Rubrica Solene Arrojada (Zaith Frost - Presidente)</option>
+              <option value="mike">Rubrica Fluida Dinâmica (Mike Santaroni - Vice-Presidente)</option>
+              <option value="manu">Caligrafia Judicante Elegante (Manu Garcia - Juíza)</option>
+              <option value="formal">Caligrafia Judicial Formal Padrão</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pré-visualização da Rubrica Oficial do Magistrado -->
+        <div class="rubrica-preview-container" id="rubrica-preview-box">
+          <img id="img-rubrica-preview" src="" alt="Rubrica Oficial do Magistrado" />
+          <span class="rubrica-preview-label" id="label-rubrica-preview">Chancela Oficial Subscritora</span>
+        </div>
+      </section>
+
+      <!-- Navegação das 4 Categorias de Atos -->
+      <nav class="gabinete-nav-categories" id="gabinete-categories">
+        <button type="button" class="gabinete-cat-btn active" data-cat="sdj">
+          <span>🛡️</span>
+          <span>1. Homologações Notariais (SDJ)</span>
+        </button>
+        <button type="button" class="gabinete-cat-btn" data-cat="decisoes">
+          <span>⚖️</span>
+          <span>2. Sentenças &amp; Decisões Judiciais</span>
+        </button>
+        <button type="button" class="gabinete-cat-btn" data-cat="mandados">
+          <span>⛓️</span>
+          <span>3. Mandados &amp; Medidas Cautelares</span>
+        </button>
+        <button type="button" class="gabinete-cat-btn" data-cat="avulso">
+          <span>📜</span>
+          <span>4. Despacho Livre &amp; Chancela</span>
+        </button>
+      </nav>
+
+      <!-- Seletor do Ato Específico -->
+      <section class="gabinete-sub-selector">
+        <div class="gabinete-acts-grid" id="gabinete-acts-container">
+          <!-- Injetado dinamicamente via JS -->
+        </div>
+      </section>
+
+      <!-- Formulário do Ato Judicial Selecionado -->
+      <section class="gabinete-form-box" id="gabinete-form-wrapper">
+        <div class="gabinete-form-header">
+          <div>
+            <h3 id="form-act-title">⚖️ Homologação Judicial</h3>
+            <span class="muted" id="form-act-desc" style="font-size:13px;">Preencha os termos e fundamente a decisão do Juízo.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button type="button" class="btn-fill-model" id="btn-fill-model" title="Preencher com um modelo realístico de decisão judicial">
+              <span>📋 Carregar Exemplo Real</span>
+            </button>
+          </div>
+        </div>
+
+        <form id="gabinete-act-form" onsubmit="return false;">
+          <div class="form-grid fields" id="gabinete-fields-container">
+            <!-- Campos dinâmicos do documento injetados aqui -->
+          </div>
+
+          <!-- Caixa da Decisão / Dispositivo do Juiz -->
+          <div class="dispositivo-judicial-box">
+            <label for="act_dispositivo">
+              <span>⚖️ Dispositivo Judicial &amp; Ordem de Homologação</span>
+              <span class="muted" style="font-size:11.5px;font-weight:400;">Redação que integrará a certidão / sentença oficial</span>
+            </label>
+            <textarea id="act_dispositivo" rows="5" placeholder="Fundamentação e ordem expressa do magistrado..."></textarea>
+          </div>
+
+          <!-- Barra de Chancela, Selo e Autenticidade -->
+          <div class="chancela-preview-bar">
+            <div class="chancela-info">
+              <div class="chancela-seal-icon">⚖️</div>
+              <div class="chancela-meta">
+                <strong>Chancela Criptográfica da Magistratura</strong>
+                <span id="act-hash-preview">CHAVE: TJ-BRAVA-2026-AUTH-••••••••</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span class="badge" style="background:rgba(212,175,95,0.15);color:var(--gold);border:1px solid rgba(212,175,95,0.4);font-size:11px;padding:3px 8px;border-radius:6px;">Fé Pública Plena</span>
+            </div>
+          </div>
+
+          <!-- Botões de Ação do Magistrado -->
+          <div class="form-actions" style="margin-top:24px;">
+            <button class="btn-outline" id="btn-limpar-ato" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              </svg>
+              <span>Limpar</span>
+            </button>
+            <button class="btn-outline" id="btn-pdf-gabinete" type="button" title="Baixar documento chancelado em PDF de alta qualidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>Baixar PDF Chancelado</span>
+            </button>
+            <button class="btn-primary" id="btn-dispatch-gabinete" type="button" style="background:linear-gradient(135deg, #7c3aed, #d4af37);">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/>
+              </svg>
+              <span>Chancelar &amp; Publicar no Discord</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal para Alteração de PIN -->
+  <div id="modal-pin" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal modal-pin-box">
+      <div class="modal-header">
+        <h3>🔑 Alterar Senha PIN do Gabinete</h3>
+        <button class="modal-close" id="btn-close-modal-pin" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body" style="padding:16px 20px;">
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Defina uma nova senha de 4 dígitos para o acesso restrito dos Juízes.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <label style="font-size:12px;font-weight:600;">PIN Atual:
+            <input type="password" id="input-pin-atual" maxlength="4" placeholder="••••" style="margin-top:4px;" />
+          </label>
+          <label style="font-size:12px;font-weight:600;">Novo PIN (4 dígitos):
+            <input type="password" id="input-novo-pin" maxlength="4" placeholder="••••" style="margin-top:4px;" />
+          </label>
+          <label style="font-size:12px;font-weight:600;">Confirmar Novo PIN:
+            <input type="password" id="input-confirma-pin" maxlength="4" placeholder="••••" style="margin-top:4px;" />
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:12px 20px;display:flex;justify-content:flex-end;gap:10px;">
+        <button type="button" class="btn-outline" id="btn-cancelar-pin">Cancelar</button>
+        <button type="button" class="btn-primary" id="btn-salvar-pin">Salvar Novo PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Rodapé Oficial com Créditos e Link do Discord -->
+  <footer class="sdj-footer">
+    <div class="sdj-footer-inner">
+      <div class="sdj-footer-brand">
+        <span class="sdj-footer-symbol">⚖️</span>
+        <span class="sdj-footer-title">Sistema do Departamento Jurídico · Brava RP</span>
+      </div>
+      <div class="sdj-footer-meta">
+        <span class="sdj-footer-author">Criado e desenvolvido por <a href="https://discord.com/users/717926510119354659" target="_blank" rel="noopener noreferrer" class="sdj-footer-discord-link">Discord (717926510119354659)</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="jspdf.umd.min.js"></script>
+  <script src="qrcode.min.js"></script>
+  <script src="codigo-civil-data.js?v=20261021"></script>
+  <script src="tribunal-data.js?v=20261021"></script>
+  <script src="data.js?v=20261021"></script>
+  <script src="pdf-generator.js?v=20261021"></script>
+  <script src="gabinete.js?v=20261021"></script>
+</body>
+
+</html>
